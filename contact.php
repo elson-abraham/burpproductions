@@ -34,3 +34,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['message'], $_POST['services']
 	}
 }
 ?>
+
+<?php if ($responses): ?>
+<p class="responses"><?php echo implode('<br>', $responses); ?></p>
+<?php endif; ?>
