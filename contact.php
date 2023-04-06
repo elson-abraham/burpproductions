@@ -14,7 +14,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['message'], $_POST['services']
 	// If there are no errors
 	if (!$responses) {
 		// Where to send the mail? It should be your email address
-		$to      = 'admin@burpproductions.com';
+		$to = 'admin@burpproductions.com';
 		// Send mail from which email address?
 		$from = $_POST['email'];
 		// Mail subject
@@ -34,7 +34,3 @@ if (isset($_POST['name'], $_POST['email'], $_POST['message'], $_POST['services']
 	}
 }
 ?>
-
-<?php if ($responses): ?>
-<p class="responses"><?php echo implode('<br>', $responses); ?></p>
-<?php endif; ?>
