@@ -350,7 +350,28 @@ strong {
   overflow: hidden;
 }
 
-.logo {
+.heroText {
+  position: absolute;
+  z-index: 9;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  text-align: center;
+}
+
+.logoH {
+  position: fixed;
+  /* top: -9.5cm;
+  right: -2.2cm; */
+  top: -150%;
+  right: -3%;
+  width: 100px;
+  height: 100px;
+  align-items: baseline;
+}
+
+.logoF {
   width: 100px;
   height: 100px;
 }
@@ -372,15 +393,6 @@ strong {
   }
 }
 
-.heroText {
-  position: absolute;
-  z-index: 9;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  text-align: center;
-}
 
 /*---------------------------------------
   ABOUT & TEAM MEMBERS               
