@@ -6,6 +6,12 @@
     // AOS ANIMATIONS
     AOS.init();
 
+    // PRE LOADER
+    $(window).load(function(){
+      $('.preloader').delay(500).slideUp('slow'); // set duration in brackets    
+    });
+
+
     // NAVBAR
     $('.navbar-nav .nav-link').click(function(){
         $(".navbar-collapse").collapse('hide');
