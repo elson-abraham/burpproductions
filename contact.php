@@ -1,36 +1,64 @@
 <?php
-// Output messages
-$responses = [];
-// Check if the form was submitted
-if (isset($_POST['name'], $_POST['email'], $_POST['message'], $_POST['services'])) {
-	// Validate email adress
-	if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-		$responses[] = 'Email is not valid!';
+if ($_POST) {
+	$name = "";
+	$email = "";
+	$email_title = "";
+	$services = "";
+	$message = "";
+	$email_body = "<div>";
+
+	if (isset($_POST['name'])) {
+		$name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
+		$email_body .= "<div>
+							<label><b>Name:</b></label>&nbsp;<span>" . $name . "</span> 
+						</div>";
 	}
-	// Make sure the form fields are not empty
-	if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['message']) || empty($_POST['services'])) {
-		$responses[] = 'Please complete all fields!';
-	} 
-	// If there are no errors
-	if (!$responses) {
-		// Where to send the mail? It should be your email address
-		$to = 'admin@burpproductions.com';
-		// Send mail from which email address?
-		$from = $_POST['email'];
-		// Mail subject
-		$subject = $_POST['services'];
-		// Mail message
-		$message = $_POST['message'];
-		// Mail headers
-		$headers = 'From: ' . $from . "\r\n" . 'Reply-To: ' . $_POST['email'] . "\r\n" . 'X-Mailer: PHP/' . phpversion();
-		// Try to send the mail
-		if (mail($to, $subject, $message, $headers)) {
-			// Success
-			$responses[] = 'Message sent!';		
-		} else {
-			// Fail
-			$responses[] = 'Message could not be sent! Please check your mail server settings!';
-		}
+	if (isset($_POST['email'])) {
+		$email = str_replace(array("\r", "\n", "%0a", "%0d"), '', $_POST['email']);
+		$email = filter_var($email, FILTER_VALIDATE_EMAIL);
+		$email_body .= "<div> 
+							<label><b>Email:</b></label>&nbsp;<span>" . $email . "</span> 
+						</div>";
 	}
+
+	if (isset($_POST['message'])) {
+		$message = htmlspecialchars($_POST['message']);
+		$email_body .= "<div> 
+							<label><b>Message:</b></label> 
+							<div>" . $message . "</div> 
+						</div>";
+	}
+	
+	if (isset($_POST['services'])) {
+		$services = filter_var($_POST['services'], FILTER_SANITIZE_STRING);
+		$email_body .= "<div> 
+							<label><b>Services:</b></label>&nbsp;<span>" . $services . "</span> 
+						</div>";
+	}
+
+
+	if ($services == "checkbox1") {
+		$recipient = "admin@burpproductions.com";
+	} else if ($services == "checkbox2") {
+		$recipient = "admin@burpproductions.com";
+	} else if ($services == "checkbox3") {
+		$recipient = "admin@burpproductions.com";
+	} else {
+		$recipient = "admin@burpproductions.com";
+	}
+
+	$email_body .= "</div>";
+	$headers = 'MIME-Version: 1.0' . "\r\n"
+		. 'Content-type: text/html; charset=utf-8' . "\r\n"
+		. 'From: ' . $email . "\r\n";
+
+	if (mail($recipient, $email_title, $email_body, $headers)) {
+		echo "<p>Thank you for contacting us, $name. You will get a reply within 24 hours.</p>";
+	} else {
+		echo '<p>We are sorry but the email did not go through.</p>';
+	}
+
+} else {
+	echo '<p>Something went wrong</p>';
 }
 ?>
