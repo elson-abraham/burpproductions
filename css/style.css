@@ -608,14 +608,10 @@ strong {
 }
 
 .logoH {
-  position: absolute;
-  /* top: -9.5cm;
-  right: -2.2cm; */
-  top: -100%;
-  right: -3%;
-  width: 100px;
-  height: 100px;
-  align-items: baseline;
+  position: fixed;
+  top: -110%;
+  right: -7%;
+  /* align-items: baseline; */
 }
 
 .logoF {
@@ -693,9 +689,9 @@ strong {
 
 .portfolio-c1 {
   padding-left: 0% !important;
-  padding-right: 0% !important;
-  
+  padding-right: 0% !important; 
 }
+
 .portfolio-category {
   background: var(--white-color);
   position: absolute;
@@ -920,7 +916,11 @@ strong {
 /*---------------------------------------
   RESPONSIVE STYLES               
 -----------------------------------------*/
-
+.responsive {
+  width: 100%;
+  max-width: 100px;
+  height: auto;
+}
 
 @media screen and (min-width: 1600px) {
   .portfolio-two-column {
@@ -975,7 +975,21 @@ strong {
   }
 
   .logoH {
-    display: none;
+    position: fixed;
+    /* padding-top: 40%;
+    padding-right: 2%; */
+    top: -40% ;
+    right: -10%;
+  }
+
+  .hero {
+    height: 40vh;
+  }
+
+  .custom-video {
+    object-fit: cover;
+    width: 100%;
+    height: 40vh;
   }
 }
 
@@ -1034,6 +1048,14 @@ strong {
 
   .heroText p {
     font-size: 9px;
+  }
+
+  .logoH {
+    position: fixed;
+    /* padding-top: 40%;
+    padding-right: 2%; */
+    top: -40% ;
+    right: -10%;
   }
 }
 
