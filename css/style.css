@@ -1002,10 +1002,14 @@ img {
 }
 
 /* On smaller screens, decrease text size */
-@media only screen and (max-width: 300px) {
+@media only screen and (max-width: 991px) {
   .prev,
   .next,
   .text {font-size: 11px}
+
+  .slideshow-container {
+    height: fit-content; 
+  }
 }
 
 
@@ -1073,8 +1077,6 @@ img {
 
   .logoH {
     position: fixed;
-    /* padding-top: 40%;
-    padding-right: 2%; */
     top: -40% ;
     right: -10%;
   }
@@ -1118,7 +1120,7 @@ img {
 }
 
 @media screen and (min-width: 360px)
-              and (max-width: 430px) {
+              and (max-width: 767px) {    
   .portfolio-detail-title {
     font-size: 30px;
   }
@@ -1149,8 +1151,6 @@ img {
 
   .logoH {
     position: fixed;
-    /* padding-top: 40%;
-    padding-right: 2%; */
     top: -40% ;
     right: -10%;
   }
