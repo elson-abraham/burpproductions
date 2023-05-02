@@ -12,8 +12,6 @@
 
     <title>Burp Procutions</title>
 
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
     <meta name="keywords" content="burp procuctions, video production bangalore, corporate video, corporate, video, production, video production, bangalore video production, production company, podcasts, live video, virtual production, photograghy, videography, bangalore photograghy, bangalore videography, bengaluru photograghy, bengaluru videography, bengaluru, charls, charls abraham, best, awesome, service" />
 
     <!-- CSS FILES -->
@@ -26,6 +24,14 @@
     <link href="css/magnific-popup.css" rel="stylesheet">
     <link href="css/aos.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    
+    <script type="text/javascript">
+        var onloadCallback = function() {
+          grecaptcha.render('html_element', {
+            'sitekey' : '6Le7ltUlAAAAAHjE1WIwq9P3dJc-pK48g4nRqs6O'
+          });
+        };
+    </script>
 
 </head>
 
@@ -372,8 +378,8 @@
                             <!-- Let's include a hidden field containing our current path -->
                             <input type="hidden" name="entry.327322381" value="{{ page.url }}" />
                             <br>
-                            <div class="g-recaptcha" data-sitekey="6Le7ltUlAAAAAHjE1WIwq9P3dJc-pK48g4nRqs6O"></div>
-                            
+                            <!-- <div class="g-recaptcha" data-sitekey="6Le7ltUlAAAAAHjE1WIwq9P3dJc-pK48g4nRqs6O"></div> -->
+                            <div id="html_element"></div>
                             <div class="col-lg-5 col-12 mx-auto mt-5">
                                 <button type="submit" class="form-control">Send Message</button>
                             </div>
@@ -440,8 +446,11 @@
             </section>
     </footer>
 
-    <!-- JAVASCRIPT FILES -->
 
+    <!-- JAVASCRIPT FILES -->
+    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+    
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/jquery.sticky.js"></script>
