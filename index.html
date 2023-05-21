@@ -28,7 +28,9 @@
     <script type="text/javascript">
         var onloadCallback = function() {
           grecaptcha.render('html_element', {
-            'sitekey' : '6Le7ltUlAAAAAHjE1WIwq9P3dJc-pK48g4nRqs6O'
+            'sitekey' : '6Le7ltUlAAAAAHjE1WIwq9P3dJc-pK48g4nRqs6O',
+            'callback': capcha_filled,
+            'expired-callback': capcha_expired,
           });
         };
     </script>
@@ -319,11 +321,19 @@
 
                         <h2 class="mb-4 text-center" data-aos="fade-up">Dont' be shy, write to us</h2>
                                                                         
-                        <script type="text/javascript">var submitted=false;</script>
+                        <script type="text/javascript">
+                            var submitted=false;
+                            var allowSubmit = false;
+                            function capcha_filled () {allowSubmit = true;}
+                            function capcha_expired () {allowSubmit = false;}
+                            function check_if_capcha_is_filled (e) {if(allowSubmit) return true;
+                                e.preventDefault();
+                                alert('Fill in the capcha!');}
+                        </script>
                         <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {window.location='thankyou.html';}">
                         </iframe>
 
-                        <form action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSfVF7E1tKbpKOCbYa1Y1x6VZkwuchhcmqH-aq9Li2Fvd4PAIg/formResponse" method="post" target="hidden_iframe" onsubmit="submitted=true"; class="contact-form" role="form" data-aos="fade-up">
+                        <form action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSfVF7E1tKbpKOCbYa1Y1x6VZkwuchhcmqH-aq9Li2Fvd4PAIg/formResponse" method="post" target="hidden_iframe" onsubmit="check_if_capcha_is_filled(); submitted=true"; class="contact-form" role="form" data-aos="fade-up">
                             <div class="row">
 
                                 <div class="col-lg-6 col-6">
