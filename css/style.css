@@ -686,7 +686,6 @@ strong {
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 15vh;
-  /* background-image: url(../images/PV2.0/IMG_7.JPG); */
   background-image: url(../images/PV2.0/IMG_7.JPG);
   background-attachment: fixed;
   min-height: 100vh;
@@ -1237,9 +1236,6 @@ img {
 
 @media screen and (min-width: 360px)
               and (max-width: 767px) {    
-                
-
-  
   .portfolio-detail-title {
     font-size: 30px;
   }
@@ -1251,9 +1247,7 @@ img {
   .heroText p {
     font-size: 11px;
   }
-
 }
-
 
 @media screen and (max-width: 359px) {
   .portfolio-detail-title {
@@ -1273,15 +1267,11 @@ img {
     top: -40% ;
     right: -10%;
   }
+  .service-content {
+    padding-left: auto;
+    padding-right: auto;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
+  }
 }
-
-/* @media screen and (max-width: 360px) {
-  h1 {
-    font-size: 30px;
-  }
-
-  .heroText p {
-    font-size: 11px;
-  }
-
-} */
