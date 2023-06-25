@@ -770,6 +770,20 @@ strong {
   PORTFOLIO               
 -----------------------------------------*/
 
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.flex-container > div {
+  padding: 0px;
+  max-width: 15%;
+  max-height: 15%;
+  align-content: center;
+}
+
+
 .portfolio,
 .related-portfolio {
   background: var(--section-bg-color);
@@ -814,7 +828,7 @@ strong {
 
 .services-image,
 .portfolio-image {
-  display: block;
+  /* display: block; */
   transition: transform 0.6s ease-out;
 }
 
@@ -1194,9 +1208,12 @@ img {
   }
 
   .logoH {
-    position: fixed;
+
+    position: fixed !important;
     top: -40% ;
     right: -10%;
+    /* padding-top: -40% !important;
+    padding-right: -10% !important; */
   }
 
   .hero {
