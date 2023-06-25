@@ -783,6 +783,7 @@ strong {
   align-content: center;
 }
 
+#more {display: none;}
 
 .portfolio,
 .related-portfolio {
@@ -917,6 +918,21 @@ strong {
 }
 .small-section{
   padding: 100px 0;
+}
+
+.moreBtn{
+  display: inline-block;
+  width: 40%;
+  margin-left: 30%;
+  background-color: var(--primary-color);
+  padding: 15px 24px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: #000;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.5px;
 }
 /*---------------------------------------
   SECTION               
