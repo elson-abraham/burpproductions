@@ -11,7 +11,6 @@
       $('.preloader').delay(500).slideUp('slow'); // set duration in brackets    
     });
 
-
     // NAVBAR
     $('.navbar-nav .nav-link').click(function(){
         $(".navbar-collapse").collapse('hide');
@@ -46,7 +45,7 @@
     });
     
 
-    //Slideshow
+    //SLIDESHOW IMAGE
     let slideIndex = 0;
     let timeoutId = null;
     const slides = document.getElementsByClassName("mySlides");
@@ -85,7 +84,40 @@
       timeoutId = setTimeout(showSlides, 3000); // Change image every 5 seconds
     }
 
+    //VIEW MORE VIEW LESS
+    function vMore() {
+      var dots = document.getElementById("dots");
+      var moreText = document.getElementById("more");
+      var btnText = document.getElementById("moreBtn");
     
+      if (dots.style.display === "none") {
+        dots.style.display = "inline";
+        btnText.innerHTML = "View more";
+        moreText.style.display = "none";
+      } else {
+        dots.style.display = "none";
+        btnText.innerHTML = "View less";
+        moreText.style.display = "inline";
+      }
+    }
+
+    //CAPATCHA CHECH
+    // var allowSubmit = false;
+
+    // function capcha_filled () {
+    //   allowSubmit = true;
+    // }
+    // function capcha_expired () {
+    //   allowSubmit = false;
+    // }
+    
+    // function check_if_capcha_is_filled (e) {
+    //   if(allowSubmit) return true;
+    //   e.preventDefault();
+    //   alert('Fill in the capcha!');
+    // }
+    
+
   })(window.jQuery);
 
   
