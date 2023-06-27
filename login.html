@@ -60,10 +60,10 @@
                 e.preventDefault();
                 alert('Fill in the capcha!');}
         </script>
-        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {window.location='thankyou.html';}">
-        </iframe>
+        <!-- <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {window.location='thankyou.html';}">
+        </iframe> -->
 
-        <form action="https://docs.google.com/forms/d/e/1FAIpQLSfCbl02VQNKW9Vh-0zi61VooiXfbwz1FMJHmxZNGgNAjHIKog/formResponse" method="post" target="hidden_iframe" onsubmit="" submitted="true"; class="passkey-form" role="form"> 
+        <form action="https://docs.google.com/forms/d/e/1FAIpQLSfCbl02VQNKW9Vh-0zi61VooiXfbwz1FMJHmxZNGgNAjHIKog/formResponse" method="post" target="hidden_iframe" onsubmit="check_if_capcha_is_filled(); submitted=true"; class="passkey-form" role="form"> 
             <label for="email">ENTER EMAIL <sup class="text-danger">*</sup></label>
             <br>
             <input class="box" type="email" id="email" type="text" name="entry.1291933285" required>
