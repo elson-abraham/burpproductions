@@ -101,6 +101,16 @@
       }
     }
 
+    function passwd(){
+      var password = prompt('Enter the password');
+      if(password.toLowerCase() == "hereinBurpProductions7991"){
+        window.open("folder/history.zip")    
+      }else{
+        alert("incorrect password!! please try again");
+      }
+    }
+
+
     //CAPATCHA CHECH
     // var allowSubmit = false;
 
