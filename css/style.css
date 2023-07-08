@@ -915,36 +915,22 @@ strong {
   
   padding: 140px 0;
 }
+
 .small-section{
   padding: 100px 0;
-}
-
-.moreBtn{
-  display: inline-block;
-  width: 40%;
-  margin-left: 30%;
-  background-color: var(--primary-color);
-  padding: 15px 24px;
-  border-radius: 3px;
-  text-transform: uppercase;
-  font-size: 11px;
-  color: #000;
-  font-weight: 700;
-  text-decoration: none;
-  letter-spacing: 0.5px;
 }
 
 .photo-gallery{
   width: 90%;
   margin: auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 5px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
 }
 
 .pic {
   position: relative;
-  height: 230px;
+  height: 300px;
   border-radius: 7px;
   box-shadow: 3px 3px 5px lightgray;
   cursor: pointer;
@@ -952,10 +938,11 @@ strong {
 
 .pic img {
   width: 100%;
-  height: 100%;
-  border-radius: 7px;
-}
+  height: 300px;
+  border-radius: 1px;
+  object-fit: cover;
 
+}
 
 /*---------------------------------------
   SECTION               
@@ -984,7 +971,7 @@ strong {
   padding-right: 5vh;
   padding-top: 2vh;
   padding-bottom: 3vh;
-  box-sizing: content-box;
+  box-sizing: border-box;
   border-radius: 5mm;
   background-color: rgba(255, 255, 255, 0.5);
   box-shadow: 3px 3px 20px rgba(255, 255, 255, 0.404);
@@ -1016,6 +1003,8 @@ strong {
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   padding: 16px;
+  margin-left: 25%;
+  width: 50%;
   transition: all 0.6s ease-out;
 }
 
@@ -1170,191 +1159,4 @@ img {
 @keyframes fade {
   from {opacity: .5}
   to {opacity: 1}
-}
-
-/* On smaller screens, decrease text size */
-@media only screen and (max-width: 991px) {
-  .prev,
-  .next,
-  .text {font-size: 11px}
-
-  .slideshow-container {
-    height: fit-content; 
-  }
-}
-
-
-
-/*---------------------------------------
-  RESPONSIVE STYLES               
------------------------------------------*/
-.responsive {
-  width: 100%;
-  max-width: 100px;
-  height: auto;
-}
-
-@media screen and (min-width: 1600px) {
-  .portfolio-two-column {
-    min-height: 232.5px;
-  }
-}
-
-@media screen and (max-width: 991px) {
-  h1 {
-    font-size: 48px;
-  }
-  h2 {
-    font-size: 36px;
-  }
-  h3 {
-    font-size: 32px;
-  }
-  h4 {
-    font-size: 28px;
-  }
-  h5 {
-    font-size: 20px;
-  }
-  h6 {
-    font-size: 18px;
-  }
-
-  .navbar {
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-
-  .section-padding {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
-  }
-
-  .team-thumb {
-    left: 0;
-    width: auto;
-  }
-
-  .portfolio-two-column {
-    height: auto !important; 
-    min-height: inherit;
-    width: auto !important; 
-    min-width: inherit;
-  }
-
-  .portfolio .col-12 .portfolio-two-column:first-child {
-    margin-bottom: 38px;
-  }
-
-  .logoH {
-
-    position: fixed !important;
-    top: -40% ;
-    right: -10%;
-    /* padding-top: -40% !important;
-    padding-right: -10% !important; */
-  }
-
-  .hero {
-    height: 40vh;
-  }
-
-  .custom-video {
-    object-fit: cover;
-    width: 100%;
-    height: 40vh;
-  }
-}
-
-@media screen and (min-width: 992px) {
-  .hero {
-    height: 100vh;
-  }
-
-  .custom-video,
-  .portfolio-detail-image {
-    object-fit: cover;
-    width: 100vw;
-    height: 100vh;
-  }
-
-  .sticky-wrapper {
-    position: relative;
-    bottom: 76px;
-  }
-
-}
-
-
-@media screen and (max-width: 767px) {
-  .portfolio-detail-title {
-    font-size: 36px;
-  }
-
-  .service-content .service-item {
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 25px 30px;
-    text-align: center;
-    color: #fff;
-    margin-bottom: 30px;
-  }
-}
-
-@media screen and (min-width: 360px)
-              and (max-width: 767px) {    
-  .portfolio-detail-title {
-    font-size: 30px;
-  }
-
-  h1 {
-    font-size: 30px;
-  }
-
-  .heroText p {
-    font-size: 11px;
-  }
-
-  .service-content {
-    padding-left: 0cm;
-    padding-right: 0cm;
-    background-attachment:scroll;
-    background-size: cover;
-    background-position: center center;
-  }
-
-  /* .contact-bg {
-    background-attachment: fixed;
-    min-height: 100vh;
-    background-size: cover;
-    background-position: center center;
-  }
-  
-  .contact-box {
-    margin-left: 1%;
-    margin-right: 1%;
-    padding-top: 1vh;
-    padding-bottom: 3vh;
-    box-sizing: border-box;
-  } */
-}
-
-@media screen and (max-width: 359px) {
-  .portfolio-detail-title {
-    font-size: 22px;
-  }
-
-  h1 {
-    font-size: 22px;
-  }
-
-  .heroText p {
-    font-size: 9px;
-  }
-
-  .logoH {
-    position: fixed;
-    top: -40% ;
-    right: -10%;
-  }
-
 }

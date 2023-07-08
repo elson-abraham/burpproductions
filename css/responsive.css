@@ -1,0 +1,195 @@
+/* Medium Layout: 1280px. */
+/* @media only screen and (min-width: 992px) and (max-width: 1200px) { 
+  
+} */
+/* Tablet Layout: 768px. */
+/* @media only screen and (min-width: 768px) and (max-width: 991px) { 
+  
+} */
+/* Mobile Layout: 320px. */
+/* @media only screen and (max-width: 767px) { 
+
+} */
+/* Wide Mobile Layout: 480px. */
+/* @media only screen and (min-width: 480px) and (max-width: 767px) { 
+
+} */
+
+/*---------------------------------------
+  RESPONSIVE STYLES               
+-----------------------------------------*/
+.responsive {
+  width: 100%;
+  max-width: 100px;
+  height: auto;
+}
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 991px) {
+    .prev,
+    .next,
+    .text {font-size: 11px}
+  
+    .slideshow-container {
+      height: fit-content; 
+    }
+  }
+  
+@media screen and (min-width: 1600px) {
+  .portfolio-two-column {
+    min-height: 232.5px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  h1 {
+    font-size: 48px;
+  }
+  h2 {
+    font-size: 36px;
+  }
+  h3 {
+    font-size: 32px;
+  }
+  h4 {
+    font-size: 28px;
+  }
+  h5 {
+    font-size: 20px;
+  }
+  h6 {
+    font-size: 18px;
+  }
+
+  .navbar {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .section-padding {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .team-thumb {
+    left: 0;
+    width: auto;
+  }
+
+  .portfolio-two-column {
+    height: auto !important; 
+    min-height: inherit;
+    width: auto !important; 
+    min-width: inherit;
+  }
+
+  .portfolio .col-12 .portfolio-two-column:first-child {
+    margin-bottom: 38px;
+  }
+
+  .logoH {
+    position: fixed !important;
+    top: -40% ;
+    right: -10%;
+  }
+
+  .hero {
+    height: 40vh;
+  }
+
+  .custom-video {
+    object-fit: cover;
+    width: 100%;
+    height: 40vh;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .hero {
+    height: 100vh;
+  }
+
+  .custom-video,
+  .portfolio-detail-image {
+    object-fit: cover;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .sticky-wrapper {
+    position: relative;
+    bottom: 76px;
+  }
+
+}
+
+@media screen and (max-width: 767px) {
+  .portfolio-detail-title {
+    font-size: 36px;
+  }
+
+  .service-content .service-item {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 25px 30px;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 30px;
+  }
+}
+
+@media screen and (min-width: 360px) and (max-width: 767px) {    
+  .portfolio-detail-title {
+    font-size: 30px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .heroText p {
+    font-size: 11px;
+  }
+
+  .service-content {
+    padding-left: 0cm;
+    padding-right: 0cm;
+    background-attachment:scroll;
+    background-size: cover;
+    background-position: center center;
+  }
+/*
+
+   .contact-bg {
+    background-attachment: fixed;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center center;
+  }*/
+  
+  .contact-box {
+    padding-left: 1%;
+    padding-right: 1%;
+    box-sizing: border-box;
+
+  } 
+}
+
+@media screen and (max-width: 359px) {
+  .portfolio-detail-title {
+    font-size: 22px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  .heroText p {
+    font-size: 9px;
+  }
+
+  .logoH {
+    position: fixed;
+    top: -40% ;
+    right: -10%;
+  }
+
+}
