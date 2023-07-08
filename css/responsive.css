@@ -156,6 +156,14 @@
     background-size: cover;
     background-position: center center;
   }
+
+  .pic {
+    height: 100px;
+  }
+  .pic img {
+    height: 100px;
+ 
+  }
 /*
 
    .contact-bg {
@@ -171,6 +179,8 @@
     box-sizing: border-box;
 
   } 
+
+
 }
 
 @media screen and (max-width: 359px) {
@@ -192,4 +202,11 @@
     right: -10%;
   }
 
+  .pic {
+    height: 70px;
+  }
+  .pic img {
+    height: 70px;
+ 
+  }
 }
