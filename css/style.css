@@ -41,13 +41,6 @@ body {
     position: relative;
 }
 
-.bg_services {
-  background-image: url('/images/PV2.0/IMG_7.JPG');
-  background-repeat: no-repeat;
-  background-attachment: fixed;  
-  background-size: cover;
-}
-
 /*---------------------------------------
   PRE LOADER              
 -----------------------------------------*/
@@ -682,15 +675,19 @@ strong {
   margin: 20px;
 }
 
+.bg_services {
+  background-image: url('https://drive.google.com/uc?export=view&id=1yfXXv1YWMxp2nh6rmRmp2gYr9mDpDQTL');
+  background-repeat: no-repeat;
+  background-attachment: fixed;  
+  background-size: cover;
+  background-position: center center;
+}
+
 .service-content {
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 15vh;
-  background-image: url(../images/PV2.0/IMG_7.JPG);
-  background-attachment: fixed;
   min-height: 100vh;
-  background-size: cover;
-  background-position: center center;
 }
 
 .service-content .left-text ul {
@@ -959,7 +956,7 @@ strong {
 -----------------------------------------*/
 
 .contact-bg {
-  background-image: url(../images/PV2.0/IMG_15.jpg);
+  background-image: url('https://drive.google.com/uc?export=view&id=1t4oeYja8c2MZ7xI_j9_axtqyJJ0w70Mj');
   background-attachment: fixed;
   min-height: 100vh;
   background-size: cover;
