@@ -5,38 +5,27 @@
 
 /* Tablet Layout: 768px. */
 @media only screen and (min-width: 768px) and (max-width: 991px) { 
-  iframe {
-    width: 45%;
-    align-content: center;
- 
-  }
+
 }
 
 /* Wide Mobile Layout: 480px. */
 @media only screen and (min-width: 480px) and (max-width: 767px) { 
 
   iframe {
-    width: 50%;  
+    /* width: 99% !important; */
+    align-content: center;
   }
 }
 
 /* Mobile Layout: 320px. */
 @media only screen and (max-width: 767px) {
 
-  iframe {
-    width: 60%;  
-    align-content: center;
 
-  }
 
 }
 
 /* Small Mobile Layout: 320px. */
 @media screen and (max-width: 359px) {
 
-  iframe {
-    width: 90%;
-
-  }
 
 }
