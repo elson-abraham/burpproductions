@@ -23,9 +23,15 @@
     <link href="css/bootstrap-icons.css" rel="stylesheet">
     <link href="css/magnific-popup.css" rel="stylesheet">
     <link href="css/aos.css" rel="stylesheet">
-    <link href="css/style1.css" rel="stylesheet">
-    <link href="css/downloadstyles.css" rel="stylesheet">
-
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/dwnstyle.css" rel="stylesheet">
+    <script>
+        const handleLogout = () => {
+            window.localStorage.clear();
+            window.location.reload(true);
+            window.location.replace('https://burpproductions.com/login.html');
+        };
+    </script>
 </head>
 
 <body>
@@ -37,17 +43,16 @@
             </div>
         </div>
 
-
-
         <nav class="navbar navbar-expand-lg bg-light shadow-lg">
             <div class="container">
                 <a class="navbar-brand" href="#">
                     <strong>Burp Productions | Downloads</strong>
                 </a>
-                <button class="button logout-btn" href="#">Logout</button>
+                <button class="button logout-btn" onclick="handleLogout()">Logout
+                    <i className="fas fa-power-off"></i>
+                </button>
             </div>
         </nav>
-
 
         <div>
             <a class="" href="#">
@@ -58,12 +63,6 @@
         <div>
             <iframe class="embdgdrive" src="https://drive.google.com/a/burpproductions/embeddedfolderview?id=1PaLifUqkWekwH6fue1XYJRj_lnuC9UVo#grid" ></iframe>
         </div>
-
-
-
-
-
-
 
 
     </main>
