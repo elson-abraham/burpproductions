@@ -1,0 +1,67 @@
+* {
+  box-sizing: border-box;
+}
+
+/*---------------------------------------
+CUSTOM PROPERTIES ( VARIABLES )             
+-----------------------------------------*/
+:root {
+  --white-color: #FFFFFF;
+  --primary-color: #ffc107;
+  --secondary-color: #FD8535;
+  --section-bg-color: #f9f9f9;
+  --dark-color: #000000;
+  --grey-color: #fcfeff;
+  --text-secondary-white-color: rgba(255, 255, 255, 0.98);
+  --title-color: #565758;
+  --p-color: #717275;
+
+  --body-font-family: 'Noto Sans JP', sans-serif;
+
+  --h1-font-size: 72px;
+  --h2-font-size: 42px;
+  --h3-font-size: 36px;
+  --h4-font-size: 25px;
+  --h5-font-size: 24px;
+  --h6-font-size: 22px;
+  --p-font-size: 20px;
+  --copyright-text-font-size: 14px;
+  --custom-link-font-size: 12px;
+
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+}
+
+html {
+  height: 100%;
+}
+
+
+.bi {
+  color: var(--secondary-color);
+}
+
+iframe {
+  width: 45%;
+  height: 630px;
+  /* margin-top: 1%; */
+
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.logo {
+  width: 18%;
+  /* position: absolute; */
+  /* z-index: 2; */
+}
