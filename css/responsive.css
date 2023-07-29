@@ -214,4 +214,9 @@
     height: 70px;
  
   }
+  .bg_services  {
+    background-repeat: no-repeat;
+    background-attachment: fixed;    
+    background-size: cover;
+  }
 }

@@ -780,10 +780,10 @@ strong {
   align-content: center;
 } */
 
-
 .portfolio,
 .related-portfolio {
-  background: var(--section-bg-color);
+  /* background: var(--section-bg-color); */
+  background:#9999997a;
 }
 
 .portfolio-thumb {
@@ -956,7 +956,8 @@ strong {
 -----------------------------------------*/
 
 .contact-bg {
-  background-image: url('https://drive.google.com/uc?export=view&id=1t4oeYja8c2MZ7xI_j9_axtqyJJ0w70Mj');
+  padding-top: 1%;
+  background-image: url('https://drive.google.com/uc?export=view&id=1F1fyLNMop8qQ-NEj2ophFaiSEJrVyObk');
   background-attachment: fixed;
   min-height: 100vh;
   background-size: cover;
@@ -1088,12 +1089,16 @@ img {
 /* Slideshow container */
 .slideshow-container {
   position: relative;
-  border: 1px solid #ddd;
-  border-radius: 4px;  
-  padding: 5px; 
+  /* border: 1px solid #ddd;
+  border-radius: 4px;   */
+  object-fit: cover;
+  padding: 0px; 
   width: 800px;
-  height: 455px; 
+  height: 450px; 
   margin: auto;
+  border: none;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.541);
+
 }
 
 /* Hide the images by default */
