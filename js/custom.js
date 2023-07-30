@@ -84,31 +84,15 @@
       timeoutId = setTimeout(showSlides, 3000); // Change image every 5 seconds
     }
 
-    //VIEW MORE VIEW LESS
-    function vMore() {
-      var dots = document.getElementById("dots");
-      var moreText = document.getElementById("more");
-      var btnText = document.getElementById("moreBtn");
-    
-      if (dots.style.display === "none") {
-        dots.style.display = "inline";
-        btnText.innerHTML = "View more";
-        moreText.style.display = "none";
-      } else {
-        dots.style.display = "none";
-        btnText.innerHTML = "View less";
-        moreText.style.display = "inline";
-      }
-    }
-
-    function passwd(){
-      var password = prompt('Enter the password');
-      if(password.toLowerCase() == "hereinBurpProductions7991"){
-        window.open("folder/history.zip")    
-      }else{
-        alert("incorrect password!! please try again");
-      }
-    }
+    //
+    // function passwd(){
+    //   var password = prompt('Enter the password');
+    //   if(password.toLowerCase() == "hereinBurpProductions7991"){
+    //     window.open("folder/history.zip")    
+    //   }else{
+    //     alert("incorrect password!! please try again");
+    //   }
+    // }
 
 
     //CAPATCHA CHECH
