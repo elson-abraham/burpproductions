@@ -164,6 +164,19 @@
     height: 100px;
  
   }
+  .video-gallery{
+
+    grid-template-columns: repeat(2, 1fr);
+    /* grid-gap: 10px; */
+  }
+  .vid {
+    height: 100px;
+  }
+  .vid video {
+    height: 100px;
+ 
+  }
+  
 /*
 
    .contact-bg {
@@ -183,7 +196,7 @@
   .bg_services  {
     background-repeat: no-repeat;
     background-attachment: fixed;    
-    background-size: cover;
+    background-size: cover !important;
   }
 
 }

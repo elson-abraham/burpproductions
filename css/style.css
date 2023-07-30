@@ -790,19 +790,6 @@ strong {
 /*---------------------------------------
   PORTFOLIO               
 -----------------------------------------*/
-/* 
-.flex-container {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-}
-
-.flex-container > div {
-  padding: 0px;
-  max-width: 15%;
-  max-height: 15%;
-  align-content: center;
-} */
 
 .portfolio,
 .related-portfolio {
@@ -965,15 +952,38 @@ strong {
 
 }
 
+.video-gallery{
+  width: 96%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+}
+
+.vid {
+  position: relative;
+  height: 200px;
+  border-radius: 7px;
+  box-shadow: 3px 3px 5px lightgray;
+  cursor: pointer;
+}
+
+.vid video {
+  width: 100%;
+  height: 200px;
+  border-radius: 1px;
+  object-fit: cover;
+}
+
 /*---------------------------------------
   SECTION               
 -----------------------------------------*/
+
 .section-padding {
   padding-top: 7rem;
   padding-bottom: 7rem;
 
 }
-
 
 /*---------------------------------------
   CONTACT              
