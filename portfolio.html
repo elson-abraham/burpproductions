@@ -264,7 +264,6 @@
                         </div>
                         
                     </div>
-
                 </div>
             </div>
         </section>
@@ -564,27 +563,6 @@
             </div>
             </section>
     </footer>
-
-    <script>
-        $(document).ready(function () {
-            var images = $(".handler > div").hide(), x = 1;
-            var showMore = $('#showMore');
-            var showLess = $('#showLess');
-            var funcs = {
-                'showMore': function () { ++x; show(); },
-                'showLess': function () { --x; show(); }
-            }
-            $('.controls').on('click', 'a', function (e) {
-                return (funcs[e.target.id] || function () { })(), false;
-            });
-            function show() {
-                images.hide().filter(function (i) { return i < (x * 3); }).show();
-                showMore.show().filter(function () { return !images.is(':hidden'); }).hide();
-                showLess.show().filter(function () { return x === 1; }).hide();
-            }
-            show();
-        });
-    </script>
 
     <!-- JAVASCRIPT FILES -->
     <script src="js/jquery.min.js"></script>
