@@ -177,9 +177,7 @@
  
   }
   
-/*
-
-   .contact-bg {
+/*.contact-bg {
     background-attachment: fixed;
     min-height: 100vh;
     background-size: cover;
@@ -197,6 +195,13 @@
     background-repeat: no-repeat;
     background-attachment: fixed;    
     background-size: cover !important;
+  }
+
+  #myBtn {
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+
   }
 
 }
@@ -230,6 +235,13 @@
   .bg_services  {
     background-repeat: no-repeat;
     background-attachment: fixed;    
-    background-size: cover;
+    background-size: cover !important;
+  }
+  
+  #myBtn {
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+
   }
 }
