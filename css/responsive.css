@@ -23,17 +23,21 @@
   max-width: 100px;
   height: auto;
 }
+
 /* On smaller screens, decrease text size */
 @media only screen and (max-width: 991px) {
-    .prev,
-    .next,
-    .text {font-size: 11px}
-  
-    .slideshow-container {
-      height: fit-content; 
-    }
+
+  .prev,
+  .next,
+  .text {
+    font-size: 11px
   }
-  
+
+  .slideshow-container {
+    height: fit-content;
+  }
+}
+
 @media screen and (min-width: 1600px) {
   .portfolio-two-column {
     min-height: 232.5px;
@@ -44,18 +48,23 @@
   h1 {
     font-size: 48px;
   }
+
   h2 {
     font-size: 36px;
   }
+
   h3 {
     font-size: 32px;
   }
+
   h4 {
     font-size: 28px;
   }
+
   h5 {
     font-size: 20px;
   }
+
   h6 {
     font-size: 18px;
   }
@@ -76,9 +85,9 @@
   }
 
   .portfolio-two-column {
-    height: auto !important; 
+    height: auto !important;
     min-height: inherit;
-    width: auto !important; 
+    width: auto !important;
     min-width: inherit;
   }
 
@@ -88,7 +97,7 @@
 
   .logoH {
     position: fixed !important;
-    top: -40% ;
+    top: -40%;
     right: -10%;
   }
 
@@ -136,7 +145,7 @@
   }
 }
 
-@media screen and (min-width: 360px) and (max-width: 767px) {    
+@media screen and (min-width: 360px) and (max-width: 767px) {
   .portfolio-detail-title {
     font-size: 30px;
   }
@@ -152,7 +161,7 @@
   .service-content {
     padding-left: 0cm;
     padding-right: 0cm;
-    background-attachment:scroll;
+    background-attachment: scroll;
     background-size: cover;
     background-position: center center;
   }
@@ -160,41 +169,50 @@
   .pic {
     height: 100px;
   }
+
   .pic img {
     height: 100px;
- 
+
   }
-  .video-gallery{
+
+  .video-gallery {
 
     grid-template-columns: repeat(2, 1fr);
     /* grid-gap: 10px; */
   }
+
   .vid {
     height: 100px;
   }
+
   .vid video {
     height: 100px;
- 
+
   }
-  
-/*.contact-bg {
+
+  .contact-bg {
+    background-repeat: no-repeat;
     background-attachment: fixed;
-    min-height: 100vh;
     background-size: cover;
-    background-position: center center;
-  }*/
-  
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+  }
+
   .contact-box {
     padding-left: 1%;
     padding-right: 1%;
     box-sizing: border-box;
 
-  } 
+  }
 
-  .bg_services  {
+  .bg_services {
     background-repeat: no-repeat;
-    background-attachment: scroll;    
-    background-size: cover !important;
+    background-attachment: fixed;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
   }
 
   #myBtn {
@@ -221,28 +239,33 @@
 
   .logoH {
     position: fixed;
-    top: -40% ;
+    top: -40%;
     right: -10%;
   }
 
   .pic {
     height: 70px;
   }
+
   .pic img {
     height: 70px;
- 
+
   }
-  .bg_services  {
+
+  .bg_services {
     background-repeat: no-repeat;
-    background-attachment: scroll;    
-    background-size: cover !important;
+    background-attachment: fixed;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
   }
-  
+
   #myBtn {
     font-size: 15px;
     width: 40px;
     height: 40px;
 
   }
-  
+
 }

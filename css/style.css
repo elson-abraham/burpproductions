@@ -42,21 +42,6 @@ body {
   position: relative;
 }
 
-body:after{
-  content:"";
-  position:fixed; /* stretch a fixed position to the whole screen */
-  top:0;
-  height:100vh; /* fix for mobile browser address bar appearing disappearing */
-  left:0;
-  right:0;
-  z-index:-1; /* needed to keep in the background */
-  /* background: url(https://newevolutiondesigns.com/images/freebies/nature-hd-background-9.jpg) center center; */
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-
 /*---------------------------------------
   PRE LOADER              
 -----------------------------------------*/
@@ -725,6 +710,9 @@ strong {
   background-attachment: fixed;  
   background-size: cover;
   background-position: center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
 }
 
 .service-content {
@@ -788,7 +776,6 @@ strong {
 
 }
 
-
 .primary-button a {
   display: inline-block;
   background-color: var(--primary-color);
@@ -805,7 +792,6 @@ strong {
 .service-item:hover {
   background-color: #ffc107;
 }
-
 
 /*---------------------------------------
   PORTFOLIO               
@@ -1016,6 +1002,9 @@ strong {
   min-height: 100vh;
   background-size: cover;
   background-position: center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
 }
 
 .contact-box {
