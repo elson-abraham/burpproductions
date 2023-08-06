@@ -407,12 +407,14 @@ a.btn-mod:focus {
 }
 
 #myBtn {
-  object-position: center;
+  background-image: url('https://drive.google.com/uc?export=view&id=1ZVrhpPTp6N7n3UOKbEBw3LeOUb6Ponzv');
+  background-size: 40px 40px;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
   border-radius: 50%; /* Rounded corners */
-  font-weight: 100;
-  font-size: 30px;
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   display: none; /* Hidden by default */
   position: fixed; /* Fixed/sticky position */
   bottom: 20px; /* Place the button at the bottom of the page */
@@ -420,16 +422,13 @@ a.btn-mod:focus {
   z-index: 99; /* Make sure it does not overlap */
   border: none; /* Remove borders */
   outline: none; /* Remove outline */
-  background-color: rgba(0, 0, 0, 0.534); /* Set a background color */
-  color: var(--primary-color); /* Text color */
+  background-color: rgba(0, 0, 0, 0.534); 
   cursor: pointer; /* Add a mouse pointer on hover */
 
 }
 
 #myBtn:hover {
   background-color: var(--primary-color); /* Add a dark-grey background on hover */
-  color: rgb(0, 0, 0); /* Text color */
-
 }
 
 /*---------------------------------------
