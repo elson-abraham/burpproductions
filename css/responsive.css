@@ -193,7 +193,7 @@
 
   .bg_services  {
     background-repeat: no-repeat;
-    background-attachment: fixed;    
+    background-attachment: scroll;    
     background-size: cover !important;
   }
 
@@ -234,7 +234,7 @@
   }
   .bg_services  {
     background-repeat: no-repeat;
-    background-attachment: fixed;    
+    background-attachment: scroll;    
     background-size: cover !important;
   }
   
