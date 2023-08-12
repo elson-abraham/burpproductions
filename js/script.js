@@ -227,44 +227,44 @@ function showList() {
     });
 }
 
-// function readEditDownload(v, condition) {
-//   var id = v.parentElement.getAttribute("data-id");
-//   var name = v.parentElement.getAttribute("data-name");
-//   v.innerHTML = "...";
-//   gapi.client.drive.files
-//     .get({
-//       fileId: id,
-//       alt: "media",
-//     })
-//     .then(function (res) {
-//       expandContainer.style.display = "none";
-//       expandContainerUl.setAttribute("data-id", "");
-//       expandContainerUl.setAttribute("data-name", "");
-//       if (condition == "read") {
-//         v.innerHTML = "Read";
-//         document.querySelector("textarea").value = res.body;
-//         document.documentElement.scrollTop = 0;
-//         console.log("Read Now");
-//       } else if (condition == "edit") {
-//         v.innerHTML = "Edit";
-//         document.querySelector("textarea").value = res.body;
-//         document.documentElement.scrollTop = 0;
-//         var updateBtn = document.getElementsByClassName("upload")[0];
-//         updateBtn.innerHTML = "Update";
-//         // we will make the update function later
-//         updateBtn.setAttribute("onClick", "update()");
-//         document.querySelector("textarea").setAttribute("data-update-id", id);
-//         console.log("File ready for update");
-//       } else {
-//         v.innerHTML = "Download";
-//         var blob = new Blob([res.body], { type: "plain/text" });
-//         var a = document.createElement("a");
-//         a.href = window.URL.createObjectURL(blob);
-//         a.download = name;
-//         a.click();
-//       }
-//     });
-// }
+function readEditDownload(v, condition) {
+  var id = v.parentElement.getAttribute("data-id");
+  var name = v.parentElement.getAttribute("data-name");
+  v.innerHTML = "...";
+  gapi.client.drive.files
+    .get({
+      fileId: id,
+      alt: "media",
+    })
+    .then(function (res) {
+      expandContainer.style.display = "none";
+      expandContainerUl.setAttribute("data-id", "");
+      expandContainerUl.setAttribute("data-name", "");
+      if (condition == "read") {
+        v.innerHTML = "Read";
+        document.querySelector("textarea").value = res.body;
+        document.documentElement.scrollTop = 0;
+        console.log("Read Now");
+      } else if (condition == "edit") {
+        v.innerHTML = "Edit";
+        document.querySelector("textarea").value = res.body;
+        document.documentElement.scrollTop = 0;
+        var updateBtn = document.getElementsByClassName("upload")[0];
+        updateBtn.innerHTML = "Update";
+        // we will make the update function later
+        updateBtn.setAttribute("onClick", "update()");
+        document.querySelector("textarea").setAttribute("data-update-id", id);
+        console.log("File ready for update");
+      } else {
+        v.innerHTML = "Download";
+        var blob = new Blob([res.body], { type: "plain/text" });
+        var a = document.createElement("a");
+        a.href = window.URL.createObjectURL(blob);
+        a.download = name;
+        a.click();
+      }
+    });
+}
 
 // new create update function
 function update() {
@@ -293,22 +293,22 @@ function update() {
     .catch((err) => console.error(err));
 }
 
-// function deleteFile(v) {
-//   var id = v.parentElement.getAttribute("data-id");
-//   v.innerHTML = "...";
-//   var request = gapi.client.drive.files.delete({
-//     fileId: id,
-//   });
-//   request.execute(function (res) {
-//     console.log("File Deleted");
-//     v.innerHTML = "Delete";
-//     expandContainer.style.display = "none";
-//     expandContainerUl.setAttribute("data-id", "");
-//     expandContainerUl.setAttribute("data-name", "");
-//     // after delete update the list
-//     showList();
-//   });
-// }
+function deleteFile(v) {
+  var id = v.parentElement.getAttribute("data-id");
+  v.innerHTML = "...";
+  var request = gapi.client.drive.files.delete({
+    fileId: id,
+  });
+  request.execute(function (res) {
+    console.log("File Deleted");
+    v.innerHTML = "Delete";
+    expandContainer.style.display = "none";
+    expandContainerUl.setAttribute("data-id", "");
+    expandContainerUl.setAttribute("data-name", "");
+    // after delete update the list
+    showList();
+  });
+}
 
 //#################################################################################
 
