@@ -74,10 +74,10 @@
     padding-bottom: 10px;
   }
 
-  .section-padding {
-    padding-top: 6rem;
+  /* .section-padding {
+    padding-top: 2rem;
     padding-bottom: 6rem;
-  }
+  } */
 
   .team-thumb {
     left: 0;
@@ -218,6 +218,12 @@
 }
 
 @media screen and (max-width: 359px) {
+
+    .section-padding {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+  }
+
   .portfolio-detail-title {
     font-size: 22px;
   }
