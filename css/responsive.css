@@ -219,7 +219,7 @@
 
 @media screen and (max-width: 359px) {
 
-    .section-padding {
+  .section-padding {
     padding-top: 1rem;
     padding-bottom: 2rem;
   }
