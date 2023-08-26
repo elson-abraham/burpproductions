@@ -81,7 +81,7 @@
       if(timeoutId) {
         clearTimeout(timeoutId);
       }
-      timeoutId = setTimeout(showSlides, 3000); // Change image every 5 seconds
+      timeoutId = setTimeout(showSlides, 1500); // Change image every 1.5 seconds
     }
 
     //
