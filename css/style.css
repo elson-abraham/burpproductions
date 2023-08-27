@@ -881,7 +881,7 @@ strong {
   width: 33.33%;
   margin: auto;
   display: inline-block;
-  padding: 0px 20px 20px 0;
+  padding: 0px 20px 20px 20px;
 }
 
 .photo-gallery a img {
