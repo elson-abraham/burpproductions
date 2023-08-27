@@ -163,11 +163,11 @@
     padding-right: 0cm;
   }
 
-  .pic {
+  .photo-gallery a {
     height: 100px;
   }
 
-  .pic img {
+  .photo-gallery a img {
     height: 100px;
   }
 
@@ -242,11 +242,11 @@
     right: -10%;
   }
 
-  .pic {
+  .photo-gallery a {
     height: 70px;
   }
 
-  .pic img {
+  .photo-gallery a img {
     height: 70px;
 
   }
