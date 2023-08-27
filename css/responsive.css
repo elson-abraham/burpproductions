@@ -214,6 +214,10 @@
     width: 40px;
     height: 40px;
   }
+  
+  .load-button a {
+    margin-left: 40%; 
+  }
 
 }
 
@@ -265,6 +269,10 @@
     font-size: 15px;
     width: 40px;
     height: 40px;
+  }
+
+  .load-button a {
+    margin-left: 40%; 
   }
 
 }
