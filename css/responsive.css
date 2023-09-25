@@ -42,6 +42,10 @@
   .portfolio-two-column {
     min-height: 232.5px;
   }
+
+  .cookies-container  {
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 991px) {
@@ -252,7 +256,6 @@
 
   .photo-gallery a img {
     height: 70px;
-
   }
 
   .bg_services {
@@ -274,5 +277,6 @@
   .load-button a {
     margin-left: 40%; 
   }
+
 
 }
