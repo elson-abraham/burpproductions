@@ -131,10 +131,15 @@
                     <!-- PHOTO GALLERY -->
                     <div class="photo-gallery"></div>
 
-                    <div class="load-button">
-                        <a id="loadph">Show More...</a>
-                    </div>
+                    <!-- <div class="load-button">  btn btn-mod btn-w btn-large btn-round
+                        <a id="loadph">Show More</a>
+                    </div> -->
                     
+
+                    <!-- <div id="loadph" class="btn btn-mod btn-w btn-large btn-round" style="width: 20%; margin-left: 40%;">Show More
+                    </div> -->
+                    
+
                     <script>                
                         var linksph = [
                         "https://drive.google.com/uc?export=view&id=1-eF0sb-znpMCEDEtcFnMIc3Ux9k7oKWa",
@@ -169,8 +174,8 @@
                         var $galleryph = $(".photo-gallery").first();
                         var $loadMoreph = $("#loadph");
 
-                        function loadMoreph(e) {
-                        for (var i = 0; i < 6; i++) {
+                        function loadMoreph() {
+                        for (var i = 0; i < 24; i++) {
                             if (linksph.length) {
                                 var src = linksph.pop();
                                 var $link = $("<a>").addClass("image-popup");
@@ -478,8 +483,8 @@
 
                 <div class="col-lg-3 col-5 ms-auto">
                     <ul class="social-icon">
-<!--                         <li><a href="https://www.facebook.com/burpproductions" class="social-icon-link bi-facebook"  target="_blank"></a></li> -->
-                        <li><a href="#" class="social-icon-link bi-twitter"></a></li>
+                        <!-- <li><a href="https://www.facebook.com/burpproductions" class="social-icon-link bi-facebook"  target="_blank"></a></li>
+                        <li><a href="#" class="social-icon-link bi-twitter"></a></li> -->
                         <li><a href="https://wa.link/jlkkya" class="social-icon-link bi-whatsapp" target="_blank"></a></li>
                         <li><a href="https://www.instagram.com/burpproductions" class="social-icon-link bi-instagram" target="_blank"></a></li>
                         <li><a href="https://www.youtube.com/@burpproductions." class="social-icon-link bi-youtube" target="_blank"></a></li>
