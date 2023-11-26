@@ -151,7 +151,7 @@
 
 @media screen and (min-width: 360px) and (max-width: 767px) {
   .portfolio-detail-title {
-    font-size: 30px;
+    font-size: 30px; 
   }
 
   h1 {
@@ -159,7 +159,7 @@
   }
 
   .heroText p {
-    font-size: 11px;
+    font-size: 9px; //11
   }
 
   .service-content {
