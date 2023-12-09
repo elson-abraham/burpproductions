@@ -194,9 +194,9 @@
                             if (linksph.length) {
                                 var src = linksph.pop();
                                 var $link = $("<a>").addClass("image-popup");
-                                var $img = $("<img>").addClass("img-fluid");
+                                var $img = $("<img>").addClass("lazy");
 
-                                $img.attr("src", src);
+                                $img.attr("data-src", src);
                                 $link.attr("href", src).addClass("item");
 
                                 $link.append($img);
@@ -209,6 +209,58 @@
                         
                         $loadMoreph.on("click", loadMoreph);
                         loadMoreph();
+
+                        //LAZYLOAD
+                        document.addEventListener("DOMContentLoaded", function() {
+                            var lazyloadImages;    
+                        
+                            if ("IntersectionObserver" in window) {
+                            lazyloadImages = document.querySelectorAll(".lazy");
+                            var imageObserver = new IntersectionObserver(function(entries, observer) {
+                                entries.forEach(function(entry) {
+                                if (entry.isIntersecting) {
+                                    var image = entry.target;
+                                    image.src = image.dataset.src;
+                                    image.classList.remove("lazy");
+                                    imageObserver.unobserve(image);
+                                }
+                                });
+                            });
+                        
+                            lazyloadImages.forEach(function(image) {
+                                imageObserver.observe(image);
+                            });
+                            } else {  
+                            var lazyloadThrottleTimeout;
+                            lazyloadImages = document.querySelectorAll(".lazy");
+                            
+                            function lazyload () {
+                                if(lazyloadThrottleTimeout) {
+                                clearTimeout(lazyloadThrottleTimeout);
+                                }    
+                        
+                                lazyloadThrottleTimeout = setTimeout(function() {
+                                var scrollTop = window.pageYOffset;
+                                lazyloadImages.forEach(function(img) {
+                                    if(img.offsetTop < (window.innerHeight + scrollTop)) {
+                                        img.src = img.dataset.src;
+                                        img.classList.remove('lazy');
+                                    }
+                                });
+                                if(lazyloadImages.length == 0) { 
+                                    document.removeEventListener("scroll", lazyload);
+                                    window.removeEventListener("resize", lazyload);
+                                    window.removeEventListener("orientationChange", lazyload);
+                                }
+                                }, 20);
+                            }
+                        
+                            document.addEventListener("scroll", lazyload);
+                            window.addEventListener("resize", lazyload);
+                            window.addEventListener("orientationChange", lazyload);
+                            }
+                        })
+                        //LAZYLOAD
 
                     </script>
                    
@@ -229,6 +281,7 @@
                         <div>
                             <div class="vid" data-aos="fade-up">
                                 <!-- <video width="100%" height="100%" controls autoplay="" loop="" muted="" poster="" controlsList="nodownload"> -->
+
                                 <video width="100%" height="100%" controls preload="metadata" controlsList="nodownload">
                                     <source src="https://drive.google.com/uc?id=1fW3D_0MWbOnNHunkrYIL1q2KC1i0QkSl#t=0.2" type="video/mp4">
                                     Your browser does not support the video tag.
