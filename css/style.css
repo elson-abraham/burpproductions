@@ -1009,6 +1009,7 @@ strong {
 .photo-gallery a img {
   width: 100%;
   height: 300px;
+  display: block; /*LAZYLOAD*/
   border-radius: 1px;
   object-fit: cover;
 }
