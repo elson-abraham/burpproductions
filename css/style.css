@@ -511,8 +511,7 @@ strong {
 } */
 .navbar {
   z-index: 9;
-  position: relative;
-
+  position: relative; 
   right: 0;
   left: 0;
   padding-top: 15px;
@@ -692,9 +691,9 @@ strong {
 
 .logoH {
   position: fixed;
-  top: -110%;
+  top: -130%;
   right: -7%;
-  /* align-items: baseline; */
+  /* align-items: center; */
 }
 
 .logoF {

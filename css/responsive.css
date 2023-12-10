@@ -151,7 +151,7 @@
 
 @media screen and (min-width: 360px) and (max-width: 767px) {
   .portfolio-detail-title {
-    font-size: 30px; 
+    font-size: 30px;
   }
 
   h1 {
@@ -159,7 +159,13 @@
   }
 
   .heroText p {
-    font-size: 7px; //11
+    font-size: 11px;
+  }
+
+  .logoH {
+    position: fixed;
+    top: -80%;
+    right: -10%;
   }
 
   .service-content {
@@ -241,12 +247,12 @@
   }
 
   .heroText p {
-    font-size: 7px;  //9
+    font-size: 9px;
   }
 
   .logoH {
     position: fixed;
-    top: -40%;
+    top: -100%;
     right: -10%;
   }
 
