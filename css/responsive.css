@@ -42,10 +42,6 @@
   .portfolio-two-column {
     min-height: 232.5px;
   }
-
-  .cookies-container  {
-    width: 100%;
-  }
 }
 
 @media screen and (max-width: 991px) {
@@ -100,9 +96,7 @@
   }
 
   .logoH {
-    position: fixed !important;
-    top: -40%;
-    right: -10%;
+    max-width: 200px;
   }
 
   .hero {
@@ -163,9 +157,7 @@
   }
 
   .logoH {
-    position: fixed;
-    top: -80%;
-    right: -10%;
+    max-width: 200px;
   }
 
   .service-content {
@@ -251,9 +243,7 @@
   }
 
   .logoH {
-    position: fixed;
-    top: -90%;
-    right: -10%;
+    max-width: 150px;
   }
 
   .photo-gallery a {

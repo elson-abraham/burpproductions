@@ -685,10 +685,9 @@ strong {
 }
 
 .logoH {
-  position: fixed;
-  top: -130%;
-  right: -7%;
-  /* align-items: center; */
+  width: 100%;
+  max-width: 300px;
+  height: auto;
 }
 
 .logoF {
