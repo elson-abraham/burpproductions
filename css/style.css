@@ -505,18 +505,14 @@ strong {
 /*---------------------------------------
   NAVIGATION               
 -----------------------------------------*/
-/* nav  {
-  background-color: #00b8a334;
 
-} */
 .navbar {
   z-index: 9;
-  position: relative; 
+  /* position: relative;  */
   right: 0;
   left: 0;
   padding-top: 15px;
-  padding-bottom: 15px;
-  /* opacity: 0.6; */
+  padding-bottom: 17px;
 }
 
 .navbar-brand {
@@ -643,7 +639,6 @@ strong {
 .navbar-toggler .navbar-toggler-icon:after {
   top: 8px;
 }
-
 
 .dropdown {
   position: relative;
@@ -1285,54 +1280,3 @@ img {
   from {opacity: .5}
   to {opacity: 1}
 }
-
-/*---------------------------------------
-  COOKIES               
------------------------------------------*/
-
-.cookies-container  {
-  width: fit-content;
-  margin: auto;
-}
-
-.cookies-subcontainer {
-  width: 85%;
-  margin: auto;
-}
-
-#cookies  {
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 1;
-  display: none;
-}
-
-.cookies  {
-  min-height: 100px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-.cookies a  {
-  color: var(--primary-color);
-  font-weight: 500;
-  text-decoration: none;
-}
-
-#cookies-btn  {
-  border-radius: 5px;
-  padding: 8px 12px 8px 12px;
-  font-size: 1rem;
-  font-family: inherit;
-  cursor: pointer;
-  border: 3px solid white;
-  background-color: #000;
-  color: white;
-}
-
-
