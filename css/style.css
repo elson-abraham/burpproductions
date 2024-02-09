@@ -6,7 +6,7 @@
 /*---------------------------------------
   CUSTOM PROPERTIES ( VARIABLES )             
 -----------------------------------------*/
-:root {/*
+:root {
   --white-color:                  #FFFFFF;
   --primary-color:                #ffc107;    
   --section-bg-color:             #f9f9f9;
@@ -15,23 +15,9 @@
   --text-secondary-white-color:   rgba(255, 255, 255, 0.98);
   --title-color:                  #565758;    
   --p-color:                      #717275;
-  --keppel-color:                 #00B8A1;        Keppel ffc107
-  --polynesianblue-color:         #0054A0;      
-  --richblack:                    #0E1A2A;        */
-
-  --white-color:                  #FFFFFF;
-  --primary-color:                #ffc107;    
-  --section-bg-color:             #f9f9f9;
-  --dark-color:                   #000000;/*rgba(38, 38, 38);*/
-  --grey-color:                   #fcfeff;
-  --text-secondary-white-color:   rgba(255, 255, 255, 0.98);
-  --title-color:                  #565758;    
-  --p-color:                      #717275;
-  --p-hover-color:                #b6b7bd;
   --keppel-color:                 #00B8A1;       /* Keppel ffc107*/
   --polynesianblue-color:         #0054A0;       /* Polynesian blue */
   --richblack:                    #0E1A2A;       /* Rich black */
-  --dark-themebg:                 rgba(38, 38, 38);  
 
   --body-font-family:           'Noto Sans JP', sans-serif;
 
@@ -58,7 +44,7 @@ html {
 }
 
 body {
-  background: var(--dark-themebg);
+  background: var(--white-color);
   font-family: var(--body-font-family);
   position: relative;
 }
@@ -121,7 +107,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: var(--p-color);
+  color: var(--dark-color);
   line-height: inherit;
 }
 
@@ -165,7 +151,7 @@ h6 {
 }
 
 p {
-  color: var(--white-color);
+  color: var(--p-color);
   font-size: var(--p-font-size);
   font-weight: var(--font-weight-light);
   letter-spacing: 0.5px;
@@ -230,6 +216,34 @@ a:hover {
   bottom: 0;
   left: 0;
 }
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
 
 /* ==============================
    Buttons
@@ -553,7 +567,7 @@ strong {
 .navbar-nav .nav-item.active .nav-link,
 .nav-link:focus, 
 .nav-link:hover {
-  color: var(--p-hover-color);
+  color: var(--dark-color);
 }
 
 .nav-link:focus {
@@ -626,44 +640,33 @@ strong {
   top: 8px;
 }
 
-
 .dropdown {
   position: relative;
   display: inline-block;
-
-  transition: transform 0.5s;
-
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.25);
-  min-width: 200px;
+  background-color: #f1f1f1;
+  min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 99;
+  z-index: 1;
+  transform: translateY(20px);
 
 }
 
 .dropdown-content a {
-  color: white;
+  color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
-
 }
 
-.dropdown-content a:hover {
-  color: rgb(120, 120, 120);
-}
+.dropdown-content a:hover {background-color: var(--primary-color);}
 
-.dropdown:hover .dropdown-content {
-  display: block;
-} 
+.dropdown:hover .dropdown-content {display: block;}
 
-.dropdown:hover {
-  transform: translateY(5px);
-}
 
 /*---------------------------------------
   HERO              
@@ -1010,6 +1013,13 @@ strong {
   display: block; /*LAZYLOAD*/
   border-radius: 1px;
   object-fit: cover;
+}
+
+img.hover-shadow {
+  transition: 0.3s;
+}
+.hover-shadow:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 /* a {
