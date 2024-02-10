@@ -36,7 +36,7 @@
     <link href="css/bootstrap-icons.css" rel="stylesheet">
     <link href="css/magnific-popup.css" rel="stylesheet">
     <link href="css/aos.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style_light.css" rel="stylesheet">
     <link href="css/responsive.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -75,7 +75,7 @@
             <div class="overlay"></div>
         </section>
 
-        <nav class="navbar navbar-expand-lg">
+        <nav class="navbar navbar-expand-lg bg-light shadow-lg">
             <div class="container">
                 <a class="navbar-brand" href="index.html">
                     <strong>Burp Productions</strong>
@@ -90,15 +90,15 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mx-auto active">
-                        <li class="nav-item dropdown">
+                        <li class="nav-item ">
                             <a class="nav-link" href="index.html">Home</a>
                         </li>
 
-                        <li class="nav-item dropdown">
+                        <li class="nav-item">
                             <a class="nav-link" href="index.html#about">Our Studio</a>
                         </li>
 
-                        <li class="nav-item dropdown">
+                        <li class="nav-item">
                             <a class="nav-link" href="index.html#services">Our Services</a>
                         </li>
 
@@ -144,20 +144,16 @@
                     <!-- PHOTO GALLERY -->
                     <div class="photo-gallery"></div>
 
+                    <!-- <div class="load-button">  btn btn-mod btn-w btn-large btn-round
+                        <a id="loadph">Show More</a>
+                    </div> -->
+                    
+
+                    <!-- <div id="loadph" class="btn btn-mod btn-w btn-large btn-round" style="width: 20%; margin-left: 40%;">Show More
+                    </div> -->
+
                     <script>                
                         var linksph = [
-                        "assets/images/portfolio/port30.JPG",
-                        "assets/images/portfolio/port29.JPG",
-                        "assets/images/portfolio/port28.JPEG",
-                        "assets/images/portfolio/port27.JPG",
-                        "assets/images/portfolio/port26.JPG",
-                        "assets/images/portfolio/port25.JPG",
-                        "assets/images/portfolio/port24.JPG",
-                        "assets/images/portfolio/port23.JPG",
-                        "assets/images/portfolio/port22.JPG",
-                        "assets/images/portfolio/port21.JPG",
-                        "assets/images/portfolio/port20.JPG",
-                        "assets/images/portfolio/port19.JPG",
                         "assets/images/portfolio/port18.JPG",
                         "assets/images/portfolio/port17.JPG",
                         "assets/images/portfolio/port16.JPG",
@@ -183,11 +179,11 @@
                         var $loadMoreph = $("#loadph");
 
                         function loadMoreph(e) {
-                        for (var i = 0; i < 30; i++) {
+                        for (var i = 0; i < 27; i++) {
                             if (linksph.length) {
                                 var src = linksph.pop();
                                 var $link = $("<a>").addClass("image-popup");
-                                var $img = $("<img>").addClass("lazy");
+                                var $img = $("<img>").addClass("lazy hover-shadow");
 
                                 $img.attr("data-src", src);
                                 $link.attr("href", src).addClass("item");
@@ -266,16 +262,15 @@
                 <div class="container relative">
                     <div class="row wow fadeInUpShort">
                         <div class="col-lg-5 offset-lg-2">
-                            <h3 class="call-action-1-heading" style="color: var(--primary-color);">Want to book our service?</h3>
-                            <div class="call-action-1-decription mb-0 pb-md-20" style="color: var(--p-color);">
+                            <h3 class="call-action-1-heading">Want to book our service?</h3>
+                            <div class="call-action-1-decription mb-0 pb-md-20">
                                 Get in touch.
                             </div>
                         </div>
                         <div class="col-lg-3 pt-10 text-lg-end">
                             <div class="local-scroll">
-                                <a href="contact.html#contact">
-                                    <button class="primary-button" ><em>Contact Us</em></button>
-                                </a>
+                                <a href="contact.html" target="" class="btn btn-mod btn-w btn-large btn-round">Contact
+                                    Us</a>
                             </div>
                         </div>
                     </div>
