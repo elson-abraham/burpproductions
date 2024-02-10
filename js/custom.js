@@ -84,7 +84,7 @@
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
-    timeoutId = setTimeout(showSlides, 4000); // Change image every 1 seconds
+    timeoutId = setTimeout(showSlides, 1000); // Change image every 1 seconds
   }
 
 })(window.jQuery);
