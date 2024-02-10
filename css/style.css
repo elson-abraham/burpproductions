@@ -98,6 +98,87 @@ body {
   to {transform: rotate(360deg);}
 }
 
+/*##########    MODE SWITCH   ##########*/
+.mode-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 28px;
+}
+
+.mode-switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #202020;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #202020;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(30px);
+  -ms-transform: translateX(30px);
+  transform: translateX(30px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+} 
+
+.slider:after {
+ content:'LIGHT';
+ color: white;
+ display: block;
+ position: absolute;
+ transform: translate(-50%,-50%);
+ top: 50%;
+ left: 70%;
+ font-size: 10px;
+ font-family: var(--body-font-family);
+}
+
+input:checked + .slider:after {  
+  content:'DARK';
+  left: 30%;
+
+}
+
+/*--------- END --------*/
+
 /*---------------------------------------
   TYPOGRAPHY               
 -----------------------------------------*/
@@ -494,7 +575,7 @@ a.btn-mod:focus {
 
 .custom-link:hover,
 .custom-link:hover::after {
-  color: var(--white-color);
+  color: var(--p-color);
 }
 
 b,
@@ -667,6 +748,11 @@ strong {
 
 .dropdown:hover .dropdown-content {display: block;}
 
+.nav-item-switch {
+  padding-top: 10px;
+  /* padding-left: 150px; */
+}
+
 
 /*---------------------------------------
   HERO              
@@ -723,7 +809,7 @@ strong {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 81.25%;
+  width: 76%;
   padding: 22px 32px 32px 32px;
 }
 
@@ -750,9 +836,10 @@ strong {
 /*---------------------------------------
   SERVICES               
 -----------------------------------------*/
-.serveces-header {
+.services-header {
   font-size: 24px; 
   color: var(--primary-color);
+  text-transform: uppercase;
 }
 
 .services-thumb {
@@ -761,23 +848,13 @@ strong {
 }
 
 .services {
-  background-color: var(--dark-color);
+  color: var(--dark-color);
 }
 
 .services-info {
   margin: 20px;
 }
 
-/* .bg_services {
-  background-image: url('https://drive.google.com/uc?export=view&id=1yfXXv1YWMxp2nh6rmRmp2gYr9mDpDQTL');
-  background-repeat: no-repeat;
-  background-attachment: fixed;  
-  background-size: cover;
-  background-position: center center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-} */
 
 .service-content {
   padding-left: 15px;
@@ -792,7 +869,6 @@ strong {
 .service-content .left-text h4 {
   font-size: 24px;
   font-weight: 500;
-  color: #fff;
 }
 .service-content .left-text .line-dec {
   width: 45px;
@@ -800,12 +876,12 @@ strong {
   background-color: var(--primary-color);
   margin: 20px 0px 20px 0px;
 }
-.service-content p {
+/* .service-content p {
   color: #fff;
-}
+} 
 .service-content .left-text p {
   color: #fff;
-}
+}*/
 .service-content .left-text ul {
   padding: 0;
   margin-top: 30px;
@@ -814,7 +890,6 @@ strong {
 .service-content .left-text ul li {
   margin: 15px 0px;
   font-weight: 600;
-  color: #fff;
 }
 .service-content .left-text .primary-button {
   margin: 30px 0px;
@@ -861,10 +936,6 @@ strong {
 /*---------------------------------------
   PORTFOLIO               
 -----------------------------------------*/
-
-.portfolio {
-  background: var(--dark-color);
-}
 
 .portfolio-thumb {
   position: relative;
@@ -1222,8 +1293,10 @@ img {
   position: relative;
   object-fit: cover;
   padding: 0px; 
-  width: 800px;
-  height: 450px; 
+  /* width: 800px;
+  height: 450px;  */
+  max-width: fit-content;
+  max-height: fit-content;
   margin: auto;
   border: none;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.541);
@@ -1271,7 +1344,7 @@ img {
   cursor: pointer;
   height: 7px;
   width: 7px;
-  margin: 0 2px;
+  margin: 0 10px;
   background-color: #999999;
   border-radius: 50%;
   display: inline-block;
