@@ -146,6 +146,18 @@
                                 <a href="tel:+919902676712">Call Now!</a>
                             </div>
                         </li>
+
+                        <!-- <li class="nav-item-switch">
+                            <label class="mode-switch">
+                                <input id="togBtn" type="checkbox">
+                                <div class="slider round"></div>
+                            </label>
+                        </li> -->
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="index_dark.html">Dark Mode</a>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -556,6 +568,25 @@
             document.body.scrollTop = 0; // For Safari
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         }
+
+
+        //Toggle Dark and Light Page
+        
+        $(document).ready(function(){
+            $('togBtn').on('togBtn',function(){
+                if(this.checked){
+                    window.location.href = "";
+                    // $("#info").text("U checked me, place some code here");
+                }
+                else{
+                    fetch('index.html')
+                    .then(response => response.text())
+                    .then(text => document.getElementById('togBtn').innerHTML = text);
+
+        	        // $("#info").text("U unchecked me, another piece of code here");
+                }
+            });
+        });
 
     </script>
 
