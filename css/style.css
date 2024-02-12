@@ -384,11 +384,11 @@ strong {
   left: 0;
   padding-top: 15px;
   padding-bottom: 17px;
-  background: rgba(20, 20, 20, 0.8);
+  background: rgba(20, 20, 20);
 }
 
 .navbar:hover{
-  background: rgba(20, 20, 20, 0.9);
+  background: rgba(20, 20, 20);
 }
 
 .navbar-brand {
@@ -529,8 +529,7 @@ strong {
   min-width: 200px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
   z-index: 1;
-  transform: translateY(10px);
-
+  /* transform: translateY(10px); */
 }
 
 .dropdown-content a {
@@ -538,7 +537,6 @@ strong {
   padding: 12px 16px;
   text-decoration: none;
   display: block;
-
 }
 
 .dropdown-content a:hover {
@@ -552,6 +550,8 @@ strong {
 .dropdown:hover {
   transform: translateY(5px);
 }
+
+
 
 /*---------------------------------------
   HERO              

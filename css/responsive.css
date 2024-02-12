@@ -130,6 +130,7 @@
 }
 
 @media screen and (max-width: 767px) {
+
   .portfolio-detail-title {
     font-size: 36px;
   }
@@ -144,6 +145,33 @@
 }
 
 @media screen and (min-width: 360px) and (max-width: 767px) {
+
+  .dropdown-content {
+    display: contents;
+    position: relative;
+    background-color: rgb(0, 0, 0);
+    min-width: 150px;
+  }
+
+  .dropdown-content a {
+    display: block;
+    line-height: 0%;
+  }
+
+  .dropdown:hover {
+    background-color: var(--dark-themebg);
+    transform: translateY(0%);
+  }
+  
+  .dropdown-content:hover {
+    background-color: var(--dark-themebg);
+    box-shadow: none;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: contents;
+  } 
+
   .portfolio-detail-title {
     font-size: 30px;
   }
