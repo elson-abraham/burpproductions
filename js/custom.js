@@ -87,63 +87,31 @@
     timeoutId = setTimeout(showSlides, 1000); // Change image every 1 seconds
   }
 
-	//Dark and Light mode Button
+	//DARK & LIGHT mode SLIDER
+  const toggleSwitch = document.querySelector(
+    '.theme-switch input[type="checkbox"]'
+  );
+  const currentTheme = localStorage.getItem("theme");
   
-	/**
- * Change the text of a button
- * @param {el} object HTMLElement: button to change text of
- * @param {dText} string: default text
- * @param {nText} string: new text
- **/
-	function changeText(el, dText, nText) {
-		var content = '',
-			context = '';
-
-		/**
-		 * Set the text of a button
-		 *     - dependant upon current text
-		 **/
-		function setText() {
-			return (content === dText) ? nText : dText;
-		}
-
-		/* Check to see if the browser accepts textContent */
-		if ('textContent' in document.body) {
-			context = 'textContent';
-			/* Get the current button text */
-			content = el[context];
-			/* Browser does NOT use textContent */
-		} else {
-			/* Get the button text with fallback option */
-			content = el.firstChild.nodeValue;
-		}
-
-		/* Set button text */
-		if (context === 'textContent') {
-			el.textContent = setText();
-		} else {
-			el.firstChild.nodeValue = setText();
-		}
-	}
-
-	var defaultText,
-		substituteText,
-		btn;
-
-	/* Default text of the button */
-	defaultText = 'Light Mode';
-	/* Alternate text for button */
-	substituteText = 'Dark Mode';
-	/* Grab our button */
-	btn = document.querySelector('.toggleMode');
-
-	/* Add a listener to the button instance so we can manipulate it */
-	btn.addEventListener('click', function () {
-		var element = document.body;
-		element.classList.toggle("light-mode");
-		
-		changeText(this, defaultText, substituteText);
-	}, false);
-
+  if (currentTheme) {
+    document.documentElement.setAttribute("data-theme", currentTheme);
+  
+    if (currentTheme === "dark") {
+      toggleSwitch.checked = true;
+    }
+  }
+  
+  function switchTheme(event) {
+    if (event.target.checked) {
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.setAttribute("data-theme", "light");
+      localStorage.setItem("theme", "light");
+    }
+  }
+  
+  toggleSwitch.addEventListener("change", switchTheme, false);
+  
 
 })(window.jQuery);
