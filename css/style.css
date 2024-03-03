@@ -56,6 +56,82 @@ body {
   position: relative;
 }
 
+/*---------------------------------------
+  LIGHT MODE              
+-----------------------------------------*/
+.toggleMode{
+  margin-left: 5rem;
+  border: none;
+  background-color:  rgb(255, 255, 255);
+  color: var(--dark-color);
+}
+
+.light-mode .toggleMode {
+  background-color:  rgba(20, 20, 20);
+  color: var(--primary-color);
+}
+
+.light-mode, 
+.light-mode .navbar,
+.light-mode .about p {
+  background-color: var(--primary-color);
+  color: var(--dark-color);
+}
+.light-mode .navbar-brand,
+.light-mode .ourstudio p,
+.light-mode .ourstudio h3,
+.light-mode .custom-link:hover,
+.light-mode .custom-link:hover::after,
+.light-mode .service-content p,
+.light-mode .services-header:hover,
+.light-mode .service-content a:hover,
+.light-mode em,
+.light-mode .small-section h3,
+.light-mode .portfolio p,
+.light-mode .downloads p,
+.light-mode .contact p,
+.light-mode .site-footer h5,
+.light-mode .site-footer a,
+.light-mode .site-footer p,
+.light-mode .site-footer .custom-link:hover,
+.light-mode .site-footer .social-icon-link:hover {
+  color: var(--dark-color);
+}
+
+.light-mode .service-item .line-dec{
+  background-color: var(--dark-color);
+}
+
+.light-mode .service-item {
+  box-shadow: 2px 2px 10px rgba(100, 100, 100, 0.404);
+}
+
+.light-mode .service-item:hover {
+  background-color: var(--p-hover-color);
+}
+
+.light-mode .box-anim {
+	border-image: conic-gradient(from var(--angle), var(--c2), var(--dark-color) 0.1turn, var(--dark-color) 0.15turn, var(--c2) 0.25turn) 30;
+}
+
+.light-mode .box-anim:nth-child(2) {
+	border-image: radial-gradient(ellipse at var(--gradX) var(--gradY), var(--dark-color), var(--dark-color) 10%, var(--c2) 40%) 30;
+}
+
+.light-mode .primary-button::before,
+.light-mode .primary-button::after,
+.light-mode em::before,
+.light-mode em::after {
+  border-color: var(--dark-color);
+}
+
+.light-mode .logoF {
+  content: url("/assets/images/logo_new/BURPFINALLOGO-5invertedfit.png");
+}
+
+.light-mode .site-footer .social-icon-link {
+  color: var(--p-color);
+}
 
 /*---------------------------------------
   PRE LOADER              
@@ -236,7 +312,6 @@ a:hover {
   background: none;
   border: none;
   cursor: pointer;
-  color: white;
   box-sizing: content-box;
   border: 2px solid transparent;
 
@@ -251,7 +326,8 @@ a:hover {
 }
 
 em {
-  font-style:normal;
+  font-style: normal;
+  color: var(--primary-color);
 }
 
 .primary-button::before, .primary-button::after, em::before, em::after {
@@ -384,12 +460,12 @@ strong {
   left: 0;
   padding-top: 15px;
   padding-bottom: 17px;
-  background: rgba(20, 20, 20);
+  background-color: rgba(20, 20, 20);
 }
 
-.navbar:hover{
+/* .navbar:hover{
   background: rgba(20, 20, 20);
-}
+} */
 
 .navbar-brand {
   color: var(--primary-color);
@@ -577,17 +653,16 @@ strong {
   height: auto;
 }
 
-.logoF {
-  width: 100%;
-  max-width: 250px;
-  height: auto;
-}
-
-
 
 /*---------------------------------------
   ABOUT & TEAM MEMBERS               
 -----------------------------------------*/
+.ourstudio h3 {
+  color: var(--primary-color);
+}
+
+
+
 .about-image {
   width: 100%;
   height: 100%;
@@ -651,10 +726,6 @@ strong {
   overflow: hidden;
 }
 
-.services {
-  background-color: var(--dark-themebg);
-}
-
 .services-info {
   margin: 20px;
 }
@@ -672,7 +743,6 @@ strong {
 .service-content .left-text h4 {
   font-size: 24px;
   font-weight: 500;
-  color: #fff;
 }
 .service-content .left-text .line-dec {
   width: 45px;
@@ -680,12 +750,7 @@ strong {
   background-color: var(--primary-color);
   margin: 20px auto 20px auto;
 }
-.service-content p {
-  color: #fff;
-}
-.service-content .left-text p {
-  color: #fff;
-}
+
 .service-content .left-text ul {
   padding: 0;
   margin-top: 30px;
@@ -694,17 +759,14 @@ strong {
 .service-content .left-text ul li {
   margin: 15px 0px;
   font-weight: 600;
-  color: #fff;
 }
 .service-content .left-text .primary-button {
   margin: 30px 0px;
 }
 
 .service-content .service-item {
-  background-color: rgba(25, 25, 25);
   padding: 25px 30px;
   text-align: center;
-  color: #fff;
   margin-bottom: 30px;
   transition-duration: 0.5s;
   transition-timing-function: linear;
@@ -790,10 +852,6 @@ strong {
 /*---------------------------------------
   PORTFOLIO               
 -----------------------------------------*/
-
-.portfolio {
-  background: var(--dark-themebg);
-}
 
 .portfolio-thumb {
   position: relative;
@@ -922,8 +980,10 @@ strong {
   
   padding: 140px 0;
 }
-.small-section{
-  padding: 100px 0;
+
+.small-section h3{
+  /* padding: 100px 0; */
+  color: var(--primary-color)
 }
 
 
@@ -1076,10 +1136,20 @@ video {
 /*---------------------------------------
   SITE FOOTER               
 -----------------------------------------*/
+.logoF {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  content: url("/assets/images/logo_new/BURPFINALLOGO-5.png");
+}
+
 .site-footer {
-  background: var(--dark-color);
   padding-top: 4.5rem;
   padding-bottom: 2.5rem;
+}
+
+.site-footer h5{
+  color: var(--primary-color);
 }
 
 .site-footer .custom-link {
