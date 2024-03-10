@@ -1073,7 +1073,7 @@ video {
   CONTACT              
 -----------------------------------------*/
 
-.contact-bg {
+/* .contact-bg {
   padding-top: 1%;
   background-image: url('https://drive.google.com/uc?export=view&id=1F1fyLNMop8qQ-NEj2ophFaiSEJrVyObk');
   background-attachment: fixed;
@@ -1083,7 +1083,7 @@ video {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-}
+} */
 
 .contact-box {
   padding-left: 5vh;
@@ -1115,10 +1115,10 @@ video {
 }
 
 .contact-form button[type='submit'] {
-  background: var(--dark-color);
+  background: var(--primary-color);
   border: none;
   border-radius: 100px;
-  color: var(--primary-color);
+  color: var(--p-color);
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   padding: 16px;
@@ -1128,7 +1128,8 @@ video {
 }
 
 .contact-form button[type='submit']:hover {
-  background: var(--primary-color);
+  background: var(--p-color);
+  color: var(--bg-color);
 }
 
 .form-label {
