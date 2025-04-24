@@ -141,6 +141,7 @@ input:checked {
         transform: translateX(26px);
     }
   }
+
 }
 
 /*---------------------------------------
@@ -1140,6 +1141,7 @@ video {
 .map-iframe {
   display: block;
   filter: grayscale(0);
+  /* filter: invert(100%); */
 }
 
 /*---------------------------------------
