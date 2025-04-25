@@ -275,8 +275,8 @@ a:hover {
 }
 
 .custom-underline {
-  border-bottom: 2px solid var(--light-color);
-  color: var(--light-color);
+  border-bottom: 2px solid var(--primary-color);
+  color: var(--primary-color);
   padding-bottom: 4px;
 }
 
