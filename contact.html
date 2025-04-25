@@ -47,6 +47,15 @@
             });
         };
     </script>
+    <script type="text/javascript">
+        var submitted=false;
+        var allowSubmit = false;
+        function capcha_filled () {allowSubmit = true;}
+        function capcha_expired () {allowSubmit = false;}
+        function check_if_capcha_is_filled (e) {if(allowSubmit) return true;
+            e.preventDefault();
+            alert('Fill in the capcha!');}
+    </script>
 </head>
 
 <body>
@@ -145,7 +154,7 @@
                                 Feel free to call or drop me a message.
                             </p>
                             <!-- HD-237, WeWork Prestige Cubesite, No-26 Laskar Hosur Road, Adugodi, Koramangala, Bengaluru, Karnataka - 560030 -->
-                            <div class="row">
+                            <div class="row contact-info">
                                 <div class="py-5">
                                     <strong>Burp Productions</strong><br>
                                     HD-237, WeWork Prestige Cubesite<br>
@@ -161,31 +170,23 @@
                             <div class="line-cus"></div><br>                  
                             <ul class="social-icon">
                                 <!-- <li><a href="https://www.facebook.com/burpproductions" class="social-icon-link bi-facebook" target="_blank"></a></li> -->
-                                <li><a href="#" class="social-icon-link bi-twitter"></a></li>
+                                <!-- <li><a href="#" class="social-icon-link bi-twitter"></a></li> -->
                                 <li><a href="https://wa.link/jlkkya" class="social-icon-link bi-whatsapp" target="_blank"></a></li>
                                 <li><a href="https://www.instagram.com/burpproductions" class="social-icon-link bi-instagram" target="_blank"></a></li>
                                 <li><a href="https://www.youtube.com/@burpproductions." class="social-icon-link bi-youtube" target="_blank"></a></li>
                             </ul>
-                            <div class="py-5" style="color: rgb(170, 170, 170); font-size: var(--custom-link-font-size); text-align: justify; margin: 10px;"><br>
+                            <div class="py-5 contact-privacy"><br>
                                 Your Privacy Matters: Rest assured that your privacy is of utmost importance to us. Any information you provide will be treated with the highest confidentiality. 
                                 We will only use it to respond to your inquiries, accommodate your photography requests, or communicate with you about our services. Your trust means the world to us.
                                 Get ready to experience photography that goes beyond the ordinary. Reach out to us today, and let's embark on a remarkable visual adventure together.<br>
-                                We can't wait to hear from you.
+                                <strong>We can't wait to hear from you.</strong>
                             </div>
                         </div>
                     </div>
 
                     <div class="container-fluid col-lg-7 contact-box">
                         <h2 class="mb-4 text-center" data-aos="fade-up">Dont' be shy, write to us</h2>                                  
-                        <script type="text/javascript">
-                            var submitted=false;
-                            var allowSubmit = false;
-                            function capcha_filled () {allowSubmit = true;}
-                            function capcha_expired () {allowSubmit = false;}
-                            function check_if_capcha_is_filled (e) {if(allowSubmit) return true;
-                                e.preventDefault();
-                                alert('Fill in the capcha!');}
-                        </script>
+
                         <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {window.location='thankyou.html';}">
                         </iframe>
 
@@ -235,7 +236,7 @@
                                     <label for="services" class="form-label">Pick a date (optional)</label>
                                 </div>
 
-                                <div>
+                                <div class="form-date">
                                     <label for="date">Date: </label>
                                     <input type="date" id="date" name="entry.1466843230">
                                 </div>
@@ -253,6 +254,7 @@
                 </div>
             </div>
         </section>
+        <br><br>
 
         <section class="google-map">   
             <!-- <iframe
@@ -296,7 +298,7 @@
                 <div class="col-lg-3 col-5 ms-auto">
                     <ul class="social-icon">
                         <!-- <li><a href="https://www.facebook.com/burpproductions" class="social-icon-link bi-facebook" target="_blank"></a></li> -->
-                        <li><a href="#" class="social-icon-link bi-twitter"></a></li>
+                        <!-- <li><a href="#" class="social-icon-link bi-twitter"></a></li> -->
                         <li><a href="https://wa.link/jlkkya" class="social-icon-link bi-whatsapp" target="_blank"></a></li>
                         <li><a href="https://www.instagram.com/burpproductions" class="social-icon-link bi-instagram" target="_blank"></a></li>
                         <li><a href="https://www.youtube.com/@burpproductions." class="social-icon-link bi-youtube" target="_blank"></a></li>
@@ -309,7 +311,7 @@
 
 
     <!-- JAVASCRIPT FILES -->
-    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 
     <script src="js/jquery.min.js"></script>
