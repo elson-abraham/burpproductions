@@ -42,6 +42,7 @@
         var onloadCallback = function() {
             grecaptcha.render('html_element', {
                 'sitekey' : '6Le7ltUlAAAAAHjE1WIwq9P3dJc-pK48g4nRqs6O',
+                'theme'   : 'light',
                 'callback': capcha_filled,
                 'expired-callback': capcha_expired,
             });
@@ -190,7 +191,8 @@
                         <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {window.location='thankyou.html';}">
                         </iframe>
 
-                        <form action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSfVF7E1tKbpKOCbYa1Y1x6VZkwuchhcmqH-aq9Li2Fvd4PAIg/formResponse" method="POST" target="hidden_iframe" onsubmit="check_if_capcha_is_filled(); submitted=true"; class="contact-form" role="form" data-aos="fade-up">
+                        <form action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSfVF7E1tKbpKOCbYa1Y1x6VZkwuchhcmqH-aq9Li2Fvd4PAIg/formResponse" method="POST" target="hidden_iframe" 
+                        onsubmit="check_if_capcha_is_filled(); submitted=true"; class="contact-form" role="form" data-aos="fade-up">
                             <div class="row">
 
                                 <div class="col-xs-6 col-6">     <!--  .col-xs- -->
