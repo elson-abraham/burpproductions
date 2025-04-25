@@ -35,6 +35,33 @@
     <link href="css/style.css" rel="stylesheet">
     <link href="css/responsive.css" rel="stylesheet">
 
+    <script>
+            // Countdown timer for redirecting to another URL after several seconds
+            var seconds = 10; // seconds for HTML
+            var foo; // variable for clearInterval() function
+
+            function redirect() {
+                document.location.href = 'http://bubencode.com';
+            }
+
+            function updateSecs() {
+                document.getElementById("seconds").innerHTML = seconds;
+                seconds--;
+                if (seconds == -1) {
+                    clearInterval(foo);
+                    redirect();
+                }
+            }
+
+            function countdownTimer() {
+                foo = setInterval(function () {
+                    updateSecs()
+                }, 1000);
+            }
+
+            countdownTimer();
+    </script>
+
 </head>
 
 <body>    
@@ -48,12 +75,18 @@
 
         <section class="hero" id="hero">
             <div class="heroText">
-                <h1 class="text-black mt-5 mb-lg-4" data-aos="zoom-in" data-aos-delay="800">
-                    Email Sent! Thank you for contacting us.
+                <h1 style="color: green;" class=" mt-5 mb-lg-4" data-aos="zoom-in" data-aos-delay="800">
+                    Email Sent. 
                 </h1>
+                <p class="text-white-color" data-aos="zoom-in" data-aos-delay="900">
+                    Thank you for contacting us.
+                </p>
 
                 <p class="text-secondary-black-color" data-aos="fade-up" data-aos-delay="1000">
-                    You will get a reply within 24 hours.<strong class="custom-underline"></strong>
+                    <strong >Our team will contact you within 24 hours.</strong><br>
+                </p>
+                <p style="color: var(--p-color); font-size: 13px; margin-top: 20%;">
+                    You should be automatically redirected in <span id="seconds">10</span> seconds.
                 </p>
 
                 <div class="logoH-centre">
@@ -64,43 +97,6 @@
             </div>
         </section>
 
-        <nav class="navbar navbar-expand-lg bg-light shadow-lg">
-            <div class="container">
-                <a class="navbar-brand" href="index.html">
-                    <strong>Burp Productions</strong>
-                </a>
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <!-- NAVBAR -->
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav mx-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="index.html">Home</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html#about">Our Studio</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#services">Our Services</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="portfolio.html">Portfolio</a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html#contact">Contact Us</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
     </main>
 
     <footer class="site-footer">
@@ -152,7 +148,7 @@
     </footer>
 
     
-    <meta http-equiv="refresh" content="5; url=https://burpproductions.com/">
+    <meta http-equiv="refresh" content="10; url=https://burpproductions.com/contact">
 
     <!-- JAVASCRIPT FILES -->
 
