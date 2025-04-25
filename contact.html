@@ -41,9 +41,10 @@
     <script type="text/javascript">
         var onloadCallback = function() {
             grecaptcha.render('html_element', {
-                'sitekey' : '6Le7ltUlAAAAAHjE1WIwq9P3dJc-pK48g4nRqs6O',
-                'theme'   : 'dark',
-                'callback': capcha_filled,
+                'sitekey'  : '6Le7ltUlAAAAAHjE1WIwq9P3dJc-pK48g4nRqs6O',
+                'theme'    : 'dark',
+                'data-size': 'compact',
+                'callback' : capcha_filled,
                 'expired-callback': capcha_expired,
             });
         };
@@ -53,9 +54,11 @@
         var allowSubmit = false;
         function capcha_filled () {allowSubmit = true;}
         function capcha_expired () {allowSubmit = false;}
-        function check_if_capcha_is_filled (e) {if(allowSubmit) return true;
-            e.preventDefault();
-            toast('Fill in the capcha!');}
+            function check_if_capcha_is_filled(e) {
+                if (allowSubmit) return true;
+                e.preventDefault();
+                toast('Fill in the capcha!');
+            }
     </script>
 </head>
 
