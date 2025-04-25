@@ -1092,13 +1092,21 @@ video {
   padding-bottom: 3vh;
   box-sizing: border-box;
   border-radius: 5mm;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(22, 22, 22, 0.6);
   box-shadow: 3px 3px 20px rgba(255, 255, 255, 0.404);
 }
 
 .contact-info {
-  padding: 40px;
-  background-color: #959595;
+  /* padding: 15px; */
+  margin-left: 2.5%;
+  color: var(--font-color);
+}
+
+.contact-privacy {
+  color: var(--p-color); 
+  font-size: var(--custom-link-font-size); 
+  text-align: justify; 
+  margin-left: 5%;
 }
 
 .line-dec {
@@ -1133,8 +1141,16 @@ video {
 }
 
 .form-label {
-  color: var(--dark-color);
+  color: var(--p-color);
   font-weight: var(--font-weight-bold);
+}
+
+.form-check {
+  color: var(--p-color);
+}
+
+.form-date {
+  color: var(--p-color);
 }
 
 .map-iframe {
@@ -1181,7 +1197,7 @@ video {
   SOCIAL ICON               
 -----------------------------------------*/
 .social-icon {
-  margin: 0;
+  margin-left: 5%;
   padding: 0;
 }
 
