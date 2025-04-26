@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css?family=Raleway:400");
+/* @import url("https://fonts.googleapis.com/css?family=Raleway:400"); */
+@import url("https://fonts.googleapis.com/css?family=Josefin Sans:400");
 
 * {
   -webkit-box-sizing: border-box;
@@ -19,7 +20,7 @@
   --p-color:                      #717275;
   --p-hover-color:                #b6b7bd;
 
-  --body-font-family:           'Raleway', sans-serif;
+  --body-font-family:           'Josefin Sans', sans-serif;
 
   --h1-font-size:               72px;
   --h2-font-size:               42px;
@@ -1129,7 +1130,7 @@ video {
   filter: grayscale(10%); /*blur(0.75px)*/
 
   object-fit: contain;
-  max-width: 105px;
+  max-width: 91px;
   opacity: 0.8;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
@@ -1363,20 +1364,20 @@ img {
 
 
 /* The dots/bullets/indicators */
-.dot {
+/* .dot {
   cursor: pointer;
   height: 7px;
   width: 7px;
   margin: 0 10px;
-  background-color: #999999;
+  background-color: #000000;
   border-radius: 50%;
   display: inline-block;
   transition: background-color 0.5s ease;
 }
 
 .activeslide, .dot:hover {
-  background-color: #0000006c;
-}
+  background-color: var(--font-color);
+} */
 
 /* Fading animation */
 .fade {
