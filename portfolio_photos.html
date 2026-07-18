@@ -140,119 +140,127 @@
                     <!-- PHOTO GALLERY -->
                     <div class="photo-gallery"></div>
 
-                    <script>                
+                    <script>
+                        (function () {
                         var linksph = [
-                        "assets/images/portfolio/port30.JPG",
-                        "assets/images/portfolio/port29.JPG",
-                        "assets/images/portfolio/port28.JPEG",
-                        "assets/images/portfolio/port27.JPG",
-                        "assets/images/portfolio/port26.JPG",
-                        "assets/images/portfolio/port25.JPG",
-                        "assets/images/portfolio/port24.JPG",
-                        "assets/images/portfolio/port23.JPG",
-                        "assets/images/portfolio/port22.JPG",
-                        "assets/images/portfolio/port21.JPG",
-                        "assets/images/portfolio/port20.JPG",
-                        "assets/images/portfolio/port19.JPG",
-                        "assets/images/portfolio/port18.JPG",
-                        "assets/images/portfolio/port17.JPG",
-                        "assets/images/portfolio/port16.JPG",
-                        "assets/images/portfolio/port15.JPG",
-                        "assets/images/portfolio/port14.JPG",
-                        "assets/images/portfolio/port13.JPG",
-                        "assets/images/portfolio/port12.JPG",
-                        "assets/images/portfolio/port11.JPG",
-                        "assets/images/portfolio/port10.JPG",
-                        "assets/images/portfolio/port9.JPG",
-                        "assets/images/portfolio/port8.JPG",
-                        "assets/images/portfolio/port7.JPG",
-                        "assets/images/portfolio/port6.JPG",
-                        "assets/images/portfolio/port5.JPG",
-                        "assets/images/portfolio/port4.JPG",
-                        "assets/images/portfolio/port3.JPG",
-                        "assets/images/portfolio/port2.JPG",
-                        "assets/images/portfolio/port1.JPG",
-                        // "https://drive.google.com/uc?export=view&id=1-eF0sb-znpMCEDEtcFnMIc3Ux9k7oKWa",
+                            "assets/images/portfolio/port30.JPG",
+                            "assets/images/portfolio/port29.JPG",
+                            "assets/images/portfolio/port28.JPEG",
+                            "assets/images/portfolio/port27.JPG",
+                            "assets/images/portfolio/port26.JPG",
+                            "assets/images/portfolio/port25.JPG",
+                            "assets/images/portfolio/port24.JPG",
+                            "assets/images/portfolio/port23.JPG",
+                            "assets/images/portfolio/port22.JPG",
+                            "assets/images/portfolio/port21.JPG",
+                            "assets/images/portfolio/port20.JPG",
+                            "assets/images/portfolio/port19.JPG",
+                            "assets/images/portfolio/port18.JPG",
+                            "assets/images/portfolio/port17.JPG",
+                            "assets/images/portfolio/port16.JPG",
+                            "assets/images/portfolio/port15.JPG",
+                            "assets/images/portfolio/port14.JPG",
+                            "assets/images/portfolio/port13.JPG",
+                            "assets/images/portfolio/port12.JPG",
+                            "assets/images/portfolio/port11.JPG",
+                            "assets/images/portfolio/port10.JPG",
+                            "assets/images/portfolio/port9.JPG",
+                            "assets/images/portfolio/port8.JPG",
+                            "assets/images/portfolio/port7.JPG",
+                            "assets/images/portfolio/port6.JPG",
+                            "assets/images/portfolio/port5.JPG",
+                            "assets/images/portfolio/port4.JPG",
+                            "assets/images/portfolio/port3.JPG",
+                            "assets/images/portfolio/port2.JPG",
+                            "assets/images/portfolio/port1.JPG"
                         ];
 
-                        var $galleryph = $(".photo-gallery").first();
-                        var $loadMoreph = $("#loadph");
+                        var BATCH_SIZE = 30;              // smaller first batch = faster first paint
+                        var gallery = document.querySelector(".photo-gallery");
+                        var loadMoreBtn = document.getElementById("loadph");
+                        var observer;                     // single shared observer, reused for every batch
 
-                        function loadMoreph(e) {
-                        for (var i = 0; i < 30; i++) {
-                            if (linksph.length) {
-                                var src = linksph.pop();
-                                var $link = $("<a>").addClass("image-popup");
-                                var $img = $("<img>").addClass("lazy");
+                        function getObserver() {
+                            if (observer) return observer;
 
-                                $img.attr("data-src", src);
-                                $link.attr("href", src).addClass("item");
-
-                                $link.append($img);
-                                $galleryph.append($link);
-                            } else {
-                                $loadMoreph.hide();
-                            }
-                        }
-                        }                        
-                        
-                        $loadMoreph.on("click", loadMoreph);
-                        loadMoreph();
-
-                        //LAZYLOAD
-                        document.addEventListener("DOMContentLoaded", function() {
-                            var lazyloadImages;    
-                        
                             if ("IntersectionObserver" in window) {
-                            lazyloadImages = document.querySelectorAll(".lazy");
-                            var imageObserver = new IntersectionObserver(function(entries, observer) {
-                                entries.forEach(function(entry) {
-                                if (entry.isIntersecting) {
-                                    var image = entry.target;
-                                    image.src = image.dataset.src;
-                                    image.classList.remove("lazy");
-                                    imageObserver.unobserve(image);
-                                }
-                                });
-                            });
-                        
-                            lazyloadImages.forEach(function(image) {
-                                imageObserver.observe(image);
-                            });
-                            } else {  
-                            var lazyloadThrottleTimeout;
-                            lazyloadImages = document.querySelectorAll(".lazy");
-                            
-                            function lazyload () {
-                                if(lazyloadThrottleTimeout) {
-                                clearTimeout(lazyloadThrottleTimeout);
-                                }    
-                        
-                                lazyloadThrottleTimeout = setTimeout(function() {
-                                var scrollTop = window.pageYOffset;
-                                lazyloadImages.forEach(function(img) {
-                                    if(img.offsetTop < (window.innerHeight + scrollTop)) {
-                                        img.src = img.dataset.src;
-                                        img.classList.remove('lazy');
+                            observer = new IntersectionObserver(
+                                function (entries) {
+                                entries.forEach(function (entry) {
+                                    if (entry.isIntersecting) {
+                                    var img = entry.target;
+                                    img.src = img.dataset.src;
+                                    img.onload = function () { img.classList.add("loaded"); };
+                                    img.classList.remove("lazy");
+                                    observer.unobserve(img);
                                     }
                                 });
-                                if(lazyloadImages.length == 0) { 
-                                    document.removeEventListener("scroll", lazyload);
-                                    window.removeEventListener("resize", lazyload);
-                                    window.removeEventListener("orientationChange", lazyload);
-                                }
-                                }, 20);
+                                },
+                                { rootMargin: "400px 0px" }   // fetch before it's visible, no visible pop-in
+                            );
                             }
-                        
-                            document.addEventListener("scroll", lazyload);
-                            window.addEventListener("resize", lazyload);
-                            window.addEventListener("orientationChange", lazyload);
-                            }
-                        })
-                        //LAZYLOAD
+                            return observer;
+                        }
 
+                        function loadMorePh() {
+                        var frag = document.createDocumentFragment();
+                        var count = 0;
+
+                        while (count < BATCH_SIZE && linksph.length) {
+                            var fullSrc = linksph.pop();
+                            var thumbSrc = toThumbPath(fullSrc);
+
+                            var link = document.createElement("a");
+                            var img = document.createElement("img");
+
+                            link.className = "image-popup item";
+                            link.href = fullSrc;
+
+                            img.className = "lazy";
+                            img.dataset.src = thumbSrc;
+                            img.alt = "Portfolio photo";
+                            img.loading = "lazy";
+                            img.decoding = "async";
+                            if (count < 4) img.fetchPriority = "high";
+
+                            link.appendChild(img);
+                            frag.appendChild(link);
+                            count++;
+                        }
+
+                        gallery.appendChild(frag);
+
+                        // ↓↓↓ moved back inside, runs after every batch is appended
+                        var io = getObserver();
+                        if (io) {
+                            gallery.querySelectorAll("img.lazy:not([data-observed])").forEach(function (img) {
+                            img.setAttribute("data-observed", "1");
+                            io.observe(img);
+                            });
+                        } else {
+                            gallery.querySelectorAll("img.lazy").forEach(function (img) {
+                            img.src = img.dataset.src;
+                            img.classList.remove("lazy");
+                            });
+                        }
+
+                        if (!linksph.length && loadMoreBtn) loadMoreBtn.style.display = "none";
+                        }
+
+                        function toThumbPath(fullSrc) {
+                        var parts = fullSrc.split("/");
+                        var filename = parts.pop();
+                        var nameOnly = filename.replace(/\.[^.]+$/, "");
+                        parts.push("thumbs", nameOnly.toLowerCase() + ".webp");
+                        return parts.join("/");
+                        }
+
+                        if (loadMoreBtn) loadMoreBtn.addEventListener("click", loadMorePh);
+
+                        loadMorePh(); // load the first batch — now correctly triggers observation too
+                        })();
                     </script>
-                   
+
                 </div>
             </div>
         </section>
