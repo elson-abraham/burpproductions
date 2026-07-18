@@ -881,6 +881,17 @@ strong {
 /*---------------------------------------
   PORTFOLIO               
 -----------------------------------------*/
+.photo-gallery .item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;      /* reserve space, prevents layout shift */
+  object-fit: cover;
+  background: #1a1a1a;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.photo-gallery .item img.loaded { opacity: 1; }
+
+
 
 .portfolio-thumb {
   position: relative;
