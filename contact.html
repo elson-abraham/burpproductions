@@ -10,10 +10,10 @@
     gtag('js', new Date());
     gtag('config', 'G-SYGMV2QRPL');
   </script>
-    
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact — Burp Productions</title>
+  <title>Contact - Burp Productions</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="icon" href="/assets/photos/logo_new/BURPFINALLOGO-5invertedicon.png" type="image/x-icon">
@@ -72,7 +72,7 @@
         <form id="contactForm" class="contact-form" action="https://formspree.io/f/mjgnaljj" method="POST">
 
           <!-- Formspree config: routes submissions to info@burpproductions.com -->
-          <input type="hidden" name="_to" value="info@burpproductions.com">
+          <!-- <input type="hidden" name="_to" value="info@burpproductions.com"> -->
           <input type="hidden" name="_subject" value="New enquiry — burpproductions.com">
           <!-- honeypot field to cut down on spam bots -->
           <input type="text" name="_gotcha" style="display:none">
@@ -254,14 +254,22 @@
           headers: { 'Accept': 'application/json' }
         });
 
+        const data = await res.json().catch(() => null);
+
         if (res.ok) {
           form.reset();
           statusEl.textContent = "Thanks — your message is on its way. We'll reply within two business days.";
           statusEl.classList.add('is-success');
         } else {
-          throw new Error('Form submission failed');
+          // Show Formspree's actual reason instead of a generic message
+          const reason = data?.errors?.map(err => err.message).join(', ')
+            || `Request failed (${res.status})`;
+          console.error('Formspree error:', data);
+          statusEl.textContent = `Couldn't send that: ${reason}. You can also email us directly at info@burpproductions.com.`;
+          statusEl.classList.add('is-error');
         }
       } catch (err) {
+        console.error('Network/JS error:', err);
         statusEl.textContent = "Something went wrong sending that. Please email us directly at info@burpproductions.com.";
         statusEl.classList.add('is-error');
       } finally {
