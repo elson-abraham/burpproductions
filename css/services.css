@@ -1,0 +1,646 @@
+/* ==========================================================================
+   services.css — page-specific styles for services.html
+   Namespaced under .svc-* and .team-* so nothing collides with style.css or
+   works.css. Reuses shared :root tokens, .wrap, .bracket, .eyebrow,
+   .eyebrow-nav, .cta-link and nav/footer rules from style.css — load this
+   AFTER style.css.
+   ========================================================================== */
+
+/* ============ HERO ============ */
+.svc-hero {
+  padding: 150px 0 0;
+  position: relative;
+}
+
+.svc-title {
+  font-family: var(--font);
+  font-weight: 400;
+  text-transform: lowercase;
+  font-size: clamp(52px, 9vw, 120px);
+  line-height: .92;
+  letter-spacing: .005em;
+  margin: 18px 0 40px;
+}
+
+.svc-hero-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 40px;
+  padding-bottom: 44px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.svc-hero-sub {
+  max-width: 520px;
+  color: var(--ink-dim);
+  font-size: 15.5px;
+  line-height: 1.7;
+}
+
+.svc-hero-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.svc-hero-stat-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(36px, 4vw, 56px);
+  color: var(--accent);
+  line-height: 1;
+}
+
+.svc-hero-stat-label {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* ============ SERVICES — BENTO TILE GRID ============ */
+.svc-grid-section {
+  padding: 20px 0 130px;
+}
+
+.svc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 320px;
+  grid-auto-flow: row dense;
+  gap: 3px;
+  background: var(--line);
+}
+
+.svc-tile {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(155deg, #141414, #0a0a0a);
+  cursor: pointer;
+  transition: background .4s ease;
+}
+
+.svc-tile.span-wide { grid-column: span 2; }
+.svc-tile.span-tall { grid-row: span 2; }
+
+.svc-tile:hover,
+.svc-tile.open {
+  background: linear-gradient(155deg, #1c1c1c, #0a0a0a);
+}
+
+.svc-tile:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: -3px;
+}
+
+/* oversized ghost numeral — decorative, sits behind the base + reveal
+   layers. Value comes straight from the tile's own loop index (pad(i+1)
+   against the 7-item SERVICES array), so it can only ever read 01-07. */
+.svc-ghost-num {
+  position: absolute;
+  top: -.12em;
+  right: 10px;
+  z-index: 0;
+  font-family: var(--font);
+  font-size: clamp(90px, 11vw, 160px);
+  line-height: 1;
+  color: var(--ink);
+  opacity: .06;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity .4s ease;
+}
+
+.svc-tile:hover .svc-ghost-num,
+.svc-tile.open .svc-ghost-num {
+  opacity: .1;
+}
+
+.svc-idx {
+  position: absolute;
+  top: 20px;
+  left: 26px;
+  z-index: 2;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .07em;
+  color: var(--accent);
+}
+
+.svc-plus {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  color: var(--ink-dim);
+  background: var(--bg);
+  transition: transform .3s ease, color .3s ease, border-color .3s ease;
+}
+
+.svc-tile:hover .svc-plus {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.svc-tile.open .svc-plus {
+  transform: rotate(45deg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* base layer: icon + name + tag, pinned to the bottom of the tile */
+.svc-base {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: opacity .3s ease, transform .35s ease;
+}
+
+.svc-tile:hover .svc-base,
+.svc-tile.open .svc-base {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+.svc-icon {
+  width: 98px;
+  height: 98px;
+  color: var(--ink-dim);
+  margin-bottom: 16px;
+  transition: color .3s ease;
+}
+
+.svc-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.svc-tile-body {
+  position: relative;
+}
+
+.svc-name {
+  font-size: clamp(19px, 1.7vw, 23px);
+  font-weight: 500;
+  line-height: 1.15;
+  margin: 0 0 6px;
+}
+
+.svc-tag {
+  font-size: 12px;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin: 0;
+}
+
+/* reveal layer: description + chips, crossfades in on top — always fits
+   because it's positioned against the tile's actual box, not stacked below
+   the base content, so it can never get clipped by a fixed tile height. */
+.svc-reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  overflow-y: auto;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .3s ease, transform .35s ease;
+  pointer-events: none;
+  background: linear-gradient(155deg, rgba(28, 28, 28, .97), rgba(10, 10, 10, .97));
+}
+
+.svc-tile:hover .svc-reveal,
+.svc-tile.open .svc-reveal {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.svc-reveal-name {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.svc-desc {
+  color: var(--ink-dim);
+  font-size: 12.5px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.svc-chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+}
+
+.svc-chips li {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+  letter-spacing: .01em;
+  white-space: nowrap;
+}
+
+/* ============ 8th GRID CELL — CTA TILE ============
+   Sits inside the bento grid itself (not below it), dropped into whatever
+   gap the 7 capability tiles leave via grid-auto-flow: dense. Reuses the
+   .svc-tile base (background, overflow, span sizing) but styled distinctly
+   so it doesn't read as an 8th capability. */
+.svc-cta-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 30px 28px;
+  text-decoration: none;
+  border: 1px solid var(--line);
+  background: linear-gradient(155deg, rgba(255, 90, 43, .07), rgba(10, 10, 10, .4));
+  transition: background .35s ease, border-color .35s ease;
+}
+
+.svc-cta-tile:hover,
+.svc-cta-tile:focus-visible {
+  background: linear-gradient(155deg, rgba(255, 90, 43, .14), rgba(10, 10, 10, .4));
+  border-color: var(--accent);
+}
+
+.svc-cta-text {
+  color: var(--ink-dim);
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.svc-cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 4px;
+  transition: color .25s ease, border-color .25s ease;
+}
+
+.svc-cta-link svg {
+  transition: transform .3s ease;
+}
+
+.svc-cta-tile:hover .svc-cta-link,
+.svc-cta-tile:focus-visible .svc-cta-link {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.svc-cta-tile:hover .svc-cta-link svg,
+.svc-cta-tile:focus-visible .svc-cta-link svg {
+  transform: translateX(4px);
+}
+
+/* ============ TEAM ============ */
+.team {
+  padding: 20px 0 130px;
+}
+
+.team-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 40px;
+  margin-bottom: 44px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.team-title {
+  font-family: var(--font);
+  font-weight: 400;
+  text-transform: lowercase;
+  font-size: clamp(34px, 5vw, 56px);
+  margin-top: 10px;
+}
+
+.team-sub {
+  max-width: 340px;
+  color: var(--ink-dim);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* -- founders: two large feature cards -- */
+.team-founders {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+  background: var(--line);
+  margin-bottom: 3px;
+}
+
+/* -- crew: four cards, single row by default -- */
+.team-crew {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  background: var(--line);
+}
+
+.team-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-raised);
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.team-card--founder {
+  min-height: 640px;
+}
+
+.team-idx {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  z-index: 3;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  color: var(--ink-dim);
+  letter-spacing: .06em;
+}
+
+/* -- full-bleed photo layer -- */
+.team-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(155deg, #1c1c1c, #0a0a0a);
+}
+
+.team-photo-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  filter: grayscale(1) brightness(.75) contrast(1.05);
+  transform: scale(1.04);
+  transition: filter .5s ease, transform .6s ease;
+}
+
+.team-card:hover .team-photo-img {
+  filter: grayscale(0) brightness(.9) contrast(1.05);
+  transform: scale(1.1);
+}
+
+/* -- fallback shown until a real photo file exists at the expected path -- */
+.team-photo-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.team-photo-fallback span {
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: clamp(64px, 8vw, 96px);
+  color: var(--ink);
+  opacity: .16;
+  letter-spacing: .02em;
+  transition: opacity .4s ease;
+}
+
+.team-card:hover .team-photo-fallback span {
+  opacity: .26;
+}
+
+/* -- corner brackets, viewfinder motif, echoing the rest of the site -- */
+.team-bracket {
+  position: absolute;
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  opacity: 0;
+  transition: opacity .35s ease;
+  pointer-events: none;
+}
+
+.team-bracket::before,
+.team-bracket::after {
+  content: "";
+  position: absolute;
+  background: var(--accent);
+}
+
+.team-bracket.tl { top: 18px; left: 18px; }
+.team-bracket.tl::before { top: 0; left: 0; width: 2px; height: 100%; }
+.team-bracket.tl::after  { top: 0; left: 0; width: 100%; height: 2px; }
+
+.team-bracket.br { bottom: 18px; right: 18px; transform: scale(-1, -1); }
+.team-bracket.br::before { top: 0; left: 0; width: 2px; height: 100%; }
+.team-bracket.br::after  { top: 0; left: 0; width: 100%; height: 2px; }
+
+.team-card:hover .team-bracket {
+  opacity: .9;
+}
+
+/* -- scrim + meta, anchored to the bottom like a cast/credit card -- */
+.team-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0) 38%, rgba(10, 10, 10, .55) 68%, rgba(6, 6, 6, .96) 100%);
+}
+
+.team-meta {
+  position: relative;
+  z-index: 2;
+  padding: 28px 28px 30px;
+}
+
+.team-card--founder .team-meta {
+  padding: 44px 46px 46px;
+}
+
+.team-meta h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.team-card--founder .team-meta h3 {
+  font-size: clamp(26px, 2.4vw, 32px);
+}
+
+.team-role {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin: 0;
+}
+
+.team-card--founder .team-role {
+  font-size: 12.5px;
+  margin-bottom: 14px;
+}
+
+.team-card--founder .team-bio {
+  font-size: 15px;
+  max-width: 420px;
+}
+
+.team-bio {
+  color: var(--ink-dim);
+  font-size: 13.5px;
+  line-height: 1.65;
+  max-width: 340px;
+  margin: 0;
+}
+
+.team-crew .team-card {
+  min-height: 360px;
+}
+
+/* ============ CTA STRIP ============ */
+.svc-cta {
+  position: relative;
+  padding: 0 0 150px;
+  text-align: center;
+}
+
+.svc-cta h2 {
+  font-family: var(--font);
+  font-weight: 500;
+  text-transform: lowercase;
+  font-size: clamp(32px, 5.6vw, 60px);
+  line-height: 1.08;
+  margin: 18px 0 34px;
+}
+
+/* ============ LAPTOP ============ */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .team-crew {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .team-crew .team-card {
+    min-height: 280px;
+  }
+
+  .team-crew .team-meta {
+    padding: 20px 20px 22px;
+  }
+
+  .team-crew .team-meta h3 {
+    font-size: 14.5px;
+  }
+
+  .team-crew .team-photo-fallback span {
+    font-size: clamp(44px, 5vw, 64px);
+  }
+}
+
+/* ============ TABLET / iPAD ============ */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .svc-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 340px;
+  }
+  .svc-tile.span-wide { grid-column: span 2; }
+
+  /* 4-across gets too cramped at iPad widths — two roomier cards per row */
+  .team-crew {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .team-crew .team-card {
+    min-height: 320px;
+  }
+}
+
+/* ============ PHONE ============ */
+@media (max-width: 600px) {
+  .svc-hero { padding: 120px 0 0; }
+
+  .svc-hero-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .svc-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+
+  .svc-tile {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    min-height: 300px;
+  }
+
+  .svc-base,
+  .svc-reveal {
+    padding: 22px;
+  }
+
+  .svc-cta-tile {
+    align-items: flex-start;
+  }
+
+  .team-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .team-founders,
+  .team-crew {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* nav active-state, used only on this page's "Services" link */
+.nav-links a.is-active {
+  color: var(--ink);
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 2px;
+}
