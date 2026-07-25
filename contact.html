@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Burp Productions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" href="/assets/photos/logo_new/BURPFINALLOGO-5invertedicon.png" type="image/x-icon">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin Sans:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/works.css" rel="stylesheet" />
+  <link href="https://db.onlinewebfonts.com/c/a9ad0a3fc5e238252c64655a0d4517fb?family=Visby+Bold" rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div>
+        <a href="index.html">
+          <img class="logoH" src="/assets/photos/logo_new/BURPFINALLOGO-5.png">
+        </a>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="services.html#team">About</a>
+        <a href="works.html">Work</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html" class="is-active">Contact</a>
+      </div>
+      <div class="nav-right">
+        <a href="tel:+918088689756" class="nav-cta">Call Now</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"
+          aria-controls="navLinks">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+    <div class="nav-overlay" id="navOverlay"></div>
+  </header>
+
+  <main>
+    <!-- ============ CONTACT HERO ============ -->
+    <section class="contact-hero wrap">
+      <div class="bracket tl" style="top:96px;left:0;"></div>
+      <p class="eyebrow">Get In Touch</p>
+      <h1 class="contact-title">let's talk<br>about your project.</h1>
+      <p class="contact-sub">
+        Send us a brief, a rough idea, or just a hello — we read every message
+        and reply within two business days.
+      </p>
+    </section>
+
+    <!-- ============ CONTACT BODY ============ -->
+    <section class="contact-body wrap" data-reveal>
+
+      <div class="contact-form-col">
+        <form id="contactForm" class="contact-form" action="https://formspree.io/f/mjgnaljj" method="POST">
+
+          <!-- Formspree config: routes submissions to info@burpproductions.com -->
+          <input type="hidden" name="_to" value="info@burpproductions.com">
+          <input type="hidden" name="_subject" value="New enquiry — burpproductions.com">
+          <!-- honeypot field to cut down on spam bots -->
+          <input type="text" name="_gotcha" style="display:none">
+
+          <div class="field-row">
+            <div class="field">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" required autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required autocomplete="email">
+            </div>
+            <div class="field">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" required autocomplete="tel">
+            </div>
+            <div class="field">
+              <label for="company">Company / Brand</label>
+              <input type="text" id="company" name="company" autocomplete="organization">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">Tell us about the project</label>
+            <textarea id="message" name="message" rows="6" required
+              placeholder="What are you making, who's it for, and when do you need it by?"></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="budget">Project Budget</label>
+              <select id="budget" name="budget">
+                <option value="">Select a range</option>
+                <option value="Under ₹2L">Under ₹2L</option>
+                <option value="₹2L – ₹5L">₹2L – ₹5L</option>
+                <option value="₹5L – ₹15L">₹5L – ₹15L</option>
+                <option value="₹15L+">₹15L+</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn contact-submit cta-link" id="submitBtn">
+            Send message
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </button>
+
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <aside class="contact-info-col">
+        <div class="contact-info-block">
+          <h5>Email</h5>
+          <a href="mailto:info@burpproductions.com">info@burpproductions.com</a>
+        </div>
+        <div class="contact-info-block">
+          <h5>Phone</h5>
+          <a href="tel:+918088689756">+91 8088689756</a>
+        </div>
+        <div class="contact-info-block">
+          <h5>Studio</h5>
+          <a href="https://maps.app.goo.gl/wzgYt4HCQav4onwc8" target="_blank">Bengaluru, India</a>
+        </div>
+        <div class="contact-info-block">
+          <h5>Follow</h5>
+          <a href="https://www.instagram.com/burpproductions" target="_blank">Instagram</a>
+          <a href="https://www.youtube.com/@burpproductions." target="_blank">Youtube</a>
+          <a href="https://www.linkedin.com/company/burpproductions" target="_blank">LinkedIn</a>
+        </div>
+      </aside>
+
+    </section>
+
+    <!-- ============ CTA (matches works-cta styling on works.html) ============ -->
+    <section class="works-cta wrap" data-reveal>
+      <div class="bracket br" style="bottom:0;right:0;"></div>
+      <p class="eyebrow-nav">Prefer to see our work first</p>
+      <h2>Browse the reel<br>before you reach out.</h2>
+      <a href="works.html" class="cta-link">
+        View our work
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo">Burp.</div>
+          <p>
+            A film and brand studio crafting cinematic identities, campaigns,
+            and stories that stay with people.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h5>Studio</h5>
+          <a href="services.html#team">About</a>
+          <a href="works.html">Work</a>
+          <a href="services.html">Services</a>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <a href="mailto:info@burpproductions.com">info@burpproductions.com</a>
+          <a href="tel:+918088689756">+91 8088689756</a>
+          <a href="https://www.linkedin.com/in/elson-abraham" target="_blank">Tech Support</a>
+        </div>
+        <div class="footer-col">
+          <h5>Follow</h5>
+          <a href="https://www.instagram.com/burpproductions" target="_blank">Instagram</a>
+          <a href="https://www.youtube.com/@burpproductions." target="_blank">Youtube</a>
+          <a href="https://www.linkedin.com/company/burpproductions" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Burp Productions. All rights reserved.</span>
+        <span>Bengaluru, India</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ============ mobile hamburger nav (same behavior as works.html) ============ */
+    (function () {
+      const toggle = document.getElementById('navToggle');
+      const links = document.getElementById('navLinks');
+      const overlay = document.getElementById('navOverlay');
+      if (!toggle || !links || !overlay) return;
+
+      function closeMenu() {
+        toggle.classList.remove('open');
+        links.classList.remove('open');
+        overlay.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+      function openMenu() {
+        toggle.classList.add('open');
+        links.classList.add('open');
+        overlay.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+      toggle.addEventListener('click', () => {
+        links.classList.contains('open') ? closeMenu() : openMenu();
+      });
+      overlay.addEventListener('click', closeMenu);
+      links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+      window.addEventListener('resize', () => { if (window.innerWidth > 900) closeMenu(); });
+    })();
+
+    /* ============ scroll reveal (same as works.html) ============ */
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: .15 });
+    revealEls.forEach(el => io.observe(el));
+
+    /* ============ contact form submission ============ */
+    const form = document.getElementById('contactForm');
+    const statusEl = document.getElementById('formStatus');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      statusEl.textContent = '';
+      statusEl.className = 'form-status';
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (res.ok) {
+          form.reset();
+          statusEl.textContent = "Thanks — your message is on its way. We'll reply within two business days.";
+          statusEl.classList.add('is-success');
+        } else {
+          throw new Error('Form submission failed');
+        }
+      } catch (err) {
+        statusEl.textContent = "Something went wrong sending that. Please email us directly at info@burpproductions.com.";
+        statusEl.classList.add('is-error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Send message <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
+      }
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services & Team - Burp Productions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" href="/assets/photos/logo_new/BURPFINALLOGO-5invertedicon.png" type="image/x-icon">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin Sans:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/services.css" rel="stylesheet" />
+  <link href="https://db.onlinewebfonts.com/c/a9ad0a3fc5e238252c64655a0d4517fb?family=Visby+Bold" rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div>
+        <a href="index.html">
+          <img class="logoH" src="/assets/photos/logo_new/BURPFINALLOGO-5.png">
+        </a>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="services.html#team">About</a>
+        <a href="works.html">Work</a>
+        <a href="services.html" class="is-active">Services</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="nav-right">
+        <a href="contact.html" class="nav-cta">Let's Talk</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+    <div class="nav-overlay" id="navOverlay"></div>
+  </header>
+
+  <main>
+    <!-- ============ SERVICES HERO ============ -->
+    <section class="svc-hero wrap">
+      <div class="bracket tl" style="top:96px;left:0;"></div>
+      <p class="eyebrow">Capabilities — Full Service Production</p>
+      <h1 class="svc-title">what we do.</h1>
+      <div class="svc-hero-row">
+        <p class="svc-hero-sub">
+          One crew, carried from treatment through final grade. Below is
+          everything that happens between a first call and a delivered film —
+          tap a line to see what's included.
+        </p>
+        <div class="svc-hero-stat">
+          <span class="svc-hero-stat-num">07</span>
+          <span class="svc-hero-stat-label">Capabilities<br>under one roof</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SERVICES TILES ============ -->
+    <section class="svc-grid-section wrap">
+      <div class="svc-grid" id="svcGrid"></div>
+    </section>
+
+    <!-- ============ TEAM ============ -->
+    <section class="team wrap" id="team">
+      <div class="team-head" data-reveal>
+        <div>
+          <p class="eyebrow">Cast &amp; Crew — 06</p>
+          <h2 class="team-title">the burp core.</h2>
+        </div>
+        <p class="team-sub">
+          Every project is run by the same core team — no revolving freelancers,
+          no handoffs between strangers. This is who you'll actually work with.
+        </p>
+      </div>
+
+      <!-- Co-founders -->
+      <div class="team-founders" id="teamFounders"></div>
+
+      <!-- Team members -->
+      <div class="team-crew" id="teamCrew"></div>
+    </section>
+
+    <section class="svc-cta wrap" data-reveal>
+      <div class="bracket br" style="bottom:0;right:0;"></div>
+      <p class="eyebrow-nav">Got a production in mind</p>
+      <h2>Let's staff up<br>your next shoot.</h2>
+      <a href="contact.html#contact" class="cta-link">
+        Start a project
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo">Burp.</div>
+          <p>
+            A film and brand studio crafting cinematic identities, campaigns,
+            and stories that stay with people.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h5>Studio</h5>
+          <a href="index.html#about">About</a>
+          <a href="works.html">Work</a>
+          <a href="services.html">Services</a>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <a href="mailto:info@burpproductions.com">info@burpproductions.com</a>
+          <a href="tel:+918088689756">+91 8088689756</a>
+        </div>
+        <div class="footer-col">
+          <h5>Follow</h5>
+          <a href="https://www.instagram.com/burpproductions" target="_blank">Instagram</a>
+          <a href="https://www.youtube.com/@burpproductions." target="_blank">Youtube</a>
+          <a href="https://www.linkedin.com/company/burpproductions" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Burp Productions. All rights reserved.</span>
+        <span>Bengaluru, India</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ============ mobile hamburger nav (same behavior as index.html / works.html) ============ */
+    (function () {
+      const toggle = document.getElementById('navToggle');
+      const links = document.getElementById('navLinks');
+      const overlay = document.getElementById('navOverlay');
+      if (!toggle || !links || !overlay) return;
+
+      function closeMenu() {
+        toggle.classList.remove('open');
+        links.classList.remove('open');
+        overlay.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+      function openMenu() {
+        toggle.classList.add('open');
+        links.classList.add('open');
+        overlay.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+      toggle.addEventListener('click', () => {
+        links.classList.contains('open') ? closeMenu() : openMenu();
+      });
+      overlay.addEventListener('click', closeMenu);
+      links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+      window.addEventListener('resize', () => { if (window.innerWidth > 900) closeMenu(); });
+    })();
+
+    /* ============ scroll reveal ============ */
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: .15 });
+    revealEls.forEach(el => io.observe(el));
+
+    /* ============ SERVICES DATA ============
+       Same 7 capabilities from the homepage's numbered list, expanded with a
+       description, "included" chips, and a small line icon for this dedicated
+       page. `span` controls the bento tile shape: "wide" (2 cols), "tall"
+       (2 rows), or omit for 1x1. Edit copy freely.
+    ------------------------------------------------------------------- */
+    const SERVICES = [
+
+      {
+        name: 'Digital & Social Contents',
+        tag: 'Scroll-stopping content',
+        desc: 'Short-form content engineered for feeds — reels, social ads, and campaign cutdowns shot for vertical and native placements.',
+        includes: ['Vertical & square edits', 'Platform-native cutdowns', 'Content batching', 'Caption & thumbnail sets'],
+        icon: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="9" y="4" width="14" height="24" rx="3"/><path d="M9 8h14M9 24h14" stroke-opacity=".5"/><circle cx="16" cy="16" r="3.4"/></svg>`,
+      },
+      {
+        name: 'Live Events & Aftermovies',
+        tag: 'Capturing moments cinematically',
+        desc: 'Multi-camera coverage of launches, concerts, and festivals, cut into aftermovies that carry the energy of the room.',
+        includes: ['Multi-cam live coverage', 'Same-day edits', 'Drone coverage', 'Highlight reels'],
+        icon: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M16 4v6M16 22v6M4 16h6M22 16h6M7.5 7.5l4.2 4.2M20.3 20.3l4.2 4.2M24.5 7.5l-4.2 4.2M11.7 20.3l-4.2 4.2"/><circle cx="16" cy="16" r="4.2"/></svg>`,
+      },
+      {
+        name: 'Commercial & Ad Films',
+        tag: 'Brand stories that inspire',
+        desc: 'TVC and digital ad films built from concept to final delivery — made to hold attention across broadcast and digital placements.',
+        includes: ['Concept & scripting', 'Location scouting', 'Full crew production', 'Color & sound mix'],
+        span: 'wide',
+        icon: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="9" width="19" height="14" rx="2"/><path d="M23 13l5-3v12l-5-3"/><circle cx="9" cy="16" r="2.6"/></svg>`,
+      },      
+      {
+        name: 'Music Video Production',
+        tag: 'Visual worlds built around sound',
+        desc: "Concept-driven music videos built around the track's mood, from treatment through final grade.",
+        includes: ['Treatment & storyboarding', 'Location & set design', 'Performance direction', 'Color grading'],
+        span: 'tall',
+        icon: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 23V8l14-3v15"/><circle cx="9" cy="23" r="3.2"/><circle cx="23" cy="20" r="3.2"/></svg>`,
+      },
+      {
+        name: 'Documentaries & Micro Dramas',
+        tag: 'Real stories & honest emotions',
+        desc: 'Character-led documentaries and short-form dramas that trade spectacle for honesty.',
+        includes: ['Research & casting', 'Long-form interviews', 'Narrative editing', 'Festival-ready delivery'],
+        icon: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 12l3-6h4l-2.5 6M11 12l2.5-6h4L15 12M18 12l2.5-6h4L22 12"/><rect x="4" y="12" width="24" height="14" rx="1.5"/></svg>`,
+      },
+      {
+        name: '3D & AI Visuals',
+        tag: 'Motion beyond the camera',
+        desc: '3D animation, motion graphics, and AI-assisted visuals for products, brand worlds, and shots a camera can\u2019t get.',
+        includes: ['3D product renders', 'Motion graphics', 'AI-assisted VFX', 'Style frames & mockups'],
+        icon: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M16 4l11 6.2v11.6L16 28 5 21.8V10.2z"/><path d="M16 4v12M16 16l11-5.8M16 16L5 10.2M16 16v12" stroke-opacity=".55"/></svg>`,
+      },
+      {
+        name: 'Post Production Services',
+        tag: 'Post & color',
+        desc: 'Editing, color grading, sound design, and mastering — for footage shot in-house or delivered by outside crews.',
+        includes: ['Offline & online edit', 'Color grading (DaVinci)', 'Sound design & mix', 'Delivery mastering'],
+        span: 'wide',
+        icon: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 6v20M14 6v20M22 6v20"/><circle cx="6" cy="12" r="2.2" fill="currentColor" stroke="none"/><circle cx="14" cy="21" r="2.2" fill="currentColor" stroke="none"/><circle cx="22" cy="9" r="2.2" fill="currentColor" stroke="none"/></svg>`,
+      },
+    ];
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    const svcGrid = document.getElementById('svcGrid');
+    SERVICES.forEach((s, i) => {
+      const tile = document.createElement('div');
+      tile.className = 'svc-tile' + (s.span ? ` span-${s.span}` : '');
+      tile.tabIndex = 0;
+      tile.setAttribute('role', 'button');
+      tile.setAttribute('aria-expanded', 'false');
+      tile.innerHTML = `
+        <span class="svc-ghost-num">${pad(i + 1)}</span>
+        <span class="svc-plus">+</span>
+        <div class="svc-base">
+          <div class="svc-icon">${s.icon}</div>
+          <div class="svc-tile-body">
+            <h3 class="svc-name">${s.name}</h3>
+            <p class="svc-tag">${s.tag}</p>
+          </div>
+        </div>
+        <div class="svc-reveal">
+          <h4 class="svc-reveal-name">${s.name}</h4>
+          <p class="svc-desc">${s.desc}</p>
+          <ul class="svc-chips">
+            ${s.includes.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+      function toggle() {
+        const isOpen = tile.classList.contains('open');
+        tile.classList.toggle('open', !isOpen);
+        tile.setAttribute('aria-expanded', String(!isOpen));
+      }
+      tile.addEventListener('click', toggle);
+      tile.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+      svcGrid.appendChild(tile);
+    });
+
+    /* ---- 8th grid cell: CTA, dropped into the leftover dense-grid gap
+       (auto-flow: dense backfills empty cells in document order, so as the
+       last item added it lands in whatever gap the other 7 tiles left
+       behind, whatever size that turns out to be) ---- */
+    const ctaTile = document.createElement('a');
+    ctaTile.href = 'contact.html#contact';
+    ctaTile.className = 'svc-tile svc-cta-tile span-tall';
+    ctaTile.innerHTML = `
+      <p class="svc-cta-text">Don't see the exact scope you need? We tailor crews and deliverables to the brief.</p>
+      <span class="svc-cta-link">
+        Talk to the studio
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </span>
+    `;
+    svcGrid.appendChild(ctaTile);
+
+    /* ============ TEAM DATA ============
+       Placeholder names, roles, and bios — swap for your real team.
+       Monogram cards are used instead of stock headshots; drop a real photo
+       in by adding an <img> inside .team-photo and hiding .team-mono, or
+       adjust services.css to taste.
+    ------------------------------------------------------------------- */
+    const FOUNDERS = [
+      {
+        name: 'Akshay KP',
+        role: 'Co-Founder & Head of Vision',
+        bio: 'Shapes every treatment before a single frame is shot — eleven years directing commercials and music videos.',
+      },
+      {
+        name: 'Charls Abraham',
+        role: 'Co-Founder & Head of Production',
+        bio: 'Runs the studio floor — budgets, crews, and client relationships — keeping every production on schedule.',
+      },
+    ];
+
+    const CREW = [
+      { name: 'Vishnu Nandan', role: 'The Lens Master' },
+      { name: 'Anandha Krishnan', role: 'The Visual Vault' },
+      { name: 'Dithimos Siby', role: 'The Butcher' },
+      { name: 'Aju Punnoose', role: 'Shutter Vixen' },
+      { name: 'Nishchith KS', role: 'Focal Fatale' },
+      { name: 'Arjun Sahadevan', role: 'The Alchemist' },
+      { name: 'Trishala Prasanna', role: 'Chaos Coordinator' },
+      { name: 'Elson Abraham', role: 'The Fixer' },
+    ]
+    function initials(name) {
+      return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    }
+
+    function slug(name) {
+      return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+
+    /* Photo cards degrade gracefully: if a photo hasn't been added yet at
+       the path below, the <img> fails to load and hides itself, revealing
+       the initials fallback layer sitting behind it. Drop a real photo at
+       ./assets/photos/team/<slug>.jpg (portrait orientation works best) and
+       it'll take over automatically — no markup changes needed. */
+    function teamPhotoMarkup(p) {
+      return `
+        <div class="team-photo">
+          <img class="team-photo-img" src="./assets/photos/team/${slug(p.name)}.jpg"
+               alt="${p.name}" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-scrim"></div>
+          <span class="team-bracket tl"></span>
+          <span class="team-bracket br"></span>
+        </div>
+      `;
+    }
+
+    const foundersWrap = document.getElementById('teamFounders');
+    FOUNDERS.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'team-card team-card--founder';
+      card.innerHTML = `
+        ${teamPhotoMarkup(p)}
+        <span class="team-idx">${pad(i + 1)}</span>
+        <div class="team-meta">
+          <h3>${p.name}</h3>
+          <p class="team-role">${p.role}</p>
+          <p class="team-bio">${p.bio}</p>
+        </div>
+      `;
+      foundersWrap.appendChild(card);
+    });
+
+    const crewWrap = document.getElementById('teamCrew');
+    CREW.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'team-card';
+      card.innerHTML = `
+        ${teamPhotoMarkup(p)}
+        <span class="team-idx">${pad(i + 3)}</span>
+        <div class="team-meta">
+          <h3>${p.name}</h3>
+          <p class="team-role">${p.role}</p>
+        </div>
+      `;
+      crewWrap.appendChild(card);
+    });
+  </script>
+</body>
+
+</html>

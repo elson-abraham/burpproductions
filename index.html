@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Burp Productions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" href="/assets/photos/logo_new/BURPFINALLOGO-5invertedicon.png" type="image/x-icon">
+
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="https://db.onlinewebfonts.com/c/a9ad0a3fc5e238252c64655a0d4517fb?family=Visby+Bold" rel="stylesheet">
+
+  <!-- GLightbox: local-video-capable lightbox for the work grid -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+<body>
+  <header>
+    <nav>
+      <div>
+        <a href="index.html">
+          <img class="logoH" src="/assets/photos/logo_new/BURPFINALLOGO-5.png">
+        </a>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="services.html#team">About</a>
+        <a href="works.html">Work</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="nav-right">
+        <a href="contact.html" class="nav-cta">Let's Talk</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"
+          aria-controls="navLinks">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+    <div class="nav-overlay" id="navOverlay"></div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="video-wrapper">
+        <!-- Replace the src below with your own footage. Keep muted+playsinline for autoplay to work in browsers. -->
+        <video class="hero-video" autoplay muted loop playsinline poster="">
+          <source src="/assets/videos/Showreel1.mov" type="video/mp4">
+        </video>
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="grain-tex"></div>
+    </div>
+    <!-- <div class="bracket tl" style="top:100px;left:48px;"></div> -->
+    <div class="hero-content">
+      <div class="wrap">
+        <div class="bracket tl" style="top: -70px;left:0px;"></div>
+
+        <div class="eyebrow-nav">Film &amp; Brand Studio</div>
+
+        <h1 class="title">burp productions.</h1>
+        <p class="hero-sub">Burp Productions is a creative studio crafting cinematic identities, films, and advertising
+          experiences that speak with clarity and stay with you.</p>
+        <a href="works.html" class="hero-cta">View Our Work
+          <svg class="view-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="scroll-cue"><span class="line"></span>Scroll</div>
+  </section>
+
+  <main class="wrap">
+    <section class="intro" id="about">
+      <!-- <div class="bracket tl"></div> -->
+      <div class="intro-grid">
+        <p class="intro-text" data-reveal>
+          <strong>translating ideas into cinematic narratives,</strong>
+          <span class="dim">visual campaigns, and immersive brand films that leave a lasting
+            mark.
+        </p>
+
+        <a href="services.html" class="cta-link" id="about">
+          View Our Services
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- VIDEO GALLERY -->
+
+    <section>
+      <div class="herovideo-top">
+        <div>
+          <p class="eyebrow">Showreel — 2026</p>
+          <section class="statement-vid" data-reveal>
+            <h2>a creative <br> video production studio.</h2>
+          </section>
+        </div>
+        <div class="herovideo-arrows">
+          <button class="arrow-btn" id="prevBtn" aria-label="Previous">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button class="arrow-btn" id="nextBtn" aria-label="Next">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p class="herovideo-sub">We shoot, edit, and score films for brands who'd rather be remembered than remembered of.
+      </p>
+    </section>
+
+    <div class="featured wrap" id="featured">
+      <div class="featured-progress">
+        <div class="featured-progress-bar" id="progressBar"></div>
+      </div>
+      <div class="featured-track" id="featuredTrack"></div>
+      <div class="featured-play" id="featuredPlay" aria-label="Play featured film">
+        <svg style="object-fit: cover;" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </div>
+      <div class="featured-info">
+        <div>
+          <h3 id="featuredTitle"></h3>
+          <p id="featuredClient"></p>
+        </div>
+        <div class="featured-count" id="featuredCount"></div>
+      </div>
+    </div>
+
+    <section class="selected-work" id="work">
+      <div class="section-head">
+        <h2>Selected work</h2>
+        <span class="count" id="workCount"></span>
+      </div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section class="stats" data-reveal>
+      <div class="bracket tl" style="top:80px;left:-50px;"></div>
+      <div class="bracket br" style="bottom: 80px;right: -50px;"></div>
+
+      <!-- <div class="bracket tl"></div>
+      <div class="bracket br"></div> -->
+      <div class="stats-grid">
+        <div>
+          <div class="stat-num">1000+</div>
+          <!-- <div class="stat-label">Projects &amp; Commercials</div> -->
+          <div class="stat-label">Projects</div>
+          <div class="stat-desc">
+            Film &amp; brand systems built to stand out across industries.
+          </div>
+        </div>
+        <div>
+          <div class="stat-num">194</div>
+          <div class="stat-label">Clients</div>
+          <div class="stat-desc">
+            Trusted by leading brands, agencies, and founders worldwide.
+          </div>
+        </div>
+        <div>
+          <div class="stat-num">11+</div>
+          <div class="stat-label">Years of Experience</div>
+          <div class="stat-desc">
+            Over a decade of shaping thoughtful and effective visual work.
+          </div>
+        </div>
+        <div>
+          <div class="stat-num">8</div>
+          <div class="stat-label">Creative Recognition</div>
+          <div class="stat-desc">
+            Recognized for artistic excellence, direction, and storytelling in
+            film.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="statement-row" data-reveal>
+      <section class="statement-vid">
+        <h2>cinematic precision,<br>creative storytelling,<br>vision in motion.</h2>
+      </section>
+    </div>
+
+  </main>
+
+  <div class="feature-media-colg" data-reveal>
+    <img src="/assets/photos/BTS collage.PNG" alt="">
+    <!-- class="cap" -->
+    <span class="eyebrow">On Set — Commercial Productions, 2026</span>
+  </div>
+
+  <div class="team-cta-row">
+    <a href="services.html#team" class="cta-link" id="about">
+      View Our Team
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M13 6l6 6-6 6" />
+      </svg>
+    </a>
+  </div>
+
+  <main class="wrap">
+    <section class="services" id="services">
+      <div class="head" data-reveal>
+        <h3>What we do</h3>
+        <p>
+          Multiple services, one creative team, carried from concept through final cut.
+        </p>
+      </div>
+
+      <div class="service-row" data-reveal>
+        <div class="service-idx">01</div>
+        <div class="service-name">Commercial &amp; Ad Films</div>
+        <div class="service-tag">Brand Stories that inspires</div>
+      </div>
+      <div class="service-row" data-reveal>
+        <div class="service-idx">02</div>
+        <div class="service-name">Digital &amp; Social Contents</div>
+        <div class="service-tag">Scroll stopping content</div>
+      </div>
+      <div class="service-row" data-reveal>
+        <div class="service-idx">03</div>
+        <div class="service-name">Live Events &amp; Aftermovies</div>
+        <!-- <div class="service-tag">Concept to Set</div> -->
+        <div class="service-tag">Capturing moments cinematically</div>
+      </div>
+      <div class="service-row" data-reveal>
+        <div class="service-idx">04</div>
+        <div class="service-name">Music Video Production</div>
+        <div class="service-tag">Visual worlds built around sound</div>
+      </div>
+      <div class="service-row" data-reveal>
+        <div class="service-idx">05</div>
+        <div class="service-name">Documentries &amp; Micro Dramas</div>
+        <div class="service-tag">Real Stories &amp; Honest Emotions</div>
+      </div>
+      <div class="service-row" data-reveal>
+        <div class="service-idx">06</div>
+        <div class="service-name">3D &amp; AI Visuals</div>
+        <div class="service-tag">Real Stories &amp; Honest Emotions</div>
+      </div>
+      <div class="service-row" data-reveal>
+        <div class="service-idx">07</div>
+        <div class="service-name">Post Production Services</div>
+        <div class="service-tag">Post &amp; Color</div>
+      </div>
+    </section>
+
+    <section class="cta" id="studio">
+      <p class="eyebrow-nav">Got a story to tell</p>
+      <h2 style="text-transform: lowercase;">Let's make something worth watching.</h2>
+      <a href="contact.html#contact" class="cta-link" id="contact">
+        Let's Talk
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
+    </section>
+
+    <section class="customers-section">
+      <h2 class="customer-section-title intro-text"><strong>trusted by</strong>
+        <span class="dim"> leaders and innovative entertaiment media throughout the nation.
+      </h2>
+      <!-- <p>Our clients and partners are at the core of every campaign, shoot, and story we create. From bold advertising strategies to striking 
+                            photography and cinematic videography, we work alongside visionary brands to craft content that captivates, connects, and inspires. 
+                            Together, we turn ideas into impactful visuals that leave a lasting impression.</p> -->
+      </div>
+      <div class="customers-logos">
+        <img src="assets/photos/client_logo/1522logo.jpg" alt="Customer 1" class="customer-logo" />
+        <img src="assets/photos/client_logo/EOELogo.png" alt="Customer 2" class="customer-logo" />
+        <img src="assets/photos/client_logo/KappaCultrLogo.jpg" alt="Customer 3" class="customer-logo" />
+        <img src="assets/photos/client_logo/Mathrubhumilogo.png" alt="Customer 4" class="customer-logo" />
+        <img src="assets/photos/client_logo/reliancelogo.png" alt="Customer 5" class="customer-logo" />
+        <img src="assets/photos/client_logo/SunburnFestiveLogo.png" alt="Customer 6" class="customer-logo" />
+        <img src="assets/photos/client_logo/Adidaslogo.jpg" alt="Customer 7" class="customer-logo" />
+        <img src="assets/photos/client_logo/DecathlonLogowhite.png" alt="Customer 8" class="customer-logo" />
+        <img src="assets/photos/client_logo/ArrowLogo.png" alt="Customer 9" class="customer-logo" />
+        <img src="assets/photos/client_logo/TitanLogo.png" alt="Customer 10" class="customer-logo" />
+        <img src="assets/photos/client_logo/bingo-seeklogo.png" alt="Customer 11" class="customer-logo" />
+        <img src="assets/photos/client_logo/LuluLogo.png" alt="Customer 12" class="customer-logo" />
+        <img src="assets/photos/client_logo/ikealogo.png" alt="Customer 13" class="customer-logo" />
+        <img src="assets/photos/client_logo/Courtyardlogo.png" alt="Customer 14" class="customer-logo" />
+        <img src="assets/photos/client_logo/fairfieldlogo.png" alt="Customer 15" class="customer-logo" />
+        <img src="assets/photos/client_logo/AstonMartinLogo.png" alt="Customer 16" class="customer-logo" />
+        <img src="assets/photos/client_logo/FerrariLogo.png" alt="Customer 17" class="customer-logo" />
+        <img src="assets/photos/client_logo/jeeplogo.png" alt="Customer 18" class="customer-logo" />
+        <img src="assets/photos/client_logo/tatalogo.png" alt="Customer 19" class="customer-logo" />
+        <img src="assets/photos/client_logo/JBLLogo.png" alt="Customer 20" class="customer-logo" />
+        <img src="assets/photos/client_logo/MaxFashionLogo.png" alt="Customer 21" class="customer-logo" />
+        <img src="assets/photos/client_logo/ManULogo.png" alt="Customer 22" class="customer-logo" />
+        <img src="assets/photos/client_logo/ChivasRegalLogo.png" alt="Customer 23" class="customer-logo" />
+        <img src="assets/photos/client_logo/HeinekenLogo.png" alt="Customer 24" class="customer-logo" />
+        <img src="assets/photos/client_logo/KingfisherLogo.png" alt="Customer 25" class="customer-logo" />
+        <img src="assets/photos/client_logo/BudweiserLogo.png" alt="Customer 26" class="customer-logo" />
+        <img src="assets/photos/client_logo/AbinBev.png" alt="Customer 27" class="customer-logo" />
+      </div>
+    </section>
+    <br><br>
+
+    <div class="media-partners-head">
+      <p>Other Media Partners</p>
+    </div>
+    <div class="customers-logos">
+      <img src="assets/photos/client_logo/OdigmaLogo.png" alt="Customer 5" class="customer-logo" />
+      <img src="assets/photos/client_logo/HEDLogo.avif" alt="Customer 5" class="customer-logo" />
+      <img src="assets/photos/client_logo/RippleLinksLogo.png" alt="Customer 5" class="customer-logo" />
+    </div>
+
+    <br><br><br><br><br><br><br>
+
+  </main>
+
+  <main class="wrap">
+    <section class="faq" id="contact">
+      <div class="head" data-reveal>
+        <h3>Got Questions?</h3>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <span>What kind of projects do you take on?</span><span class="plus">+</span>
+        </div>
+        <div class="faq-a">
+          From short brand films and product launches to full advertising
+          campaigns — if it needs a camera and a story, we're built for it.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <span>How long does a typical production take?</span><span class="plus">+</span>
+        </div>
+        <div class="faq-a">
+          Most projects run four to eight weeks from concept to final
+          delivery, depending on scope and shoot schedule.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <span>Do you work with brands outside our city?</span><span class="plus">+</span>
+        </div>
+        <div class="faq-a">
+          Yes — our crew travels for the right project, and we handle remote
+          pre-production and review over call.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <span>What's the first step to start a project?</span><span class="plus">+</span>
+        </div>
+        <div class="faq-a">
+          Send us a brief through the contact form and we'll set up an initial
+          call within two business days.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ########FOOTER######### -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo">Burp.</div>
+          <p>
+            A film and brand studio crafting cinematic identities, campaigns,
+            and stories that stay with people.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h5>Studio</h5>
+          <a href="#about">About</a>
+          <a href="#work">Work</a>
+          <a href="#services">Services</a>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <a href="mailto:info@burpproductions.com">info@burpproductions.com</a>
+          <a href="tel:+918088689756">+91 8088689756</a>
+        </div>
+        <div class="footer-col">
+          <h5>Follow</h5>
+          <a href="https://www.instagram.com/burpproductions" target="_blank">Instagram</a>
+          <a href="https://www.youtube.com/@burpproductions." target="_blank">Youtube</a>
+          <a href="https://www.linkedin.com/company/burpproductions" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Burp Productions. All rights reserved.</span>
+        <span>Bengaluru, India</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // mobile hamburger nav
+    (function () {
+      const toggle = document.getElementById('navToggle');
+      const links = document.getElementById('navLinks');
+      const overlay = document.getElementById('navOverlay');
+      if (!toggle || !links || !overlay) return;
+
+      function closeMenu() {
+        toggle.classList.remove('open');
+        links.classList.remove('open');
+        overlay.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
+      function openMenu() {
+        toggle.classList.add('open');
+        links.classList.add('open');
+        overlay.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+
+      toggle.addEventListener('click', () => {
+        const isOpen = links.classList.contains('open');
+        isOpen ? closeMenu() : openMenu();
+      });
+
+      overlay.addEventListener('click', closeMenu);
+      links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 900) closeMenu();
+      });
+    })();
+
+    // scroll reveal
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: .15 });
+    revealEls.forEach(el => io.observe(el));
+
+    // faq accordion
+    document.querySelectorAll('.faq-item').forEach(item => {
+      item.querySelector('.faq-q').addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(o => o.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+
+    (function () {
+      // -----------------------------------------------------------------
+      // Swap in your own footage: set `video` to a local/hosted .mp4 path
+      // to enable real playback in the lightbox. Left empty, the lightbox
+      // just opens the poster image full-size instead of breaking.
+      // Poster images below are placeholders (picsum.photos) — replace
+      // with real frames from your edits.
+      // -----------------------------------------------------------------
+      const FEATURED = [
+        { title: 'Commercial & Ad Films', client: 'JBL', poster: './assets/photos/thumbs/JBLBurpProductions.png', video: './assets/videos/JBLBurpProductions.mp4' },
+        { title: 'Digital & Social Contents', client: 'South Wave', poster: './assets/photos/thumbs/SWBurpProductions1.png', video: './assets/videos/SWBurpProductions.mov' },
+        { title: 'Ad Film', client: 'Liquid IV', poster: './assets/photos/thumbs/IKBurpProductions.png', video: './assets/videos/IKBurpProductions.mp4' },
+        { title: 'Aftermovie', client: 'DGTL', poster: './assets/photos/thumbs/DGTLBurpProductions.png', video: './assets/videos/DGTLBurpProductions.mp4' },
+        { title: 'Social Content', client: 'Decathlon', poster: './assets/photos/thumbs/DecBurpProductions.png', video: './assets/videos/DecBurpProductions.mov' },
+      ];
+
+      const WORK = [
+        { title: 'JBL', client: 'Television Commercial', poster: './assets/photos/thumbs/JBLBurpProductions.png', video: './assets/videos/JBLBurpProductions.mp4' },
+        { title: 'South Wave ', client: 'Clothing Branding', poster: './assets/photos/thumbs/SWBurpProductions1.png', video: './assets/videos/SWBurpProductions.mov' },
+        { title: 'Liquid IV', client: 'Ad Film', poster: './assets/photos/thumbs/IKBurpProductions.png', video: './assets/videos/IKBurpProductions.mp4' },
+        { title: 'Decathlon', client: 'Social Content', poster: './assets/photos/thumbs/DecBurpProductions.png', video: './assets/videos/DecBurpProductions.mov' },
+        { title: 'DGTL', client: 'Aftermovie', poster: './assets/photos/thumbs/DGTLBurpProductions.png', video: './assets/videos/DGTLBurpProductions.mp4' },
+        { title: 'Beanaru', client: 'Brand Campaign', poster: './assets/photos/thumbs/BeanaruBurpProductions.png', video: './assets/videos/BeanaruBurpProductions.mp4' },
+
+      ];
+
+      /* ---------------- Featured carousel ---------------- */
+      const track = document.getElementById('featuredTrack');
+      const titleEl = document.getElementById('featuredTitle');
+      const clientEl = document.getElementById('featuredClient');
+      const countEl = document.getElementById('featuredCount');
+      const progressBar = document.getElementById('progressBar');
+      const playBtn = document.getElementById('featuredPlay');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const featuredWrap = document.getElementById('featured');
+
+      let current = 0;
+      const AUTOPLAY_MS = 6000;
+      let timer = null;
+      let progressStart = null;
+      let rafId = null;
+
+      FEATURED.forEach((item, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'featured-slide' + (i === 0 ? ' active' : '');
+        slide.innerHTML = `<img src="${item.poster}" alt="${item.title}">`;
+        track.appendChild(slide);
+      });
+      const slides = track.querySelectorAll('.featured-slide');
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+
+      function updateFeatured() {
+        slides.forEach((s, i) => s.classList.toggle('active', i === current));
+        const item = FEATURED[current];
+        titleEl.textContent = item.title;
+        clientEl.textContent = item.client;
+        countEl.innerHTML = `${pad(current + 1)} <span class="dim">/ ${pad(FEATURED.length)}</span>`;
+      }
+
+      function goTo(i) {
+        current = (i + FEATURED.length) % FEATURED.length;
+        updateFeatured();
+        restartProgress();
+      }
+
+      function restartProgress() {
+        cancelAnimationFrame(rafId);
+        progressStart = performance.now();
+        progressBar.style.width = '0%';
+        function step(ts) {
+          const elapsed = ts - progressStart;
+          const pct = Math.min(100, (elapsed / AUTOPLAY_MS) * 100);
+          progressBar.style.width = pct + '%';
+          if (pct < 100) {
+            rafId = requestAnimationFrame(step);
+          } else {
+            goTo(current + 1);
+          }
+        }
+        rafId = requestAnimationFrame(step);
+      }
+
+      prevBtn.addEventListener('click', () => goTo(current - 1));
+      nextBtn.addEventListener('click', () => goTo(current + 1));
+      featuredWrap.addEventListener('mouseenter', () => cancelAnimationFrame(rafId));
+      featuredWrap.addEventListener('mouseleave', () => restartProgress());
+
+      /* ---------------- Work grid ---------------- */
+      const grid = document.getElementById('grid');
+      const workCount = document.getElementById('workCount');
+      workCount.textContent = `${pad(WORK.length)} films`;
+
+      WORK.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'g-card';
+        card.innerHTML = `
+          <div class="g-thumb">
+            <span class="g-index">${pad(i + 1)}</span>
+            <img src="${item.poster}" alt="${item.title}">
+            <div class="g-play">
+              <svg viewBox="0 0 68 48"><path d="M66.5,7.7c-0.8-2.9-2.6-5.1-5.4-5.9C56.6,0.5,34,0.5,34,0.5s-22.6,0-27.1,1.3C4.1,2.6,2.3,4.9,1.5,7.7 C0.2,12.2,0.2,24,0.2,24s0,11.8,1.3,16.3c0.8,2.9,2.6,5.1,5.4,5.9C11.4,47.5,34,47.5,34,47.5s22.6,0,27.1-1.3 c2.9-0.8,4.7-3,5.4-5.9C67.8,35.8,67.8,24,67.8,24S67.8,12.2,66.5,7.7z" fill="#FF5A2B"></path><path d="M 45,24 27,14 27,34" fill="#0A0A0A"></path></svg>
+            </div>
+          </div>
+          <div class="g-meta">
+            <h4>${item.title}</h4>
+            <span>${item.client}</span>
+          </div>
+        `;
+        card.addEventListener('click', () => openWorkLightbox(i));
+        grid.appendChild(card);
+      });
+
+      /* ---------------- Lightboxes ----------------
+         Previously openLightbox() created a brand-new GLightbox with a
+         single-item elements array on every click, so Next/Prev and swipe
+         had nothing to move to. Fix: build one persistent GLightbox
+         instance per collection (FEATURED and WORK), each holding its
+         FULL list of elements, and jump straight to the clicked/current
+         item with .openAt(index). Now arrows and swipe cycle through the
+         whole set for both the featured carousel and the selected-work
+         grid. ---- */
+      function toLightboxElements(items) {
+        return items.map(item => (
+          item.video
+            ? { href: item.video, type: 'video', source: 'local', title: item.title }
+            : { href: item.poster, type: 'image', title: item.title + ' — add a video file to enable playback' }
+        ));
+      }
+
+      const featuredLightbox = GLightbox({
+        elements: toLightboxElements(FEATURED),
+        autoplayVideos: true,
+        loop: true,
+        touchNavigation: true,
+      });
+
+      const workLightbox = GLightbox({
+        elements: toLightboxElements(WORK),
+        autoplayVideos: true,
+        loop: true,
+        touchNavigation: true,
+      });
+
+      function openFeaturedLightbox(index) {
+        featuredLightbox.openAt(index);
+      }
+
+      function openWorkLightbox(index) {
+        workLightbox.openAt(index);
+      }
+
+      playBtn.addEventListener('click', () => openFeaturedLightbox(current));
+
+      updateFeatured();
+      restartProgress();
+    })();
+
+  </script>
+</body>
+
+</html>
