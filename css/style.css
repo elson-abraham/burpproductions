@@ -235,6 +235,11 @@ body::after {
   max-width: 110px;
   height: auto;
 }
+@media (max-width: 900px) {
+  .logoH {
+    max-width: 84px; /* smaller on mobile so nav stays compact */
+  }
+}
 
 header {
   position: fixed;
@@ -1206,11 +1211,16 @@ footer {
   color: var(--ink-dim);
 }
 
-
 /* ============ CONTACT PAGE ============ */
 /* Used on contact.html — kept here since style.css is shared across pages.
    Relies on the same :root variables defined above
    (--bg, --ink, --ink-dim, --line, --accent, --font). */
+
+/* Solid nav background so it doesn't blend into hero content below it */
+.body .page-contact .header {
+  background: rgba(10, 10, 10, .95);
+  backdrop-filter: blur(6px);
+}
 
 .contact-hero {
   position: relative;
@@ -1400,7 +1410,6 @@ footer {
   color: var(--ink-dim) !important;
 }
 
-/* overall lightbox backdrop, in case it's also light */
 .goverlay {
   background: rgba(4, 4, 4, .92) !important;
 }
@@ -1417,11 +1426,11 @@ footer {
   transform: translateY(0);
 }
 
-/* ---------- Responsive Contact Page---------- */
-@media (max-width: 900px) {
-  .contact-hero {
-    padding: 130px 0 50px;
-  }
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+  /* .contact-hero {
+    padding: 180px 0 50px;
+  } */
 
   .contact-body {
     grid-template-columns: 1fr;
@@ -1449,7 +1458,12 @@ footer {
   }
 }
 
-/* ============ RESPONSIVE ============ */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .contact-submit {
+    align-self: center;
+  }
+}
+
 @media (max-width: 900px) {
   .wrap {
     padding: 0 24px;
@@ -1459,7 +1473,6 @@ footer {
     padding: 20px 24px;
   }
 
-  /* hamburger replaces the inline links on tablet/phone */
   .nav-toggle {
     display: flex;
   }
@@ -1473,7 +1486,6 @@ footer {
     font-size: 12.5px;
   }
 
-  /* slide-in panel instead of the old display:none */
   .nav-links {
     display: flex;
     flex-direction: column;
@@ -1552,15 +1564,12 @@ footer {
   }
 }
 
-
 /* ============ TABLET / iPAD (portrait + landscape) ============ */
 @media (min-width: 601px) and (max-width: 1024px) {
-
   nav {
     padding: 22px 32px;
   }
 
-  /* hero: comfortable padding + sizing for tablet widths */
   .hero {
     padding: 48px 5vw 0;
   }
@@ -1573,7 +1582,6 @@ footer {
     max-width: 380px;
   }
 
-  /* intro: allow two columns again once there's enough width */
   .intro-grid {
     grid-template-columns: 1fr;
     gap: 32px;
@@ -1583,7 +1591,6 @@ footer {
     padding: 110px 0 80px;
   }
 
-  /* stats: 2-up reads better than a cramped 4-up on an iPad */
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 32px;
@@ -1594,12 +1601,10 @@ footer {
     padding: 60px 0 100px;
   }
 
-  /* featured carousel info: prevent title/count crowding */
   .featured-info {
     flex-wrap: wrap;
   }
 
-  /* services: stack the head, row spacing tightened */
   .services .head {
     flex-direction: column;
     align-items: flex-start;
@@ -1614,7 +1619,6 @@ footer {
     padding: 22px 0;
   }
 
-  /* footer: 2-up instead of a squeezed 4-up */
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: 32px;
@@ -1627,6 +1631,9 @@ footer {
 
   .customers-logos {
     gap: 28px;
+  }
+  .contact-hero {
+    padding: 180px 0 50px;
   }
 }
 
@@ -1646,4 +1653,11 @@ footer {
   .hero-cta {
     float: none;
   }
+
+  .contact-hero {
+    padding: 160px 0 50px;
+  }
+  .contact-submit {
+    align-self: center;
+  }    
 }
