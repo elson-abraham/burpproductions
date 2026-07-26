@@ -26,7 +26,6 @@
   <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
 <body>
-
   <!--==============PRELOADER================ -->
   <div id="preloader">
     <div class="pl-mark">
@@ -56,7 +55,7 @@
         </a>
       </div>
       <div class="nav-links" id="navLinks">
-        <a href="services.html#team">About</a>
+        <a href="about.html">About</a>
         <a href="works.html">Work</a>
         <a href="services.html">Services</a>
         <a href="contact.html">Contact</a>
@@ -74,7 +73,7 @@
     <div class="nav-overlay" id="navOverlay"></div>
   </header>
 
-  <section class="hero">
+  <section class="hero" id="toppage">
     <div class="hero-bg">
       <div class="video-wrapper">
         <!-- Replace the src below with your own footage. Keep muted+playsinline for autoplay to work in browsers. -->
@@ -114,12 +113,12 @@
             mark.
         </p>
 
-        <a href="services.html" class="cta-link" id="about">
-          View Our Services
+        <a href="about.html" class="cta-link" id="about">
+          Read About Us
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M5 12h14M13 6l6 6-6 6" />
           </svg>
-        </a>
+        </a>        
       </div>
     </section>
 
@@ -128,7 +127,7 @@
     <section>
       <div class="herovideo-top">
         <div>
-          <p class="eyebrow">Showreel — 2026</p>
+          <p class="eyebrow">A glimpse into our portfolio</p>
           <section class="statement-vid" data-reveal>
             <h2>a creative <br> video production studio.</h2>
           </section>
@@ -177,16 +176,22 @@
       <div class="grid" id="grid"></div>
     </section>
 
+    <div class="portfolio-cta-row">
+      <a href="works.html" class="cta-link">
+        Explore our Portfolio
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>    
+    </div>
+
     <section class="stats" data-reveal>
       <div class="bracket tl" style="top:80px;left:-50px;"></div>
       <div class="bracket br" style="bottom: 80px;right: -50px;"></div>
 
-      <!-- <div class="bracket tl"></div>
-      <div class="bracket br"></div> -->
       <div class="stats-grid">
         <div>
           <div class="stat-num">1000+</div>
-          <!-- <div class="stat-label">Projects &amp; Commercials</div> -->
           <div class="stat-label">Projects</div>
           <div class="stat-desc">
             Film &amp; brand systems built to stand out across industries.
@@ -210,8 +215,7 @@
           <div class="stat-num">8</div>
           <div class="stat-label">Creative Recognition</div>
           <div class="stat-desc">
-            Recognized for artistic excellence, direction, and storytelling in
-            film.
+            Recognized for artistic excellence, direction, and storytelling in film.
           </div>
         </div>
       </div>
@@ -219,20 +223,19 @@
 
     <div class="statement-row" data-reveal>
       <section class="statement-vid">
-        <h2>cinematic precision,<br>creative storytelling,<br>vision in motion.</h2>
+        <h2>cinematic precision,<br>creative storytelling,<br>vision in motion.</h2><br>
       </section>
     </div>
-
   </main>
 
   <div class="feature-media-colg" data-reveal>
-    <img src="/assets/photos/BTS collage.PNG" alt="">
     <!-- class="cap" -->
-    <span class="eyebrow">On Set — Commercial Productions, 2026</span>
+    <span class="eyebrow">On Set - Commercial Productions, 2026</span>
+    <img src="/assets/photos/BTS collage.PNG" alt="">
   </div>
 
   <div class="team-cta-row">
-    <a href="services.html#team" class="cta-link" id="about">
+    <a href="about.html#team" class="cta-link" id="about">
       View Our Team
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M5 12h14M13 6l6 6-6 6" />
@@ -243,7 +246,7 @@
   <main class="wrap">
     <section class="services" id="services">
       <div class="head" data-reveal>
-        <h3>What we do</h3>
+        <h3>what we do.</h3>
         <p>
           Multiple services, one creative team, carried from concept through final cut.
         </p>
@@ -285,59 +288,60 @@
         <div class="service-name">Post Production Services</div>
         <div class="service-tag">Post &amp; Color</div>
       </div>
-    </section>
 
-    <section class="cta" id="studio">
-      <p class="eyebrow-nav">Got a story to tell</p>
-      <h2 style="text-transform: lowercase;">Let's make something worth watching.</h2>
-      <a href="contact.html#contact" class="cta-link" id="contact">
-        Let's Talk
+    <div class="portfolio-cta-row">
+      <a href="services.html" class="cta-link">
+        Explore our Services
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M5 12h14M13 6l6 6-6 6" />
         </svg>
-      </a>
-    </section>
+      </a>    
+    </div>
 
-    <section class="customers-section">
-      <h2 class="customer-section-title intro-text"><strong>trusted by</strong>
-        <span class="dim"> leaders and innovative entertaiment media throughout the nation.
-      </h2>
-      <!-- <p>Our clients and partners are at the core of every campaign, shoot, and story we create. From bold advertising strategies to striking 
-                            photography and cinematic videography, we work alongside visionary brands to craft content that captivates, connects, and inspires. 
-                            Together, we turn ideas into impactful visuals that leave a lasting impression.</p> -->
-      </div>
-      <div class="customers-logos">
-        <img src="assets/photos/client_logo/1522logo.jpg" alt="Customer 1" class="customer-logo" />
-        <img src="assets/photos/client_logo/EOELogo.png" alt="Customer 2" class="customer-logo" />
-        <img src="assets/photos/client_logo/KappaCultrLogo.jpg" alt="Customer 3" class="customer-logo" />
-        <img src="assets/photos/client_logo/Mathrubhumilogo.png" alt="Customer 4" class="customer-logo" />
-        <img src="assets/photos/client_logo/reliancelogo.png" alt="Customer 5" class="customer-logo" />
-        <img src="assets/photos/client_logo/SunburnFestiveLogo.png" alt="Customer 6" class="customer-logo" />
-        <img src="assets/photos/client_logo/Adidaslogo.jpg" alt="Customer 7" class="customer-logo" />
-        <img src="assets/photos/client_logo/DecathlonLogowhite.png" alt="Customer 8" class="customer-logo" />
-        <img src="assets/photos/client_logo/ArrowLogo.png" alt="Customer 9" class="customer-logo" />
-        <img src="assets/photos/client_logo/TitanLogo.png" alt="Customer 10" class="customer-logo" />
-        <img src="assets/photos/client_logo/bingo-seeklogo.png" alt="Customer 11" class="customer-logo" />
-        <img src="assets/photos/client_logo/LuluLogo.png" alt="Customer 12" class="customer-logo" />
-        <img src="assets/photos/client_logo/ikealogo.png" alt="Customer 13" class="customer-logo" />
-        <img src="assets/photos/client_logo/Courtyardlogo.png" alt="Customer 14" class="customer-logo" />
-        <img src="assets/photos/client_logo/fairfieldlogo.png" alt="Customer 15" class="customer-logo" />
-        <img src="assets/photos/client_logo/AstonMartinLogo.png" alt="Customer 16" class="customer-logo" />
-        <img src="assets/photos/client_logo/FerrariLogo.png" alt="Customer 17" class="customer-logo" />
-        <img src="assets/photos/client_logo/jeeplogo.png" alt="Customer 18" class="customer-logo" />
-        <img src="assets/photos/client_logo/tatalogo.png" alt="Customer 19" class="customer-logo" />
-        <img src="assets/photos/client_logo/JBLLogo.png" alt="Customer 20" class="customer-logo" />
-        <img src="assets/photos/client_logo/MaxFashionLogo.png" alt="Customer 21" class="customer-logo" />
-        <img src="assets/photos/client_logo/ManULogo.png" alt="Customer 22" class="customer-logo" />
-        <img src="assets/photos/client_logo/ChivasRegalLogo.png" alt="Customer 23" class="customer-logo" />
-        <img src="assets/photos/client_logo/HeinekenLogo.png" alt="Customer 24" class="customer-logo" />
-        <img src="assets/photos/client_logo/KingfisherLogo.png" alt="Customer 25" class="customer-logo" />
-        <img src="assets/photos/client_logo/BudweiserLogo.png" alt="Customer 26" class="customer-logo" />
-        <img src="assets/photos/client_logo/AbinBev.png" alt="Customer 27" class="customer-logo" />
-      </div>
     </section>
-    <br><br>
+  
+      <!-- ######## CUST & MEDIA PARTNERS ######### -->
+    <section>
+      <p class="eyebrow">Who we work with</p>
+      <p class="intro-text" data-reveal>
+        <strong>trusted by</strong>
+        <span class="dim">leaders and innovative entertaiment media throughout the nation.
+      </p>
+    </section>   
+  </main>
 
+  <section>
+    <!-- Main closed to stop the wraping to display all logos full page width. -->
+    <div class="customers-logos">
+      <img src="assets/photos/client_logo/1522logo.jpg" alt="Customer 1" class="customer-logo" />
+      <img src="assets/photos/client_logo/EOELogo.png" alt="Customer 2" class="customer-logo" />
+      <img src="assets/photos/client_logo/KappaCultrLogo.jpg" alt="Customer 3" class="customer-logo" />
+      <img src="assets/photos/client_logo/Mathrubhumilogo.png" alt="Customer 4" class="customer-logo" />
+      <img src="assets/photos/client_logo/reliancelogo.png" alt="Customer 5" class="customer-logo" />
+      <img src="assets/photos/client_logo/SunburnFestiveLogo.png" alt="Customer 6" class="customer-logo" />
+      <img src="assets/photos/client_logo/Adidaslogo.jpg" alt="Customer 7" class="customer-logo" />
+      <img src="assets/photos/client_logo/DecathlonLogowhite.png" alt="Customer 8" class="customer-logo" />
+      <img src="assets/photos/client_logo/ArrowLogo.png" alt="Customer 9" class="customer-logo" />
+      <img src="assets/photos/client_logo/TitanLogo.png" alt="Customer 10" class="customer-logo" />
+      <img src="assets/photos/client_logo/bingo-seeklogo.png" alt="Customer 11" class="customer-logo" />
+      <img src="assets/photos/client_logo/LuluLogo.png" alt="Customer 12" class="customer-logo" />
+      <img src="assets/photos/client_logo/ikealogo.png" alt="Customer 13" class="customer-logo" />
+      <img src="assets/photos/client_logo/Courtyardlogo.png" alt="Customer 14" class="customer-logo" />
+      <img src="assets/photos/client_logo/fairfieldlogo.png" alt="Customer 15" class="customer-logo" />
+      <img src="assets/photos/client_logo/AstonMartinLogo.png" alt="Customer 16" class="customer-logo" />
+      <img src="assets/photos/client_logo/FerrariLogo.png" alt="Customer 17" class="customer-logo" />
+      <img src="assets/photos/client_logo/jeeplogo.png" alt="Customer 18" class="customer-logo" />
+      <img src="assets/photos/client_logo/tatalogo.png" alt="Customer 19" class="customer-logo" />
+      <img src="assets/photos/client_logo/JBLLogo.png" alt="Customer 20" class="customer-logo" />
+      <img src="assets/photos/client_logo/MaxFashionLogo.png" alt="Customer 21" class="customer-logo" />
+      <img src="assets/photos/client_logo/ManULogo.png" alt="Customer 22" class="customer-logo" />
+      <img src="assets/photos/client_logo/ChivasRegalLogo.png" alt="Customer 23" class="customer-logo" />
+      <img src="assets/photos/client_logo/HeinekenLogo.png" alt="Customer 24" class="customer-logo" />
+      <img src="assets/photos/client_logo/KingfisherLogo.png" alt="Customer 25" class="customer-logo" />
+      <img src="assets/photos/client_logo/BudweiserLogo.png" alt="Customer 26" class="customer-logo" />
+      <img src="assets/photos/client_logo/AbinBev.png" alt="Customer 27" class="customer-logo" />
+    </div><br><br>
+  
     <div class="media-partners-head">
       <p>Other Media Partners</p>
     </div>
@@ -345,13 +349,21 @@
       <img src="assets/photos/client_logo/OdigmaLogo.png" alt="Customer 5" class="customer-logo" />
       <img src="assets/photos/client_logo/HEDLogo.avif" alt="Customer 5" class="customer-logo" />
       <img src="assets/photos/client_logo/RippleLinksLogo.png" alt="Customer 5" class="customer-logo" />
-    </div>
-
-    <br><br><br><br><br><br><br>
-
-  </main>
+    </div><br><br><br><br><br><br><br>
+  </section>
 
   <main class="wrap">
+    <section class="cta">
+      <p class="eyebrow">Got a story to tell</p>
+      <h2 style="text-transform: lowercase;">Let's make something worth watching.</h2>
+      <a href="contact.html" class="cta-link">
+        Let's Talk
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
+    </section><br><br><br>
+
     <section class="faq" id="contact">
       <div class="head" data-reveal>
         <h3>Got Questions?</h3>
@@ -363,7 +375,7 @@
         </div>
         <div class="faq-a">
           From short brand films and product launches to full advertising
-          campaigns — if it needs a camera and a story, we're built for it.
+          campaigns - if it needs a camera and a story, we're built for it.
         </div>
       </div>
       <div class="faq-item">
@@ -380,7 +392,7 @@
           <span>Do you work with brands outside our city?</span><span class="plus">+</span>
         </div>
         <div class="faq-a">
-          Yes — our crew travels for the right project, and we handle remote
+          Yes - our crew travels for the right project, and we handle remote
           pre-production and review over call.
         </div>
       </div>
@@ -401,7 +413,8 @@
     <div class="wrap">
       <div class="footer-grid">
         <div>
-          <div class="footer-logo">Burp.</div>
+          <!-- <div href="#toppage" class="footer-logo">burp.</div> -->
+          <a href="#toppage" class="footer-logo">burp.</a>
           <p>
             A film and brand studio crafting cinematic identities, campaigns,
             and stories that stay with people.
@@ -409,9 +422,9 @@
         </div>
         <div class="footer-col">
           <h5>Studio</h5>
-          <a href="#about">About</a>
-          <a href="#work">Work</a>
-          <a href="#services">Services</a>
+          <a href="about.html">About</a>
+          <a href="works.html">Work</a>
+          <a href="services.html">Services</a>
         </div>
         <div class="footer-col">
           <h5>Contact</h5>
@@ -575,7 +588,7 @@
       // Swap in your own footage: set `video` to a local/hosted .mp4 path
       // to enable real playback in the lightbox. Left empty, the lightbox
       // just opens the poster image full-size instead of breaking.
-      // Poster images below are placeholders (picsum.photos) — replace
+      // Poster images below are placeholders (picsum.photos) - replace
       // with real frames from your edits.
       // -----------------------------------------------------------------
       const FEATURED = [
@@ -697,7 +710,7 @@
         return items.map(item => (
           item.video
             ? { href: item.video, type: 'video', source: 'local', title: item.title }
-            : { href: item.poster, type: 'image', title: item.title + ' — add a video file to enable playback' }
+            : { href: item.poster, type: 'image', title: item.title + ' - add a video file to enable playback' }
         ));
       }
 
