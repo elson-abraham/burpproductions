@@ -10,7 +10,7 @@
     gtag('js', new Date());
     gtag('config', 'G-SYGMV2QRPL');
   </script>
-    
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Services & Team - Burp Productions</title>
@@ -35,14 +35,15 @@
         </a>
       </div>
       <div class="nav-links" id="navLinks">
-        <a href="services.html#team">About</a>
+        <a href="about.html">About</a>
         <a href="works.html">Work</a>
         <a href="services.html" class="is-active">Services</a>
         <a href="contact.html">Contact</a>
       </div>
       <div class="nav-right">
         <a href="contact.html" class="nav-cta">Let's Talk</a>
-        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"
+          aria-controls="navLinks">
           <span></span>
           <span></span>
           <span></span>
@@ -54,14 +55,14 @@
 
   <main>
     <!-- ============ SERVICES HERO ============ -->
-    <section class="svc-hero wrap">
+    <section class="svc-hero wrap" id="tp">
       <div class="bracket tl" style="top:96px;left:0;"></div>
-      <p class="eyebrow">Capabilities — Full Service Production</p>
+      <p class="eyebrow">Capabilities - Full Service Production</p>
       <h1 class="svc-title">what we do.</h1>
       <div class="svc-hero-row">
         <p class="svc-hero-sub">
-          One crew, carried from treatment through final grade. Below is
-          everything that happens between a first call and a delivered film —
+          One crew, carried from treatment through final grade. <br>Below is
+          everything that happens between a first call and a delivered film -
           tap a line to see what's included.
         </p>
         <div class="svc-hero-stat">
@@ -76,32 +77,13 @@
       <div class="svc-grid" id="svcGrid"></div>
     </section>
 
-    <!-- ============ TEAM ============ -->
-    <section class="team wrap" id="team">
-      <div class="team-head" data-reveal>
-        <div>
-          <p class="eyebrow">Cast &amp; Crew — 06</p>
-          <h2 class="team-title">the burp core.</h2>
-        </div>
-        <p class="team-sub">
-          Every project is run by the same core team — no revolving freelancers,
-          no handoffs between strangers. This is who you'll actually work with.
-        </p>
-      </div>
-
-      <!-- Co-founders -->
-      <div class="team-founders" id="teamFounders"></div>
-
-      <!-- Team members -->
-      <div class="team-crew" id="teamCrew"></div>
-    </section>
-
+    <!-- ============ SERVICES CTA ============ -->
     <section class="svc-cta wrap" data-reveal>
       <div class="bracket br" style="bottom:0;right:0;"></div>
-      <p class="eyebrow-nav">Got a production in mind</p>
+      <p class="eyebrow" style="justify-content: center;">Got a production in mind</p>
       <h2>Let's staff up<br>your next shoot.</h2>
-      <a href="contact.html#contact" class="cta-link">
-        Start a project
+      <a href="contact.html" class="cta-link">
+        Drop us a line
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M5 12h14M13 6l6 6-6 6" />
         </svg>
@@ -113,17 +95,18 @@
     <div class="wrap">
       <div class="footer-grid">
         <div>
-          <div class="footer-logo">Burp.</div>
-          <p>
+          <!-- <div class="footer-logo">Burp.</div> -->
+          <a href="index.html" class="footer-logo">burp.</a>
+          <p><br>
             A film and brand studio crafting cinematic identities, campaigns,
             and stories that stay with people.
           </p>
         </div>
         <div class="footer-col">
           <h5>Studio</h5>
-          <a href="index.html#about">About</a>
+          <a href="about.html">About</a>
           <a href="works.html">Work</a>
-          <a href="services.html">Services</a>
+          <a href="#tp">Services</a>
         </div>
         <div class="footer-col">
           <h5>Contact</h5>
@@ -194,7 +177,7 @@
       {
         name: 'Digital & Social Contents',
         tag: 'Scroll-stopping content',
-        desc: 'Short-form content engineered for feeds — reels, social ads, and campaign cutdowns shot for vertical and native placements.',
+        desc: 'Short-form content engineered for feeds - reels, social ads, and campaign cutdowns shot for vertical and native placements.',
         includes: ['Vertical & square edits', 'Platform-native cutdowns', 'Content batching', 'Caption & thumbnail sets'],
         icon: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="9" y="4" width="14" height="24" rx="3"/><path d="M9 8h14M9 24h14" stroke-opacity=".5"/><circle cx="16" cy="16" r="3.4"/></svg>`,
       },
@@ -208,11 +191,11 @@
       {
         name: 'Commercial & Ad Films',
         tag: 'Brand stories that inspire',
-        desc: 'TVC and digital ad films built from concept to final delivery — made to hold attention across broadcast and digital placements.',
+        desc: 'TVC and digital ad films built from concept to final delivery - made to hold attention across broadcast and digital placements.',
         includes: ['Concept & scripting', 'Location scouting', 'Full crew production', 'Color & sound mix'],
         span: 'wide',
         icon: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="9" width="19" height="14" rx="2"/><path d="M23 13l5-3v12l-5-3"/><circle cx="9" cy="16" r="2.6"/></svg>`,
-      },      
+      },
       {
         name: 'Music Video Production',
         tag: 'Visual worlds built around sound',
@@ -238,8 +221,8 @@
       {
         name: 'Post Production Services',
         tag: 'Post & color',
-        desc: 'Editing, color grading, sound design, and mastering — for footage shot in-house or delivered by outside crews.',
-        includes: ['Offline & online edit', 'Color grading (DaVinci)', 'Sound design & mix', 'Delivery mastering'],
+        desc: 'Editing, color grading, sound design, and mastering - for footage shot in-house or delivered by outside crews.',
+        includes: ['Offline & online edit', 'Color grading (DaVinci, Adobe & Final Cut)', 'Sound design & mix', 'Delivery mastering'],
         span: 'wide',
         icon: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 6v20M14 6v20M22 6v20"/><circle cx="6" cy="12" r="2.2" fill="currentColor" stroke="none"/><circle cx="14" cy="21" r="2.2" fill="currentColor" stroke="none"/><circle cx="22" cy="9" r="2.2" fill="currentColor" stroke="none"/></svg>`,
       },
@@ -303,7 +286,7 @@
     svcGrid.appendChild(ctaTile);
 
     /* ============ TEAM DATA ============
-       Placeholder names, roles, and bios — swap for your real team.
+       Placeholder names, roles, and bios - swap for your real team.
        Monogram cards are used instead of stock headshots; drop a real photo
        in by adding an <img> inside .team-photo and hiding .team-mono, or
        adjust services.css to taste.
@@ -343,7 +326,7 @@
        the path below, the <img> fails to load and hides itself, revealing
        the initials fallback layer sitting behind it. Drop a real photo at
        ./assets/photos/team/<slug>.jpg (portrait orientation works best) and
-       it'll take over automatically — no markup changes needed. */
+       it'll take over automatically - no markup changes needed. */
     function teamPhotoMarkup(p) {
       return `
         <div class="team-photo">
