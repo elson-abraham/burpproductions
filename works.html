@@ -13,7 +13,7 @@
     
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Our Works — Burp Productions</title>
+  <title>Our Works - Burp Productions</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="icon" href="/assets/photos/logo_new/BURPFINALLOGO-5invertedicon.png" type="image/x-icon">
@@ -38,7 +38,7 @@
         </a>
       </div>
       <div class="nav-links" id="navLinks">
-        <a href="services.html#team">About</a>
+        <a href="about.html">About</a>
         <a href="works.html" class="is-active">Work</a>
         <a href="services.html">Services</a>
         <a href="contact.html">Contact</a>
@@ -58,13 +58,13 @@
 
   <main>
     <!-- ============ WORKS HERO ============ -->
-    <section class="works-hero wrap">
+    <section class="works-hero wrap" id="tp">
       <div class="bracket tl" style="top:96px;left:0;"></div>
-      <p class="eyebrow">Selected Films — 2015 — 2026</p>
+      <p class="eyebrow">Selected Films - 2015 - 2026</p>
       <h1 class="works-title">our works.</h1>
       <div class="works-hero-row">
         <p class="works-hero-sub">
-          A running reel of commercials, social cuts, aftermovies, and music videos —
+          A running reel of commercials, social cuts, aftermovies, and music videos -
           filtered by the story we were hired to tell. Every frame below was shot,
           edited, and graded in-house.
         </p>
@@ -108,8 +108,8 @@
       <div class="bracket br" style="bottom:0;right:0;"></div>
       <p class="eyebrow-nav">Like what you see</p>
       <h2>Let's cut something<br>worth watching.</h2>
-      <a href="contact.html#contact" class="cta-link">
-        Start a project
+      <a href="contact.html" class="cta-link">
+        Connect with us
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M5 12h14M13 6l6 6-6 6" />
         </svg>
@@ -121,17 +121,18 @@
     <div class="wrap">
       <div class="footer-grid">
         <div>
-          <div class="footer-logo">Burp.</div>
-          <p>
+          <!-- <div class="footer-logo">Burp.</div> -->
+          <a href="index.html" class="footer-logo">burp.</a>
+          <p><br>
             A film and brand studio crafting cinematic identities, campaigns,
             and stories that stay with people.
           </p>
         </div>
         <div class="footer-col">
           <h5>Studio</h5>
-          <a href="index.html#about">About</a>
+          <a href="about.html">About</a>
           <a href="works.html">Work</a>
-          <a href="index.html#services">Services</a>
+          <a href="services.html">Services</a>
         </div>
         <div class="footer-col">
           <h5>Contact</h5>
@@ -153,7 +154,6 @@
   </footer>
 
   <script>
-
     document.addEventListener('contextmenu', (e) => e.preventDefault());
 
     /* ============ mobile hamburger nav (same behavior as index.html) ============ */
@@ -198,7 +198,7 @@
        clip used for the hover preview + lightbox playback. `span` controls the
        bento tile shape: "wide" (2 cols), "tall" (2 rows), or omit for 1x1.
        The last two entries (Kappa Cultr, 1522) are placeholders using client
-       names already in your "Trusted By" strip — add real thumbs/videos for
+       names already in your "Trusted By" strip - add real thumbs/videos for
        them at the paths below, or swap in different projects.
     ------------------------------------------------------------------- */
     const WORKS = [
@@ -257,7 +257,7 @@
 
       card.innerHTML = `
         <div class="works-media">
-          <img class="works-poster" src="${item.poster}" alt="${item.title} — ${item.client}" loading="lazy">
+          <img class="works-poster" src="${item.poster}" alt="${item.title} - ${item.client}" loading="lazy">
           <video class="works-preview" muted loop playsinline preload="none" data-src="${item.video}"></video>
           <div class="works-scrim"></div>
           <span class="works-tag">${item.category}</span>
@@ -302,7 +302,7 @@
     const lightboxElements = WORKS.map(item => (
       item.video
         ? { href: item.video, type: 'video', source: 'local', title: item.title }
-        : { href: item.poster, type: 'image', title: item.title + ' — add a video file to enable playback' }
+        : { href: item.poster, type: 'image', title: item.title + ' - add a video file to enable playback' }
     ));
 
     const lightbox = GLightbox({
