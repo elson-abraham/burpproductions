@@ -80,6 +80,16 @@ img {
   color: var(--accent);
 }
 
+::-moz-selection {
+  background: none;
+  color: var(--accent);
+}
+
+::-webkit-selection {
+  background: none;
+  color: var(--accent);
+}
+
 /* ============ PRELOADER ============ */
 #preloader {
   position: fixed;
