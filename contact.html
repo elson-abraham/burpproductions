@@ -35,7 +35,7 @@
         </a>
       </div>
       <div class="nav-links" id="navLinks">
-        <a href="services.html#team">About</a>
+        <a href="about.html">About</a>
         <a href="works.html">Work</a>
         <a href="services.html">Services</a>
         <a href="contact.html" class="is-active">Contact</a>
@@ -61,7 +61,7 @@
       <p class="eyebrow">Get In Touch</p>
       <h1 class="contact-title">let's talk<br>about your project.</h1>
       <p class="contact-sub">
-        Send us a brief, a rough idea, or just a hello — we read every message
+        Send us a brief, a rough idea, or just a hello - we read every message
         and reply within two business days.
       </p>
     </section>
@@ -72,7 +72,7 @@
       <div class="contact-form-col">
         <form id="contactForm" class="contact-form" action="https://formspree.io/f/mjgnaljj" method="POST">
 
-          <input type="hidden" name="_subject" value="New enquiry — burpproductions.com">
+          <input type="hidden" name="_subject" value="New enquiry - burpproductions.com">
           <!-- honeypot field to cut down on spam bots -->
           <input type="text" name="_gotcha" style="display:none">
 
@@ -150,7 +150,7 @@
     <!-- ============ CTA (matches works-cta styling on works.html) ============ -->
     <section class="works-cta wrap" data-reveal>
       <div class="bracket br" style="bottom:0;right:0;"></div>
-      <p class="eyebrow-nav">Prefer to see our work first</p>
+      <p class="eyebrow" style="justify-content: center;">Prefer to see our work first</p>
       <h2>Browse the reel<br>before you reach out.</h2>
       <a href="works.html" class="cta-link">
         View our work
@@ -165,15 +165,16 @@
     <div class="wrap">
       <div class="footer-grid">
         <div>
-          <div class="footer-logo">Burp.</div>
-          <p>
+          <!-- <div class="footer-logo">Burp.</div> -->
+          <a href="index.html" class="footer-logo">burp.</a>
+          <p><br>
             A film and brand studio crafting cinematic identities, campaigns,
             and stories that stay with people.
           </p>
         </div>
         <div class="footer-col">
           <h5>Studio</h5>
-          <a href="services.html#team">About</a>
+          <a href="about.html">About</a>
           <a href="works.html">Work</a>
           <a href="services.html">Services</a>
         </div>
@@ -255,22 +256,14 @@
           headers: { 'Accept': 'application/json' }
         });
 
-        const data = await res.json().catch(() => null);
-
         if (res.ok) {
           form.reset();
-          statusEl.textContent = "Thanks — your message is on its way. We'll reply within two business days.";
+          statusEl.textContent = "Thanks — your message is on its way. We'll reply within 24hours.";
           statusEl.classList.add('is-success');
         } else {
-          // Show Formspree's actual reason instead of a generic message
-          const reason = data?.errors?.map(err => err.message).join(', ')
-            || `Request failed (${res.status})`;
-          console.error('Formspree error:', data);
-          statusEl.textContent = `Couldn't send that: ${reason}. You can also email us directly at info@burpproductions.com.`;
-          statusEl.classList.add('is-error');
+          throw new Error('Form submission failed');
         }
       } catch (err) {
-        console.error('Network/JS error:', err);
         statusEl.textContent = "Something went wrong sending that. Please email us directly at info@burpproductions.com.";
         statusEl.classList.add('is-error');
       } finally {
