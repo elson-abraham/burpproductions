@@ -381,10 +381,3 @@
     white-space: nowrap;
   }
 }
-
-/* nav active-state, used only on this page's "Work" link */
-.nav-links a.is-active {
-  color: var(--ink);
-  border-bottom: 1px solid var(--accent);
-  padding-bottom: 2px;
-}
