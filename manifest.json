@@ -7,12 +7,12 @@
   "theme_color": "#0A0A0A",
   "icons": [
     {
-      "src": "/assets/photos/logo_new/BURPLOGOiconios.png",
+      "src": "/assets/photos/logo_new/BURPFINALLOGO-5invertedicon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/assets/photos/logo_new/BURPLOGOiconios.png",
+      "src": "/assets/photos/logo_new/BURPFINALLOGO-5invertedicon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
