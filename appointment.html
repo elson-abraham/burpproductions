@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SYGMV2QRPL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SYGMV2QRPL');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Book a consultation call with Burp Productions — pick a date and time and it's confirmed straight onto our calendar.">
+
+  <title>Book an Appointment | Burp Productions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" href="/assets/photos/logo_new/BURPFINALLOGO-5invertedicon.png" type="image/x-icon">
+
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="https://db.onlinewebfonts.com/c/a9ad0a3fc5e238252c64655a0d4517fb?family=Visby+Bold" rel="stylesheet">
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <div>
+        <a href="index.html">
+          <img class="logoH" src="/assets/photos/logo_new/BURPFINALLOGO-5.png">
+        </a>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="about.html">About</a>
+        <a href="works.html">Work</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+        <a href="appointment.html" class="is-active">Book an Appointment</a>
+      </div>
+      <div class="nav-right">
+        <a href="appointment.html" class="nav-cta">BOOK APPOINTMENT</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"
+          aria-controls="navLinks">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+    <div class="nav-overlay" id="navOverlay"></div>
+  </header>
+
+  <section class="contact-hero wrap">
+    <p class="eyebrow">Book a consultation</p>
+    <h1 class="contact-title">let's find time to talk.</h1>
+    <p class="contact-sub">Pick a day and time that works for you. Once confirmed, it's added straight to our
+      calendar - no back and forth emails.</p>
+  </section>
+
+  <main class="wrap">
+    <section class="booking-section" id="booking">
+
+      <!-- STEP 1: choose date -->
+      <div class="booking-step">
+        <div class="step-label"><span class="step-num">1</span> Choose a date</div>
+
+        <div class="field">
+          <label>Date</label>
+          <p class="date-readout placeholder" id="dateTriggerLabel">Select a date below</p>
+        </div>
+
+        <div class="calendar-embed" id="calendarPopup">
+          <div class="cal-head">
+            <button type="button" class="cal-nav-btn" id="calPrev" aria-label="Previous month">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <span class="cal-month" id="calMonthLabel"></span>
+            <button type="button" class="cal-nav-btn" id="calNext" aria-label="Next month">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 6l6 6-6 6" />
+              </svg>
+            </button>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+          <button type="button" class="cal-today-btn" id="calTodayBtn">Today</button>
+        </div>
+
+        <p class="form-status" style="margin-top:14px;">Akshay & Charls is available everyday, 10:00am - 9:00pm IST. Bookings need
+          at least 12 hours' notice.</p>
+      </div>
+
+      <!-- STEP 2: choose time -->
+      <div class="booking-step" id="stepTimes" style="display:none;">
+        <div class="step-label"><span class="step-num">2</span> Choose a time <span class="step-label-date" id="timeStepDate"></span></div>
+        <div class="slot-grid" id="slotGrid"></div>
+        <p class="slot-empty" id="slotEmptyMsg" style="display:none;">No open slots that day — try another date.</p>
+      </div>
+
+      <!-- STEP 3: your details -->
+      <div class="booking-step" id="stepDetails" style="display:none;">
+        <div class="step-label"><span class="step-num">3</span> Your details</div>
+        <form class="contact-form" id="bookingForm">
+          <!-- Honeypot: invisible to real visitors, but a bot filling every field on the
+               page will fill this too. Left blank -> ignored server-side. -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="hpCheck">Leave this field blank</label>
+            <input type="text" id="hpCheck" name="hp_check" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="name">Name</label>
+              <input type="text" id="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" required />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="phone">Phone number</label>
+              <input type="tel" id="phone" />
+            </div>
+            <div class="field">
+              <label for="company">Company / Brand</label>
+              <input type="text" id="company" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="message">Tell us about the project</label>
+            <textarea id="message"></textarea>
+          </div>
+          <button type="submit" class="contact-submit cta-link" id="submitBtn">
+            Confirm appointment
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </button>
+          <p class="form-status" id="statusMsg"></p>
+        </form>
+      </div>
+
+      <!-- STEP 4: confirmation -->
+      <div class="booking-step confirm-box" id="stepConfirm" style="display:none;">
+        <h2>you're booked.</h2>
+        <p class="contact-sub">A calendar invite is on its way to your inbox. We'll see you then.</p>
+        <div class="confirm-detail" id="confirmDetail"></div>
+        <button type="button" class="cta-link" id="bookAnotherBtn" style="margin-top:28px;">
+          Book another appointment
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </button>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ########FOOTER######### -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="footer-logo">burp.</a>
+          <p><br>
+            A film and brand studio crafting cinematic identities, campaigns,
+            and stories that stay with people.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h5>Studio</h5>
+          <a href="about.html">About</a>
+          <a href="works.html">Work</a>
+          <a href="services.html">Services</a>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <a href="mailto:info@burpproductions.com">info@burpproductions.com</a>
+          <a href="tel:+918088689756">+91 8088689756</a>
+        </div>
+        <div class="footer-col">
+          <h5>Follow</h5>
+          <a href="https://www.instagram.com/burpproductions" target="_blank">Instagram</a>
+          <a href="https://www.youtube.com/@burpproductions." target="_blank">Youtube</a>
+          <a href="https://www.linkedin.com/company/burpproductions" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Burp Productions. All rights reserved.</span>
+        <span>Bengaluru, India</span>
+        <span><a href="privacy.html">Privacy Policy</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // mobile hamburger nav (same behaviour as the rest of the site)
+    (function () {
+      const toggle = document.getElementById('navToggle');
+      const links = document.getElementById('navLinks');
+      const overlay = document.getElementById('navOverlay');
+      if (!toggle || !links || !overlay) return;
+
+      function closeMenu() {
+        toggle.classList.remove('open');
+        links.classList.remove('open');
+        overlay.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
+      function openMenu() {
+        toggle.classList.add('open');
+        links.classList.add('open');
+        overlay.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+
+      toggle.addEventListener('click', () => {
+        const isOpen = links.classList.contains('open');
+        isOpen ? closeMenu() : openMenu();
+      });
+
+      overlay.addEventListener('click', closeMenu);
+      links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 900) closeMenu();
+      });
+    })();
+  </script>
+
+  <script>
+    // =====================================================================
+    // CONFIG — paste your deployed Apps Script Web App URL here
+    // =====================================================================
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwuB283Ud6SBXO6V8Wl8Tn2Z9K94DH4EjvQF7xuQgnnTuDAdbq1fXBicIH5vJd-X2aG/exec';
+    const BACKEND_NOT_CONFIGURED = !APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('PASTE_YOUR');
+    const WORKING_DAYS = [0, 1, 2, 3, 4, 5, 6]; // Every day — must match the Apps Script CONFIG
+    const MAX_DAYS_AHEAD = 90;
+    // =====================================================================
+
+    const dateTriggerLabel = document.getElementById('dateTriggerLabel');
+    const calendarPopup = document.getElementById('calendarPopup');
+    const calGrid = document.getElementById('calGrid');
+    const calMonthLabel = document.getElementById('calMonthLabel');
+    const calPrev = document.getElementById('calPrev');
+    const calNext = document.getElementById('calNext');
+    const calTodayBtn = document.getElementById('calTodayBtn');
+
+    const stepTimes = document.getElementById('stepTimes');
+    const timeStepDate = document.getElementById('timeStepDate');
+    const slotGrid = document.getElementById('slotGrid');
+    const slotEmptyMsg = document.getElementById('slotEmptyMsg');
+    const stepDetails = document.getElementById('stepDetails');
+    const stepConfirm = document.getElementById('stepConfirm');
+    const bookingForm = document.getElementById('bookingForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusMsg = document.getElementById('statusMsg');
+    const confirmDetail = document.getElementById('confirmDetail');
+    const bookAnotherBtn = document.getElementById('bookAnotherBtn');
+
+    let selectedDate = null; // "YYYY-MM-DD"
+    let selectedTime = null;
+
+    const today = stripTime(new Date());
+    const maxDate = stripTime(new Date());
+    maxDate.setDate(today.getDate() + MAX_DAYS_AHEAD);
+
+    let viewYear = today.getFullYear();
+    let viewMonth = today.getMonth(); // 0-indexed
+
+    function stripTime(d) {
+      const c = new Date(d);
+      c.setHours(0, 0, 0, 0);
+      return c;
+    }
+
+    function toDateStr(y, m, d) {
+      return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    }
+
+    function fmtDisplay(y, m, d) {
+      return `${String(d).padStart(2, '0')}/${String(m + 1).padStart(2, '0')}/${y}`;
+    }
+
+    const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    // ---------------- embedded calendar ----------------
+    // Docked in the page (no open/close state) — it renders once on load
+    // and stays visible; picking a date just updates the readout above it.
+
+    calPrev.addEventListener('click', () => {
+      viewMonth--;
+      if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+      renderCalendar();
+    });
+
+    calNext.addEventListener('click', () => {
+      viewMonth++;
+      if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+      renderCalendar();
+    });
+
+    calTodayBtn.addEventListener('click', () => {
+      viewYear = today.getFullYear();
+      viewMonth = today.getMonth();
+      renderCalendar();
+    });
+
+    const monthAvailabilityCache = {}; // "YYYY-M" -> array of "YYYY-MM-DD" strings, once resolved
+    const monthInFlight = {}; // "YYYY-M" -> in-progress Promise, so prefetch + a manual open don't double-fetch
+
+    let warnedNotConfigured = false;
+
+    function getMonthAvailability(year, month) {
+      const key = `${year}-${month + 1}`;
+      if (monthAvailabilityCache[key]) return Promise.resolve(monthAvailabilityCache[key]);
+      if (monthInFlight[key]) return monthInFlight[key];
+
+      if (BACKEND_NOT_CONFIGURED) {
+        if (!warnedNotConfigured) {
+          console.warn('Booking calendar: APPS_SCRIPT_URL is still the placeholder value — no dates will show as available until you paste your deployed Apps Script /exec URL in appointment.html.');
+          warnedNotConfigured = true;
+        }
+        return Promise.resolve(null); // null = "couldn't check", distinct from [] = "checked, nothing open"
+      }
+
+      const request = (async () => {
+        try {
+          const res = await fetch(`${APPS_SCRIPT_URL}?action=month&year=${year}&month=${month + 1}`);
+          if (!res.ok) throw new Error(`Backend returned HTTP ${res.status}`);
+          const data = await res.json();
+          if (!data.success) throw new Error(data.error || 'Backend returned an error');
+          const dates = data.availableDates || [];
+          monthAvailabilityCache[key] = dates;
+          return dates;
+        } catch (err) {
+          console.error('Booking calendar: could not load month availability.', err);
+          return null;
+        } finally {
+          delete monthInFlight[key];
+        }
+      })();
+
+      monthInFlight[key] = request;
+      return request;
+    }
+
+    // ---------------- background prefetch ----------------
+    // Warms monthAvailabilityCache for every month between today and
+    // MAX_DAYS_AHEAD as soon as the page loads, so by the time someone
+    // opens the calendar (or flips months) it's already answered.
+    function prefetchAvailability() {
+      if (BACKEND_NOT_CONFIGURED) return;
+
+      let y = today.getFullYear();
+      let m = today.getMonth();
+      const endY = maxDate.getFullYear();
+      const endM = maxDate.getMonth();
+
+      while (y < endY || (y === endY && m <= endM)) {
+        getMonthAvailability(y, m); // fire and forget — just fills the cache
+        m++;
+        if (m > 11) { m = 0; y++; }
+      }
+    }
+
+    prefetchAvailability();
+    renderCalendar(); // the calendar is docked in the page, so paint it immediately on load
+
+    function renderCalendarSkeleton() {
+      calMonthLabel.textContent = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
+
+      const firstOfView = new Date(viewYear, viewMonth, 1);
+      const lastOfPrevMonth = new Date(viewYear, viewMonth, 0);
+      calPrev.disabled = lastOfPrevMonth < new Date(today.getFullYear(), today.getMonth(), 1);
+
+      const firstOfNextMonth = new Date(viewYear, viewMonth + 1, 1);
+      calNext.disabled = firstOfNextMonth > maxDate;
+
+      calTodayBtn.disabled = viewYear === today.getFullYear() && viewMonth === today.getMonth();
+
+      calGrid.innerHTML = '';
+      ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].forEach(d => {
+        const el = document.createElement('div');
+        el.className = 'cal-dow';
+        el.textContent = d;
+        calGrid.appendChild(el);
+      });
+
+      const loading = document.createElement('div');
+      loading.className = 'cal-loading';
+      loading.textContent = 'Checking availability…';
+      calGrid.appendChild(loading);
+    }
+
+    async function renderCalendar() {
+      renderCalendarSkeleton();
+      const availableDates = await getMonthAvailability(viewYear, viewMonth);
+
+      // A stale response for a month the user has since navigated away from
+      // would otherwise still paint over the current view — guard against it.
+      if (calMonthLabel.textContent !== `${MONTH_NAMES[viewMonth]} ${viewYear}`) return;
+
+      calGrid.innerHTML = '';
+
+      if (availableDates === null) {
+        const msg = document.createElement('div');
+        msg.className = 'cal-loading';
+        msg.style.color = 'var(--accent)';
+        msg.textContent = BACKEND_NOT_CONFIGURED
+          ? "Booking backend isn't connected yet — paste your Apps Script URL into appointment.html."
+          : "Couldn't check availability. Open the browser console for details, or try again.";
+        calGrid.appendChild(msg);
+        return;
+      }
+
+      ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].forEach(d => {
+        const el = document.createElement('div');
+        el.className = 'cal-dow';
+        el.textContent = d;
+        calGrid.appendChild(el);
+      });
+
+      const firstOfView = new Date(viewYear, viewMonth, 1);
+      const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+      // JS getDay(): 0=Sun..6=Sat. Convert to Monday-first index (0=Mon..6=Sun)
+      const firstWeekday = (firstOfView.getDay() + 6) % 7;
+
+      for (let i = 0; i < firstWeekday; i++) {
+        const blank = document.createElement('div');
+        blank.className = 'cal-day empty';
+        calGrid.appendChild(blank);
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const cellDate = stripTime(new Date(viewYear, viewMonth, d));
+        const dStr = toDateStr(viewYear, viewMonth, d);
+        const inRange = cellDate >= today && cellDate <= maxDate;
+        const isAvailable = inRange && availableDates.includes(dStr);
+
+        const btn = document.createElement('div');
+        btn.className = 'cal-day ' + (isAvailable ? 'available' : 'disabled');
+        if (cellDate.getTime() === today.getTime()) btn.classList.add('today');
+        if (dStr === selectedDate) btn.classList.add('selected');
+        btn.textContent = d;
+
+        if (isAvailable) {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.cal-day.selected').forEach(el => el.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectDate(viewYear, viewMonth, d);
+          });
+        }
+        calGrid.appendChild(btn);
+      }
+    }
+
+    async function selectDate(y, m, d) {
+      selectedDate = toDateStr(y, m, d);
+      selectedTime = null;
+      dateTriggerLabel.textContent = fmtDisplay(y, m, d);
+      dateTriggerLabel.classList.remove('placeholder');
+      timeStepDate.textContent = '— ' + fmtDisplay(y, m, d);
+
+      stepDetails.style.display = 'none';
+      stepTimes.style.display = 'block';
+      slotGrid.innerHTML = '<p class="slot-empty">Loading available times…</p>';
+      slotEmptyMsg.style.display = 'none';
+
+      try {
+        const res = await fetch(`${APPS_SCRIPT_URL}?action=slots&date=${selectedDate}`);
+        const data = await res.json();
+        renderSlots(data.slots || []);
+      } catch (err) {
+        slotGrid.innerHTML = '';
+        slotEmptyMsg.textContent = 'Could not load availability. Please try again.';
+        slotEmptyMsg.style.display = 'block';
+      }
+    }
+
+    function renderSlots(slots) {
+      slotGrid.innerHTML = '';
+      if (slots.length === 0) {
+        slotEmptyMsg.style.display = 'block';
+        return;
+      }
+      slotEmptyMsg.style.display = 'none';
+      slots.forEach(time => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'slot-btn';
+        btn.textContent = to12Hour(time);
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedTime = time;
+          stepDetails.style.display = 'block';
+          stepDetails.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+        slotGrid.appendChild(btn);
+      });
+    }
+
+    function to12Hour(hhmm) {
+      const [h, m] = hhmm.split(':').map(Number);
+      const period = h >= 12 ? 'PM' : 'AM';
+      const hour12 = ((h + 11) % 12) + 1;
+      return `${hour12}:${String(m).padStart(2, '0')} ${period}`;
+    }
+
+    bookingForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!selectedDate || !selectedTime) return;
+
+      // Honeypot: a real visitor never sees or fills this field, so if it's
+      // non-empty this submission almost certainly came from a bot. Pretend
+      // to succeed and quietly do nothing — no network call, no clue given.
+      const hpValue = document.getElementById('hpCheck').value.trim();
+      if (hpValue) {
+        document.querySelectorAll('#booking .booking-step').forEach(s => {
+          if (s.id !== 'stepConfirm') s.style.display = 'none';
+        });
+        confirmDetail.innerHTML = `<strong>${to12Hour(selectedTime)}</strong> on <strong>${dateTriggerLabel.textContent}</strong>`;
+        stepConfirm.style.display = 'block';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.firstChild.textContent = 'Booking… ';
+      statusMsg.className = 'form-status';
+      statusMsg.textContent = '';
+
+      const payload = {
+        date: selectedDate,
+        time: selectedTime,
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        company: document.getElementById('company').value.trim(),
+        message: document.getElementById('message').value.trim(),
+        hp_check: hpValue, // always empty here, but sent so the backend check stays authoritative
+      };
+
+      try {
+        // Sent as text/plain to avoid a CORS preflight request against Apps Script
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          // that day's remaining availability just changed — drop the cached month
+          const [y, mo] = selectedDate.split('-').map(Number);
+          delete monthAvailabilityCache[`${y}-${mo}`];
+
+          document.querySelectorAll('#booking .booking-step').forEach(s => {
+            if (s.id !== 'stepConfirm') s.style.display = 'none';
+          });
+          confirmDetail.innerHTML =
+            `<strong>${to12Hour(selectedTime)}</strong> on <strong>${dateTriggerLabel.textContent}</strong><br/>${payload.name} · ${payload.email}`;
+          stepConfirm.style.display = 'block';
+          stepConfirm.scrollIntoView({ behavior: 'smooth' });
+        } else if (data.error === 'slot_taken') {
+          statusMsg.className = 'form-status is-error';
+          statusMsg.textContent = 'Sorry — that slot was just booked by someone else. Please pick another time.';
+          selectDate(viewYear, viewMonth, Number(selectedDate.split('-')[2]));
+        } else if (data.error === 'invalid_email') {
+          statusMsg.className = 'form-status is-error';
+          statusMsg.textContent = 'That email address doesn\'t look right — please double-check it.';
+        } else {
+          statusMsg.className = 'form-status is-error';
+          statusMsg.textContent = 'Something went wrong. Please try again or email info@burpproductions.com.';
+        }
+      } catch (err) {
+        statusMsg.className = 'form-status is-error';
+        statusMsg.textContent = 'Could not reach the booking server. Please check your connection and try again.';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.firstChild.textContent = 'Confirm appointment ';
+      }
+    });
+
+    bookAnotherBtn.addEventListener('click', () => {
+      // Clear selection state
+      selectedDate = null;
+      selectedTime = null;
+      dateTriggerLabel.textContent = 'Select a date below';
+      dateTriggerLabel.classList.add('placeholder');
+      timeStepDate.textContent = '';
+
+      // Clear the contact fields so a repeat booking starts fresh
+      bookingForm.reset();
+      statusMsg.className = 'form-status';
+      statusMsg.textContent = '';
+
+      // Reset to step 1 only
+      document.querySelectorAll('#booking .booking-step').forEach(s => {
+        s.style.display = (s.id === 'stepTimes' || s.id === 'stepDetails' || s.id === 'stepConfirm') ? 'none' : 'block';
+      });
+
+      document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+
+</body>
+
+</html>
