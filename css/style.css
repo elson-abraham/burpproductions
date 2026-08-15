@@ -1,20 +1,5 @@
 /* ==========================================================================
-   Burp Productions — combined stylesheet (style.css + sty.css merged)
-   Dead/unused rules removed:
-   - .video-gallery / .vid (unused)
-   - .thumb.t1–t4 placeholder swatches (unused)
-   - .nav-toggle (no matching element in markup)
-   - duplicate @font-face / --font var / .cta p.eyebrow rule (was declared in both files)
-   - duplicate footer{} + footer .socials{} block from sty.css (conflicted with the real
-     .footer-grid layout in style.css; .socials isn't in the markup)
-   - unused custom properties --card, --accent-dim
-   - commented-out local @font-face and serif/sans var scaffolding
-
-   Mobile nav update:
-   - .nav-toggle is now a real hamburger button (re-added + restyled)
-   - .nav-right wraps the CTA + hamburger so spacing is controlled as a unit
-   - .nav-links becomes a slide-in panel on mobile instead of display:none
-   - .nav-overlay is the dim backdrop behind the open panel
+   Burp Productions —  stylesheet
    ========================================================================== */
 
 @import url(https://db.onlinewebfonts.com/c/a9ad0a3fc5e238252c64655a0d4517fb?family=Visby+Bold);
@@ -919,7 +904,6 @@ h1 {
   padding: 40px 0;
 }
 
-/* mobile-first: 1 column by default */
 .grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -927,7 +911,6 @@ h1 {
   background: var(--line);
 }
 
-/* tablet portrait and up: 2 columns */
 @media (min-width: 601px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1226,9 +1209,6 @@ footer {
 }
 
 /* ============ CONTACT PAGE ============ */
-/* Used on contact.html — kept here since style.css is shared across pages.
-   Relies on the same :root variables defined above
-   (--bg, --ink, --ink-dim, --line, --accent, --font). */
 
 /* Solid nav background so it doesn't blend into hero content below it */
 .body .page-contact .header {
@@ -1440,7 +1420,6 @@ footer {
   letter-spacing: 0.04em;
 }
 
-/* Scene list / TOC */
 .toc {
   padding: 56px 0;
   border-bottom: 1px solid var(--line);
@@ -1614,6 +1593,329 @@ h2 {
   background: var(--gold);
   color: #141310;
 }
+
+/* ============ APPOINTMENT BOOKING PAGE ============ */
+.booking-section {
+  padding: 0 0 140px;
+}
+
+.booking-step {
+  border-top: 1px solid var(--line);
+  padding: 40px 0;
+}
+
+.booking-step:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.step-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 26px;
+}
+
+.step-num {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.step-label-date {
+  color: var(--gold);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* ---------- selected-date readout + docked calendar ---------- */
+.date-readout {
+  font-family: var(--font);
+  font-size: 15px;
+  color: var(--ink);
+  padding: 10px 2px;
+  border-bottom: 1px solid var(--line);
+  max-width: 340px;
+}
+
+.date-readout.placeholder {
+  color: var(--ink-dim);
+}
+
+.calendar-embed {
+  width: 100%;
+  max-width: 340px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.cal-head .cal-month {
+  font-size: 13px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.cal-nav-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color .15s ease;
+}
+
+.cal-nav-btn:hover {
+  border-color: var(--accent);
+}
+
+.cal-nav-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.cal-nav-btn:disabled {
+  opacity: .25;
+  cursor: not-allowed;
+}
+
+.cal-today-btn {
+  display: block;
+  width: max-content;
+  margin: 18px auto 0;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  cursor: pointer;
+  transition: color .15s ease;
+}
+
+.cal-today-btn:hover {
+  color: var(--accent);
+}
+
+.cal-today-btn:disabled {
+  opacity: .3;
+  cursor: default;
+  color: var(--ink-dim);
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.cal-dow {
+  font-size: 10px;
+  color: var(--ink-dim);
+  text-align: center;
+  padding-bottom: 6px;
+  letter-spacing: .05em;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--ink);
+  border-radius: 50%;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all .15s ease;
+}
+
+.cal-day:hover:not(.disabled):not(.empty) {
+  border-color: var(--accent);
+}
+
+.cal-day.available {
+  background: rgba(255, 90, 43, .12);
+  border-color: rgba(255, 90, 43, .35);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.cal-day.available:hover {
+  border-color: var(--accent);
+  background: rgba(255, 90, 43, .22);
+}
+
+.cal-day.disabled {
+  color: var(--ink-dim);
+  opacity: .3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.cal-day.empty {
+  visibility: hidden;
+}
+
+.cal-day.today {
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+
+.cal-day.today.disabled {
+  box-shadow: inset 0 0 0 1px rgba(185, 154, 82, .4);
+}
+
+.cal-day.selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.cal-loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-dim);
+  padding: 24px 8px;
+  line-height: 1.6;
+}
+
+/* ---------- time slots ---------- */
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.slot-btn {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  padding: 12px 8px;
+  font-family: var(--font);
+  font-size: 13px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.slot-btn:hover {
+  border-color: var(--accent);
+}
+
+.slot-btn.selected {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.slot-empty {
+  color: var(--ink-dim);
+  font-size: 14px;
+}
+
+/* buttons reusing .cta-link's pill look */
+button.cta-link {
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+}
+
+button.cta-link:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.confirm-box h2 {
+  text-transform: lowercase;
+}
+
+.confirm-detail {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font-size: 14px;
+  color: var(--ink-dim);
+}
+
+.confirm-detail strong {
+  color: var(--ink);
+}
+
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ---------- hero "Book Appointment" button (index.html) ---------- */
+.hero-cta-btn {
+  margin-top: 26px;
+  padding: 16px 32px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  font-family: var(--font);
+  font-size: 13px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  transition: background .25s ease, color .25s ease, border-color .25s ease;
+  float: right;
+  clear: both;
+}
+
+.hero-cta-btn:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+@media (max-width: 900px) {
+  .hero-cta-btn {
+    float: none;
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+  }
+}
+
 /* ============ SCROLL REVEAL ============ */
 [data-reveal] {
   opacity: 0;
@@ -1625,6 +1927,7 @@ h2 {
   opacity: 1;
   transform: translateY(0);
 }
+
 
 /* ============ RESPONSIVE ============ */
 @media (max-width: 1024px) {
