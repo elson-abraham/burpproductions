@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>Equipment Log</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/css/equipment-log-style.css">
+</head>
+
+<body>
+  <div class="wrap" id="app">
+
+    <div id="setupScreen" class="hidden">
+      <div class="login-screen">
+        <div class="login-mark"><img src="/assets/photos/logo_new/BURPFINALLOGO-5.png" alt="Company logo"
+            onerror="this.parentElement.textContent='EQ'"></div>
+        <div class="eyebrow">Connect</div>
+        <h1>Connect your sheet</h1>
+        <div class="sub">Paste the Apps Script web app URL (ends in <code
+            style="font-family:'JetBrains Mono',monospace;font-size:12px;">/exec</code>).</div>
+        <div class="field">
+          <label for="scriptUrlInput">Web app URL</label>
+          <input id="scriptUrlInput" type="text" placeholder="https://script.google.com/macros/s/.../exec">
+          <div class="err" id="scriptUrlErr" style="display:none;"></div>
+        </div>
+        <button class="btn-primary" id="saveUrlBtn" style="width:100%;">Continue</button>
+      </div>
+    </div>
+
+    <div id="loginScreen" class="hidden">
+      <div class="login-screen">
+        <div class="login-mark"><img src="/assets/photos/logo_new/BURPFINALLOGO-5.png" alt="Company logo"
+            onerror="this.parentElement.textContent='EQ'"></div>
+        <div class="eyebrow">Sign in</div>
+        <h1>Equipment log</h1>
+        <div class="sub">Sign in with the name and passcode your admin gave you.</div>
+        <div class="field">
+          <label for="loginName">Name</label>
+          <input id="loginName" type="text" placeholder="Your name">
+        </div>
+        <div class="field">
+          <label for="loginPass">Passcode</label>
+          <input id="loginPass" type="password" placeholder="Passcode">
+        </div>
+        <div class="err" id="loginErr" style="display:none;"></div>
+        <button class="btn-primary" id="loginBtn" style="width:100%;">Sign in</button>
+        <button class="btn-ghost" id="changeUrlBtn" style="width:100%;margin-top:10px;">Change sheet URL</button>
+      </div>
+    </div>
+
+    <div id="mainScreen" class="hidden">
+      <header>
+        <div class="header-top">
+          <div class="title-block">
+            <div class="eyebrow">Checkout ledger</div>
+            <h1>Equipment log</h1>
+          </div>
+          <div class="header-actions">
+            <button class="icon-btn" id="manageUsersBtn" title="Manage users" aria-label="Manage users">&#9776;</button>
+            <button class="btn-ghost" id="signOutBtn">Sign out</button>
+          </div>
+        </div>
+        <div class="sub" id="whoami" style="margin-top:2px;"></div>
+        <div class="stats-row">
+          <div class="stats" id="stats"></div>
+          <button class="btn-primary" id="addEquipBtn">+ Add</button>
+        </div>
+      </header>
+      <div id="banner" class="banner hidden"></div>
+      <div class="sub" id="subline" style="margin-bottom:10px;"></div>
+      <div class="cat-filter-row" id="catFilterRow"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const LS_KEY = 'equipmentLog.scriptUrl';
+    const LS_SESSION_KEY = 'equipmentLog.session';
+    let SCRIPT_URL = null;
+    let session = null; // { name, role, passcode }
+    let equipment = [];
+    let logs = [];
+    let currentFilter = 'all'; // 'all' | 'out' | 'available'
+    let currentCategory = null; // null = all categories, otherwise exact category string
+    let cachedUserNames = null; // null = not yet fetched this session
+
+    function safeGetLS(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function safeSetLS(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
+
+    function el(id) { return document.getElementById(id); }
+
+    function fmtParts(iso) {
+      if (!iso) return null;
+      const d = new Date(iso);
+      if (isNaN(d)) return null;
+      return {
+        date: d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric', timeZone: 'Asia/Kolkata' }),
+        time: d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' })
+      };
+    }
+    function fmtDate(iso) {
+      const p = fmtParts(iso);
+      if (!p) return '';
+      return p.date + ' ' + p.time + ' IST';
+    }
+    function fmtCell(iso) {
+      const p = fmtParts(iso);
+      if (!p) return '—';
+      return `${p.date}<br>${p.time}`;
+    }
+    function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+    async function callApi(payload) {
+      const body = Object.assign({}, payload);
+      if (session) { body.actorName = session.name; body.actorPasscode = session.passcode; }
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error('Request failed (' + res.status + ')');
+      return res.json();
+    }
+
+    function showScreen(name) {
+      ['setupScreen', 'loginScreen', 'mainScreen'].forEach(s => el(s).classList.toggle('hidden', s !== name));
+    }
+
+    function saveSession(s) { safeSetLS(LS_SESSION_KEY, JSON.stringify(s)); }
+    function clearSession() { try { localStorage.removeItem(LS_SESSION_KEY); } catch (e) { } }
+    function loadStoredSession() {
+      const raw = safeGetLS(LS_SESSION_KEY);
+      if (!raw) return null;
+      try { return JSON.parse(raw); } catch (e) { return null; }
+    }
+
+    async function init() {
+      SCRIPT_URL = safeGetLS(LS_KEY);
+      if (!SCRIPT_URL) { showScreen('setupScreen'); return; }
+
+      const stored = loadStoredSession();
+      if (stored && stored.name && stored.passcode) {
+        session = stored;
+        showScreen('mainScreen');
+        el('whoami').textContent = 'Signed in as ' + stored.name;
+        el('manageUsersBtn').classList.toggle('hidden', stored.role !== 'admin');
+        await loadAll();
+        try {
+          const r = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'login', name: stored.name, passcode: stored.passcode })
+          }).then(r => r.json());
+          if (!r.ok) {
+            session = null;
+            clearSession();
+            showScreen('loginScreen');
+            el('loginErr').textContent = 'You were signed out (access no longer valid). Sign in again.';
+            el('loginErr').style.display = 'block';
+          } else if (r.role !== session.role) {
+            session.role = r.role;
+            saveSession(session);
+            el('manageUsersBtn').classList.toggle('hidden', r.role !== 'admin');
+          }
+        } catch (e) {
+          // Network hiccup — keep the cached session, don't boot the user out.
+        }
+        return;
+      }
+      showScreen('loginScreen');
+    }
+
+    el('saveUrlBtn').addEventListener('click', () => {
+      const val = el('scriptUrlInput').value.trim();
+      const errEl = el('scriptUrlErr');
+      if (!val || !val.includes('script.google.com')) {
+        errEl.textContent = 'That doesn\'t look like an Apps Script web app URL.';
+        errEl.style.display = 'block';
+        return;
+      }
+      SCRIPT_URL = val;
+      safeSetLS(LS_KEY, val);
+      showScreen('loginScreen');
+    });
+
+    el('changeUrlBtn').addEventListener('click', () => {
+      el('scriptUrlInput').value = SCRIPT_URL || '';
+      showScreen('setupScreen');
+    });
+
+    el('loginBtn').addEventListener('click', async () => {
+      const name = el('loginName').value.trim();
+      const pass = el('loginPass').value;
+      const errEl = el('loginErr');
+      errEl.style.display = 'none';
+      if (!name || !pass) {
+        errEl.textContent = 'Enter both your name and passcode.';
+        errEl.style.display = 'block';
+        return;
+      }
+      const btn = el('loginBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Signing in…';
+      try {
+        const r = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'login', name, passcode: pass })
+        }).then(r => r.json());
+        if (!r.ok) {
+          errEl.textContent = r.error || 'Sign in failed.';
+          errEl.style.display = 'block';
+          return;
+        }
+        session = { name: r.name, role: r.role, passcode: pass };
+        saveSession(session);
+        showScreen('mainScreen');
+        el('whoami').textContent = 'Signed in as ' + r.name;
+        el('manageUsersBtn').classList.toggle('hidden', r.role !== 'admin');
+        await loadAll();
+      } catch (e) {
+        errEl.textContent = 'Could not reach the sheet. Check the web app URL and that it\'s deployed with "Anyone" access.';
+        errEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+      }
+    });
+
+    el('signOutBtn').addEventListener('click', () => {
+      session = null;
+      clearSession();
+      el('loginName').value = '';
+      el('loginPass').value = '';
+      el('whoami').textContent = '';
+      showScreen('loginScreen');
+    });
+
+    async function getUserNames(forceRefresh) {
+      if (cachedUserNames && !forceRefresh) return cachedUserNames;
+      try {
+        const ur = await callApi({ action: 'listUsers' });
+        cachedUserNames = ur.ok ? ur.users.map(u => u.name).sort((a, b) => a.localeCompare(b)) : [];
+      } catch (e) {
+        cachedUserNames = cachedUserNames || [];
+      }
+      return cachedUserNames;
+    }
+
+    function renderSkeleton() {
+      const grid = el('grid');
+      grid.innerHTML = Array.from({ length: 6 }).map(() => `<div class="tag skeleton"></div>`).join('');
+    }
+
+    async function loadAll() {
+      renderSkeleton();
+      el('banner').classList.add('hidden');
+      try {
+        const [eqRes, logRes] = await Promise.all([
+          callApi({ action: 'listEquipment' }),
+          callApi({ action: 'listLogs' })
+        ]);
+        equipment = eqRes.ok ? eqRes.equipment : [];
+        logs = logRes.ok ? logRes.logs : [];
+        getUserNames(); // warm the cache in the background, don't block the grid on it
+      } catch (e) {
+        el('banner').textContent = 'Could not load data from the sheet. Try refreshing.';
+        el('banner').classList.remove('hidden');
+        equipment = []; logs = [];
+      }
+      render();
+    }
+
+    function borrowerTrailParts(l) {
+      const trail = l.borrowerTrail || (l.previousBorrower ? l.previousBorrower + ' → ' + l.borrower : l.borrower);
+      return String(trail).split('→').map(s => s.trim()).filter(Boolean);
+    }
+    function borrowerTrailHtml(l) {
+      const parts = borrowerTrailParts(l);
+      const lastClass = l.returnAt ? 'h-name h-returned' : 'h-name';
+      return parts.map((n, idx) => idx === parts.length - 1
+        ? `<span class="${lastClass}">${escapeHtml(n)}</span>`
+        : `<span class="h-trail-prev">${escapeHtml(n)}</span>`
+      ).join(' <span class="h-arrow">&rarr;</span> ');
+    }
+
+    function activeLoanFor(equipId) { return logs.find(l => l.equipmentId === equipId && !l.returnAt); }
+    function historyFor(equipId) { return logs.filter(l => l.equipmentId === equipId).sort((a, b) => new Date(b.checkoutAt) - new Date(a.checkoutAt)); }
+
+    function render() {
+      const outCount = equipment.filter(e => activeLoanFor(e.id)).length;
+      const freeCount = equipment.length - outCount;
+      el('subline').textContent = equipment.length
+        ? `${equipment.length} item${equipment.length === 1 ? '' : 's'} tracked · synced to your sheet`
+        : 'Synced to your Google Sheet';
+
+      el('stats').innerHTML = `
+    <button class="stat stat-filter ${currentFilter === 'all' ? 'active' : ''}" data-filter="all"><span class="num">${equipment.length}</span><span class="lbl">Total</span></button>
+    <button class="stat out stat-filter ${currentFilter === 'out' ? 'active' : ''}" data-filter="out"><span class="num">${outCount}</span><span class="lbl">Out</span></button>
+    <button class="stat avail stat-filter ${currentFilter === 'available' ? 'active' : ''}" data-filter="available"><span class="num">${freeCount}</span><span class="lbl">Free</span></button>
+  `;
+      el('stats').querySelectorAll('.stat-filter').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentFilter = btn.dataset.filter;
+          render();
+        });
+      });
+
+      const categories = [...new Set(equipment.map(e => e.category || 'Uncategorized'))].sort((a, b) => a.localeCompare(b));
+      const catRow = el('catFilterRow');
+      if (categories.length > 1) {
+        catRow.innerHTML = `
+    <button class="cat-chip ${currentCategory === null ? 'active' : ''}" data-cat="">All</button>
+    ${categories.map(c => `<button class="cat-chip ${currentCategory === c ? 'active' : ''}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('')}
+  `;
+        catRow.querySelectorAll('.cat-chip').forEach(chip => {
+          chip.addEventListener('click', () => {
+            currentCategory = chip.dataset.cat || null;
+            render();
+          });
+        });
+      } else {
+        catRow.innerHTML = '';
+      }
+
+      const visible = equipment.filter(e => {
+        const loan = activeLoanFor(e.id);
+        if (currentFilter === 'out' && !loan) return false;
+        if (currentFilter === 'available' && loan) return false;
+        if (currentCategory !== null && (e.category || 'Uncategorized') !== currentCategory) return false;
+        return true;
+      });
+
+      const grid = el('grid');
+      if (equipment.length === 0) {
+        grid.innerHTML = `<div class="empty">No equipment yet. Tap + Add to start logging loans.</div>`;
+        return;
+      }
+      if (visible.length === 0) {
+        const msg = (currentFilter !== 'all' || currentCategory !== null)
+          ? 'Nothing matches this filter. Try a different combination.'
+          : 'No equipment yet. Tap + Add to start logging loans.';
+        grid.innerHTML = `<div class="empty">${msg}</div>`;
+        return;
+      }
+      grid.innerHTML = visible.map(e => {
+        const loan = activeLoanFor(e.id);
+        return `
+      <div class="tag ${loan ? 'status-out' : 'status-free'}" data-id="${e.id}">
+        <div class="tag-id">#${String(e.id).slice(-5).toUpperCase()}</div>
+        <div class="tag-name">${escapeHtml(e.name)}</div>
+        <div class="tag-cat"><span class="cat-dot"></span>${escapeHtml(e.category || 'Uncategorized')}</div>
+        <div class="status-row">
+          ${loan
+            ? `<span class="stamp out">Out</span><span class="who">${escapeHtml(loan.borrower)}</span>`
+            : `<span class="stamp avail">Available</span>`}
+        </div>
+      </div>`;
+      }).join('');
+      grid.querySelectorAll('.tag').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id)));
+    }
+
+    function confirmDialog(title, message, confirmLabel) {
+      return new Promise((resolve) => {
+        const overlay = openOverlay(`
+      <div class="modal" style="max-width:380px;">
+        <h2>${escapeHtml(title)}</h2>
+        <div class="modal-sub" style="margin-bottom:20px;">${escapeHtml(message)}</div>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="confirmCancelBtn">Cancel</button>
+          <button class="btn-primary" id="confirmOkBtn" style="flex:1;background:var(--status-out);color:var(--text-primary);">${escapeHtml(confirmLabel)}</button>
+        </div>
+      </div>`);
+        let resolved = false;
+        const finish = (val) => {
+          if (resolved) return;
+          resolved = true;
+          overlay.remove();
+          resolve(val);
+        };
+        overlay.addEventListener('click', e => { if (e.target === overlay) finish(false); });
+        overlay.querySelector('#confirmCancelBtn').addEventListener('click', () => finish(false));
+        overlay.querySelector('#confirmOkBtn').addEventListener('click', () => finish(true));
+      });
+    }
+
+    function openOverlay(html) {
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      overlay.innerHTML = html;
+      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+      document.body.appendChild(overlay);
+      return overlay;
+    }
+
+    el('addEquipBtn').addEventListener('click', () => {
+      const overlay = openOverlay(`
+    <div class="modal">
+      <button class="close-x" id="closeAdd">&times;</button>
+      <h2>Add equipment</h2>
+      <div class="modal-sub">Register a new item to the log.</div>
+      <div class="field">
+        <label for="eqName">Name</label>
+        <input id="eqName" type="text" placeholder="e.g. DSLR camera">
+        <div class="err" id="nameErr" style="display:none;"></div>
+      </div>
+      <div class="field">
+        <label for="eqCat">Category</label>
+        <input id="eqCat" type="text" placeholder="e.g. Photography">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="cancelAdd">Cancel</button>
+        <button class="btn-primary" id="confirmAdd" style="flex:1;">Add item</button>
+      </div>
+    </div>`);
+      overlay.querySelector('#closeAdd').addEventListener('click', () => overlay.remove());
+      overlay.querySelector('#cancelAdd').addEventListener('click', () => overlay.remove());
+      overlay.querySelector('#confirmAdd').addEventListener('click', async () => {
+        const name = overlay.querySelector('#eqName').value.trim();
+        const cat = overlay.querySelector('#eqCat').value.trim();
+        const errEl = overlay.querySelector('#nameErr');
+        if (!name) { errEl.textContent = 'Enter an equipment name first.'; errEl.style.display = 'block'; return; }
+        const r = await callApi({ action: 'addEquipment', name, category: cat });
+        if (!r.ok) { errEl.textContent = r.error || 'Could not add item.'; errEl.style.display = 'block'; return; }
+        overlay.remove();
+        await loadAll();
+      });
+    });
+
+    async function openDetail(equipId) {
+      const item = equipment.find(e => e.id === equipId);
+      if (!item) return;
+      const loan = activeLoanFor(equipId);
+      const hist = historyFor(equipId);
+
+      const userNames = await getUserNames();
+
+      const userOptionsHtml = (selectedVal, disableName) => `
+        <option value="">Select a name…</option>
+        ${userNames.map(n => {
+        const isDisabled = disableName && n === disableName;
+        return `<option value="${escapeHtml(n)}" ${n === selectedVal ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}>${escapeHtml(n)}${isDisabled ? ' (current borrower)' : ''}</option>`;
+      }).join('')}
+        <option value="__other__">Other…</option>`;
+
+      const isAdmin = session.role === 'admin';
+      const buildHistRow = (l) => `
+          <tr>
+            <td>
+              <div>${borrowerTrailHtml(l)}</div>
+              ${isAdmin && l.updatedAt ? `<div class="h-meta">last changed by ${escapeHtml(l.updatedBy || '?')}</div>` : ''}
+            </td>
+            <td>
+              <div>${fmtCell(l.checkoutAt)}</div>
+              ${isAdmin && l.checkoutBy ? `<div class="h-meta">by ${escapeHtml(l.checkoutBy)}</div>` : ''}
+            </td>
+            <td>
+              <div>${l.returnAt ? `<span class="h-returned">${fmtCell(l.returnAt)}</span>` : '<span class="h-out">Still out</span>'}</div>
+              ${isAdmin && l.returnedBy ? `<div class="h-meta">by ${escapeHtml(l.returnedBy)}</div>` : ''}
+            </td>
+          </tr>`;
+
+      const latestHist = hist.slice(0, 1);
+      const olderHist = hist.slice(1);
+      const canSeeHistory = isAdmin || !!loan; // members only see history while it's still out
+      const canExpandHistory = isAdmin; // only admins can reveal older entries
+
+      const historyTableHtml = hist.length ? `
+      <div style="overflow-x:auto;">
+      <table class="history-table">
+        <thead>
+          <tr><th>Borrower</th><th>Out</th><th>In</th></tr>
+        </thead>
+        <tbody>${latestHist.map(buildHistRow).join('')}</tbody>
+        ${canExpandHistory && olderHist.length ? `<tbody id="olderHistBody" style="display:none;">${olderHist.map(buildHistRow).join('')}</tbody>` : ''}
+      </table>
+      </div>
+      ${canExpandHistory && olderHist.length ? `<button class="btn-ghost" id="toggleHistoryBtn" style="width:100%;margin-top:10px;font-size:12.5px;">Show more history (${olderHist.length})</button>` : ''}
+      ` : `<div style="font-size:13px;color:var(--text-secondary);">No history yet.</div>`;
+
+      const historyHtml = canSeeHistory
+        ? `<div class="history"><h3>History <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-secondary);">· times in IST</span></h3>${historyTableHtml}</div>`
+        : '';
+
+      const actionHtml = loan
+        ? `<div class="field">
+         <label>Currently with</label>
+         <div style="font-size:14px;font-weight:600;color:var(--accent);">${escapeHtml(loan.borrower)}</div>
+         ${session.role === 'admin' ? `<div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Since ${fmtDate(loan.checkoutAt)}${loan.updatedAt ? ' · last changed ' + fmtDate(loan.updatedAt) : ''}</div>` : ''}
+       </div>
+       <div class="field" id="reassignField" style="display:none;">
+         <label for="reassignSelect">New borrower</label>
+         <select id="reassignSelect">${userOptionsHtml('', loan.borrower)}</select>
+         <input id="reassignOther" type="text" placeholder="Type their name" style="margin-top:8px;display:none;">
+         <div class="err" id="reassignErr" style="display:none;"></div>
+       </div>
+       <div class="modal-actions">
+         <button class="btn-secondary" id="toggleReassignBtn">Change borrower</button>
+         <button class="btn-primary" id="returnBtn" style="flex:1;background:var(--status-free);color:var(--bg);">Return</button>
+       </div>
+       <div class="modal-actions" id="confirmReassignRow" style="display:none;">
+         <button class="btn-primary" id="confirmReassignBtn" style="flex:1;">Save new borrower</button>
+       </div>`
+        : `<div class="field">
+         <label for="borrowerSelect">Borrower name</label>
+         <select id="borrowerSelect">${userOptionsHtml('')}</select>
+         <input id="borrowerOther" type="text" placeholder="Type their name" style="margin-top:8px;display:none;">
+         <div class="err" id="borrowerErr" style="display:none;"></div>
+       </div>
+       <div class="field">
+         <label for="borrowNotes">For which shoot?</label>
+         <textarea id="borrowNotes" placeholder="Reason, expected return date, condition…"></textarea>
+       </div>
+       <div class="modal-actions">
+         <button class="btn-primary" id="checkoutBtn" style="flex:1;background:var(--status-out);color:var(--text-primary);">Borrow</button>
+       </div>`;
+
+      const overlay = openOverlay(`
+    <div class="modal">
+      <button class="close-x" id="closeDetail">&times;</button>
+      <h2>${escapeHtml(item.name)}</h2>
+      <div class="modal-sub">${escapeHtml(item.category || 'Uncategorized')}${session.role === 'admin' ? ' · #' + String(item.id).slice(-5).toUpperCase() : ''}</div>
+      ${actionHtml}
+      ${historyHtml}
+      ${session.role === 'admin' ? `<div class="modal-actions" style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;justify-content:space-between;">
+        <button class="btn-danger-outline" id="removeEquip">Delete item</button>
+        ${!loan && hist.length > 0 ? `<button class="btn-danger-outline" id="clearHistoryBtn">Clear history</button>` : ''}
+      </div>` : ''}
+    </div>`);
+
+      overlay.querySelector('#closeDetail').addEventListener('click', () => overlay.remove());
+
+      const toggleHistoryBtn = overlay.querySelector('#toggleHistoryBtn');
+      if (toggleHistoryBtn) {
+        toggleHistoryBtn.addEventListener('click', () => {
+          const body = overlay.querySelector('#olderHistBody');
+          const showing = body.style.display !== 'none';
+          body.style.display = showing ? 'none' : 'table-row-group';
+          toggleHistoryBtn.textContent = showing ? toggleHistoryBtn.dataset.showLabel : 'Show less history';
+        });
+        toggleHistoryBtn.dataset.showLabel = toggleHistoryBtn.textContent;
+      }
+
+      const borrowerSelect = overlay.querySelector('#borrowerSelect');
+      const borrowerOther = overlay.querySelector('#borrowerOther');
+      if (borrowerSelect) {
+        borrowerSelect.addEventListener('change', () => {
+          const isOther = borrowerSelect.value === '__other__';
+          borrowerOther.style.display = isOther ? 'block' : 'none';
+          if (isOther) borrowerOther.focus();
+        });
+      }
+
+      const reassignSelect = overlay.querySelector('#reassignSelect');
+      const reassignOther = overlay.querySelector('#reassignOther');
+      if (reassignSelect) {
+        reassignSelect.addEventListener('change', () => {
+          const isOther = reassignSelect.value === '__other__';
+          reassignOther.style.display = isOther ? 'block' : 'none';
+          if (isOther) reassignOther.focus();
+        });
+      }
+
+      const toggleReassignBtn = overlay.querySelector('#toggleReassignBtn');
+      if (toggleReassignBtn) {
+        toggleReassignBtn.addEventListener('click', () => {
+          const field = overlay.querySelector('#reassignField');
+          const row = overlay.querySelector('#confirmReassignRow');
+          const showing = field.style.display !== 'none';
+          field.style.display = showing ? 'none' : 'block';
+          row.style.display = showing ? 'none' : 'flex';
+        });
+      }
+
+      const confirmReassignBtn = overlay.querySelector('#confirmReassignBtn');
+      if (confirmReassignBtn) {
+        confirmReassignBtn.addEventListener('click', async () => {
+          const errEl = overlay.querySelector('#reassignErr');
+          const selected = reassignSelect.value;
+          const name = selected === '__other__' ? reassignOther.value.trim() : selected;
+          if (!name) { errEl.textContent = 'Choose or enter a new borrower name.'; errEl.style.display = 'block'; return; }
+          const active = activeLoanFor(equipId);
+          if (!active) { errEl.textContent = 'This item is no longer checked out.'; errEl.style.display = 'block'; return; }
+          const r = await callApi({ action: 'reassignBorrower', logId: active.id, newBorrower: name });
+          if (!r.ok) { errEl.textContent = r.error || 'Could not change borrower.'; errEl.style.display = 'block'; return; }
+          overlay.remove();
+          await loadAll();
+        });
+      }
+
+      const checkoutBtn = overlay.querySelector('#checkoutBtn');
+      if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', async () => {
+          const errEl = overlay.querySelector('#borrowerErr');
+          const notes = overlay.querySelector('#borrowNotes').value.trim();
+          const selected = borrowerSelect.value;
+          const name = selected === '__other__' ? borrowerOther.value.trim() : selected;
+          if (!name) { errEl.textContent = 'Choose or enter a borrower name first.'; errEl.style.display = 'block'; return; }
+          const r = await callApi({ action: 'checkout', equipmentId: equipId, borrower: name, notes });
+          if (!r.ok) { errEl.textContent = r.error || 'Could not check out item.'; errEl.style.display = 'block'; return; }
+          overlay.remove();
+          await loadAll();
+        });
+      }
+
+      const returnBtn = overlay.querySelector('#returnBtn');
+      if (returnBtn) {
+        returnBtn.addEventListener('click', async () => {
+          const active = activeLoanFor(equipId);
+          if (active) { await callApi({ action: 'returnItem', logId: active.id }); }
+          overlay.remove();
+          await loadAll();
+        });
+      }
+
+      const removeEquipBtn = overlay.querySelector('#removeEquip');
+      if (removeEquipBtn) {
+        removeEquipBtn.addEventListener('click', async () => {
+          if (activeLoanFor(equipId)) {
+            alert('This item is currently checked out. Mark it returned before removing it.');
+            return;
+          }
+          const r = await callApi({ action: 'removeEquipment', id: equipId });
+          if (!r.ok) { alert(r.error || 'Could not remove item.'); return; }
+          overlay.remove();
+          await loadAll();
+        });
+      }
+
+      const clearHistoryBtn = overlay.querySelector('#clearHistoryBtn');
+      if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', async () => {
+          const ok = await confirmDialog(
+            'Clear history?',
+            `Clear all history for "${item.name}"? This deletes every past borrow record and cannot be undone.`,
+            'Clear history'
+          );
+          if (!ok) return;
+          const r = await callApi({ action: 'clearHistory', equipmentId: equipId });
+          if (!r.ok) { alert(r.error || 'Could not clear history.'); return; }
+          overlay.remove();
+          await loadAll();
+        });
+      }
+    }
+
+    el('manageUsersBtn').addEventListener('click', async () => {
+      const r = await callApi({ action: 'listUsers' });
+      const users = r.ok ? r.users : [];
+      const errMsg = r.ok ? '' : (r.error || 'Could not load users.');
+
+      const rowsHtml = users.length ? users.map(u => `
+    <div class="user-row">
+      <div>
+        <div style="font-weight:600;">${escapeHtml(u.name)}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="role-badge ${u.role === 'admin' ? 'admin' : ''}">${escapeHtml(u.role)}</span>
+        ${u.name !== session.name ? `<button class="btn-ghost" style="padding:4px 9px;font-size:12px;" data-remove="${escapeHtml(u.name)}">Remove</button>` : ''}
+      </div>
+    </div>`).join('') : `<div style="font-size:13px;color:var(--text-secondary);">No users yet.</div>`;
+
+      const overlay = openOverlay(`
+    <div class="modal">
+      <button class="close-x" id="closeUsers">&times;</button>
+      <h2>Manage users</h2>
+      <div class="modal-sub">Only people listed here can sign in.</div>
+      ${errMsg ? `<div class="err" style="margin-bottom:12px;">${escapeHtml(errMsg)}</div>` : ''}
+      <div class="field">
+        <label for="newUserName">Name</label>
+        <input id="newUserName" type="text" placeholder="Full name">
+      </div>
+      <div class="field">
+        <label for="newUserPass">Passcode</label>
+        <input id="newUserPass" type="text" placeholder="Passcode they'll sign in with">
+      </div>
+      <div class="field">
+        <label for="newUserRole">Role</label>
+        <select id="newUserRole">
+          <option value="member">Member</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="err" id="userErr" style="display:none;"></div>
+      <button class="btn-primary" id="addUserBtn" style="width:100%;">Add user</button>
+      <div class="history"><h3>Current users</h3>${rowsHtml}</div>
+    </div>`);
+
+      overlay.querySelector('#closeUsers').addEventListener('click', () => overlay.remove());
+      overlay.querySelector('#addUserBtn').addEventListener('click', async () => {
+        const name = overlay.querySelector('#newUserName').value.trim();
+        const pass = overlay.querySelector('#newUserPass').value.trim();
+        const role = overlay.querySelector('#newUserRole').value;
+        const errEl = overlay.querySelector('#userErr');
+        if (!name || !pass) { errEl.textContent = 'Enter a name and passcode.'; errEl.style.display = 'block'; return; }
+        const res = await callApi({ action: 'addUser', name, passcode: pass, role });
+        if (!res.ok) { errEl.textContent = res.error || 'Could not add user.'; errEl.style.display = 'block'; return; }
+        cachedUserNames = null;
+        overlay.remove();
+        el('manageUsersBtn').click();
+      });
+      overlay.querySelectorAll('[data-remove]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          await callApi({ action: 'removeUser', name: btn.dataset.remove });
+          cachedUserNames = null;
+          overlay.remove();
+          el('manageUsersBtn').click();
+        });
+      });
+    });
+
+    init();
+  </script>
+</body>
+
+</html>
