@@ -55,7 +55,7 @@ header {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-strong);
-  padding: 14px 16px 12px;
+  padding: calc(14px + env(safe-area-inset-top)) 16px 12px;
   margin: 0 -16px 16px;
 }
 
@@ -788,7 +788,7 @@ button {
 .login-screen {
   position: relative;
   max-width: 380px;
-  margin: 10vh auto 0;
+  margin: calc(10vh + env(safe-area-inset-top)) auto 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
