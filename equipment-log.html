@@ -25,7 +25,7 @@
 
     <div id="setupScreen" class="hidden">
       <div class="login-screen">
-        <div class="login-mark"><img src="/assets/photos/logo_new/BURPFINALLOGO-5.png" alt="Company logo" onerror="this.parentElement.textContent='EQ'"></div>
+        <div class="login-mark"><img src="/assets/photos/logo_new/BURPFINALLOGO-5invertedfit.png" alt="Company logo" onerror="this.parentElement.textContent='EQ'"></div>
         <div class="eyebrow">Connect</div>
         <h1>Connect your sheet</h1>
         <div class="sub">Paste the Apps Script web app URL (ends in <code
@@ -41,7 +41,7 @@
 
     <div id="loginScreen" class="hidden">
       <div class="login-screen">
-        <div class="login-mark"><img src="/assets/photos/logo_new/BURPFINALLOGO-5.png" alt="Company logo" onerror="this.parentElement.textContent='EQ'"></div>
+        <div class="login-mark"><img src="/assets/photos/logo_new/BURPFINALLOGO-5invertedfit.png" alt="Company logo" onerror="this.parentElement.textContent='EQ'"></div>
         <div class="eyebrow">Sign in</div>
         <h1>Equipment log</h1>
         <div class="sub">Sign in with the name and passcode your admin gave you.</div>
@@ -86,6 +86,10 @@
   </div>
 
   <script>
+    // Paste your Apps Script Web App URL below (ends in /exec) to skip the "Connect your
+    // sheet" screen entirely and go straight to sign-in. Leave it as '' to keep asking.
+    const HARDCODED_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQWwWiDrpLgfUJWzmwdaY1ru16WjA8WXRhynHK2rC3WOXZHe4_dKthS4pC1d17zKbfpQ/exec';
+
     const LS_KEY = 'equipmentLog.scriptUrl';
     const LS_SESSION_KEY = 'equipmentLog.session';
     let SCRIPT_URL = null;
@@ -147,8 +151,14 @@
     }
 
     async function init() {
-      SCRIPT_URL = safeGetLS(LS_KEY);
+      SCRIPT_URL = (HARDCODED_SCRIPT_URL && HARDCODED_SCRIPT_URL.includes('script.google.com'))
+        ? HARDCODED_SCRIPT_URL
+        : safeGetLS(LS_KEY);
       if (!SCRIPT_URL) { showScreen('setupScreen'); return; }
+      safeSetLS(LS_KEY, SCRIPT_URL); // keep localStorage in sync so callApi/etc. behave the same either way
+      if (HARDCODED_SCRIPT_URL && HARDCODED_SCRIPT_URL.includes('script.google.com')) {
+        el('changeUrlBtn').classList.add('hidden');
+      }
 
       const stored = loadStoredSession();
       if (stored && stored.name && stored.passcode) {
