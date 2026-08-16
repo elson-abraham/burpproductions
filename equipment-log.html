@@ -30,7 +30,7 @@
         <div class="eyebrow">Connect</div>
         <h1>Connect your database</h1>
         <div class="sub">Paste the Apps Script web app URL (ends in <code
-            style="font-family:'JetBrains Mono',monospace;font-size:12px;">/exec</code>).</div>
+            style="font-family:'JetBrains Mono',monospace;font-size:13.5px;">/exec</code>).</div>
         <div class="field">
           <label for="scriptUrlInput">Web app URL</label>
           <input id="scriptUrlInput" type="text" placeholder="https://script.google.com/macros/s/.../exec">
@@ -69,7 +69,7 @@
             <h1>Equipment log</h1>
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;">
-            <div class="sub" id="welcomeMsg" style="margin:0;font-size:18px;"></div>
+            <div class="sub" id="welcomeMsg" style="margin:0;font-size:20.5px;"></div>
             <div class="sync-status">
               <button class="sync-btn" id="syncNowBtn" title="Sync now" aria-label="Sync now">&#8635;</button>
               <span class="sub" id="subline"></span>
@@ -101,7 +101,7 @@
         <div class="tab-header-row">
           <div>
             <div class="eyebrow" style="margin-bottom:2px;">All equipment</div>
-            <h1 style="font-size:20px;">Equipment</h1>
+            <h1 style="font-size:22.5px;">Equipment</h1>
           </div>
           <button class="btn-primary" id="addEquipBtn">+ Add</button>
         </div>
@@ -276,7 +276,7 @@
         showScreen('mainScreen');
         showTab('home');
         el('whoami').textContent = stored.name;
-        el('welcomeMsg').innerHTML = 'Welcome, <span style="color:var(--accent);font-weight:600;">' + escapeHtml(stored.name) + '</span>';
+        el('welcomeMsg').innerHTML = '<span style="font-size:50%;">Welcome,</span> <span style="color:var(--accent);font-weight:600;">' + escapeHtml(stored.name) + '</span>';
         updateRoleGatedUI(stored.role);
         await loadAll();
         startAutoSync();
@@ -357,7 +357,7 @@
         showScreen('mainScreen');
         showTab('home');
         el('whoami').textContent = r.name;
-        el('welcomeMsg').innerHTML = 'Welcome, <span style="color:var(--accent);font-weight:600;">' + escapeHtml(r.name) + '</span>';
+        el('welcomeMsg').innerHTML = '<span style="font-size:50%;">Welcome,</span> <span style="color:var(--accent);font-weight:600;">' + escapeHtml(r.name) + '</span>';
         updateRoleGatedUI(r.role);
         await loadAll();
         startAutoSync();
@@ -488,15 +488,15 @@
 
         legendHtml += `
           <div style="margin-bottom:12px;">
-            <div style="font-size:11px;font-weight:700;color:${cycle.returned ? 'var(--text-primary)' : 'var(--status-out)'};margin-bottom:5px;">Cycle ${ci + 1}${cycle.returned ? '' : ' · still out'}</div>
+            <div style="font-size:12.5px;font-weight:700;color:${cycle.returned ? 'var(--text-primary)' : 'var(--status-out)'};margin-bottom:5px;">Cycle ${ci + 1}${cycle.returned ? '' : ' · still out'}</div>
             ${cycle.segs.map((seg, si) => {
               const isCurrentlyOut = !cycle.returned && si === cycle.segs.length - 1;
               return `
-              <div style="display:flex;align-items:baseline;gap:7px;font-size:11px;margin-bottom:3px;">
+              <div style="display:flex;align-items:baseline;gap:7px;font-size:12.5px;margin-bottom:3px;">
                 <span style="width:9px;height:9px;border-radius:2px;background:${VIBGYOR[si % 7]};flex:none;display:inline-block;"></span>
                 <span style="color:${isCurrentlyOut ? 'var(--status-out)' : 'var(--text-primary)'};font-weight:600;min-width:60px;">${escapeHtml(seg.name)}</span>
                 <span style="color:var(--text-secondary);">${fmtDur(seg.hours)}</span>
-                <span style="color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${escapeHtml(fmtDate(seg.start.toISOString()))}</span>
+                <span style="color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:11.5px;">${escapeHtml(fmtDate(seg.start.toISOString()))}</span>
               </div>`;
             }).join('')}
           </div>`;
@@ -520,7 +520,7 @@
           <button class="close-x" id="closeChart">&times;</button>
           <h2>${escapeHtml(item.name)}</h2>
           <div class="modal-sub">Each bar is one full borrow cycle, split by user</div>
-          ${hist.length ? buildHistoryChartSvg(hist) : `<div style="font-size:13px;color:var(--text-secondary);text-align:center;padding:20px 0;">No history yet.</div>`}
+          ${hist.length ? buildHistoryChartSvg(hist) : `<div style="font-size:14.5px;color:var(--text-secondary);text-align:center;padding:20px 0;">No history yet.</div>`}
         </div>`);
       overlay.querySelector('#closeChart').addEventListener('click', () => overlay.remove());
     }
@@ -913,8 +913,8 @@
         <tbody>${latestHist.map(buildHistRow).join('')}</tbody>
       </table>
       </div>
-      ${isAdmin && fromTab === 'equipment' ? `<button class="btn-ghost" id="showChartBtn" style="width:100%;margin-top:10px;font-size:12.5px;">&#128202; Show complete History</button>` : ''}
-      ` : `<div style="font-size:13px;color:var(--text-secondary);">No history yet.</div>`;
+      ${isAdmin && fromTab === 'equipment' ? `<button class="btn-ghost" id="showChartBtn" style="width:100%;margin-top:10px;font-size:14px;">&#128202; Show complete History</button>` : ''}
+      ` : `<div style="font-size:14.5px;color:var(--text-secondary);">No history yet.</div>`;
 
       const historyHtml = canSeeHistory
         ? `<div class="history"><h3>History <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-secondary);"></span></h3>${historyTableHtml}</div>`
@@ -923,8 +923,8 @@
       const actionHtml = loan
         ? `<div class="field">
          <label>Currently with</label>
-         <div style="font-size:14px;font-weight:600;color:var(--accent);">${escapeHtml(loan.borrower)}</div>
-         ${isAdmin ? `<div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Since ${fmtDate(loan.checkoutAt)}${loan.updatedAt ? ' · last changed ' + fmtDate(loan.updatedAt) : ''}</div>` : ''}
+         <div style="font-size:16px;font-weight:600;color:var(--accent);">${escapeHtml(loan.borrower)}</div>
+         ${isAdmin ? `<div style="font-size:13.5px;color:var(--text-secondary);margin-top:2px;">Since ${fmtDate(loan.checkoutAt)}${loan.updatedAt ? ' · last changed ' + fmtDate(loan.updatedAt) : ''}</div>` : ''}
        </div>
        <div class="field" id="reassignField" style="display:none;">
          <label for="reassignSelect">New Borrower</label>
@@ -937,7 +937,7 @@
          <button class="btn-primary" id="returnBtn" style="flex:1;background:var(--status-free);color:var(--bg);">Return</button>
        </div>
        <div class="modal-actions" id="confirmReassignRow" style="display:none;">
-         <button class="btn-primary" id="confirmReassignBtn" style="flex:1;">Save new Borrower</button>
+         <button class="btn-primary" id="confirmReassignBtn" style="flex:1;">Save new Norrower</button>
        </div>`
         : `<div class="field">
          <label for="borrowerSelect">Borrower Name</label>
@@ -960,11 +960,11 @@
         <h2 style="margin:0;">${escapeHtml(item.name)}</h2>
         <div class="modal-sub" style="display:flex;align-items:center;gap:6px;">
           <span>${escapeHtml(item.category || 'Uncategorized')}${isAdmin ? ' · #' + String(item.id).slice(-5).toUpperCase() : ''}</span>
-          ${isAdmin ? `<button id="editEquipBtn" title="Edit equipment" aria-label="Edit equipment" style="background:none;border:none;color:var(--text-secondary);font-size:13px;cursor:pointer;padding:2px;flex:none;line-height:1;">&#9998;</button>` : ''}
+          ${isAdmin ? `<button id="editEquipBtn" title="Edit equipment" aria-label="Edit equipment" style="background:none;border:none;color:var(--text-secondary);font-size:14.5px;cursor:pointer;padding:2px;flex:none;line-height:1;">&#9998;</button>` : ''}
         </div>
       </div>
       ${isAdmin ? `<div id="itemHeaderEdit" style="display:none;">
-        <button id="backEditBtn" title="Back" aria-label="Back" style="background:none;border:none;color:var(--text-secondary);font-size:13px;cursor:pointer;padding:0;margin-bottom:14px;display:flex;align-items:center;gap:5px;">&larr; Back</button>
+        <button id="backEditBtn" title="Back" aria-label="Back" style="background:none;border:none;color:var(--text-secondary);font-size:14.5px;cursor:pointer;padding:0;margin-bottom:14px;display:flex;align-items:center;gap:5px;">&larr; Back</button>
         <div class="field">
           <label for="editName">Name</label>
           <input id="editName" type="text" value="${escapeHtml(item.name)}">
@@ -1196,10 +1196,10 @@
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="role-badge ${u.role === 'superadmin' ? 'superadmin' : (u.role === 'admin' ? 'admin' : '')}">${u.role === 'superadmin' ? 'super admin' : escapeHtml(u.role)}</span>
-        ${isSuperAdmin ? `<button class="btn-ghost" style="padding:4px 9px;font-size:12px;" data-reset="${escapeHtml(u.name)}">Reset</button>` : ''}
-        ${isSuperAdmin && u.name !== session.name ? `<button class="btn-ghost" style="padding:4px 9px;font-size:12px;" data-remove="${escapeHtml(u.name)}">Remove</button>` : ''}
+        ${isSuperAdmin ? `<button class="btn-ghost" style="padding:4px 9px;font-size:13.5px;" data-reset="${escapeHtml(u.name)}">Reset</button>` : ''}
+        ${isSuperAdmin && u.name !== session.name ? `<button class="btn-ghost" style="padding:4px 9px;font-size:13.5px;" data-remove="${escapeHtml(u.name)}">Remove</button>` : ''}
       </div>
-    </div>`).join('') : `<div style="font-size:13px;color:var(--text-secondary);">No users yet.</div>`;
+    </div>`).join('') : `<div style="font-size:14.5px;color:var(--text-secondary);">No users yet.</div>`;
 
       const overlay = openOverlay(`
     <div class="modal">
