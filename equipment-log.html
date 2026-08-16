@@ -3,11 +3,12 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#0A0A0A">
   <link rel="icon" type="image/png" href="/assets/icons/favicon-32.png">
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Equipment Log">
@@ -64,15 +65,17 @@
         <div class="header-top">
           <div class="title-block">
             <img src="/assets/photos/logo_new/BURPFINALLOGO-5.png" alt="Company logo" class="header-logo" onerror="this.style.display='none'">
-            <div class="eyebrow">Checkout ledger</div>
+            <div class="eyebrow">Burp Checkout ledger</div>
             <h1>Equipment log</h1>
           </div>
-          <div class="header-actions">
-            <button class="icon-btn" id="manageUsersBtn" title="Manage users" aria-label="Manage users">&#9776;</button>
-            <button class="btn-ghost" id="signOutBtn">Sign out</button>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">
+            <div class="sub" id="whoami" style="margin:0;"></div>
+            <div class="header-actions">
+              <button class="icon-btn" id="manageUsersBtn" title="Manage users" aria-label="Manage users">&#9776;</button>
+              <button class="btn-ghost" id="signOutBtn">Sign out</button>
+            </div>
           </div>
         </div>
-        <div class="sub" id="whoami" style="margin-top:2px;"></div>
         <div class="stats-row">
           <div class="stats" id="stats"></div>
           <button class="btn-primary" id="addEquipBtn">+ Add</button>
@@ -126,7 +129,7 @@
     function fmtDate(iso) {
       const p = fmtParts(iso);
       if (!p) return '';
-      return p.date + ' ' + p.time + ' IST';
+      return p.date + ' ' + p.time;
     }
     function fmtCell(iso) {
       const p = fmtParts(iso);
@@ -134,6 +137,7 @@
       return `${p.date}<br>${p.time}`;
     }
     function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+    function isAdminRole(role) { return role === 'admin' || role === 'superadmin'; }
 
     async function callApi(payload) {
       const body = Object.assign({}, payload);
@@ -173,8 +177,8 @@
       if (stored && stored.name && stored.passcode) {
         session = stored;
         showScreen('mainScreen');
-        el('whoami').textContent = 'Signed in as ' + stored.name;
-        el('manageUsersBtn').classList.toggle('hidden', stored.role !== 'admin');
+        el('whoami').innerHTML = 'Signed in as <span style="color:var(--accent);font-weight:600;">' + escapeHtml(stored.name) + '</span>';
+        el('manageUsersBtn').classList.toggle('hidden', !isAdminRole(stored.role));
         await loadAll();
         try {
           const r = await fetch(SCRIPT_URL, {
@@ -191,7 +195,7 @@
           } else if (r.role !== session.role) {
             session.role = r.role;
             saveSession(session);
-            el('manageUsersBtn').classList.toggle('hidden', r.role !== 'admin');
+            el('manageUsersBtn').classList.toggle('hidden', !isAdminRole(r.role));
           }
         } catch (e) {
           // Network hiccup — keep the cached session, don't boot the user out.
@@ -246,8 +250,8 @@
         session = { name: r.name, role: r.role, passcode: pass };
         saveSession(session);
         showScreen('mainScreen');
-        el('whoami').textContent = 'Signed in as ' + r.name;
-        el('manageUsersBtn').classList.toggle('hidden', r.role !== 'admin');
+        el('whoami').innerHTML = 'Signed in as <span style="color:var(--accent);font-weight:600;">' + escapeHtml(r.name) + '</span>';
+        el('manageUsersBtn').classList.toggle('hidden', !isAdminRole(r.role));
         await loadAll();
       } catch (e) {
         errEl.textContent = 'Could not reach the sheet. Check the web app URL and that it\'s deployed with "Anyone" access.';
@@ -453,6 +457,14 @@
     });
     el(currentView === 'list' ? 'viewListBtn' : 'viewGridBtn').classList.add('active');
 
+    function setBtnLoading(btn, loadingText) {
+      if (!btn) return () => {};
+      const original = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner"></span>${loadingText}`;
+      return () => { btn.disabled = false; btn.innerHTML = original; };
+    }
+
     function confirmDialog(title, message, confirmLabel) {
       return new Promise((resolve) => {
         const overlay = openOverlay(`
@@ -474,6 +486,47 @@
         overlay.addEventListener('click', e => { if (e.target === overlay) finish(false); });
         overlay.querySelector('#confirmCancelBtn').addEventListener('click', () => finish(false));
         overlay.querySelector('#confirmOkBtn').addEventListener('click', () => finish(true));
+      });
+    }
+
+    function resetPasscodeDialog(targetName) {
+      return new Promise((resolve) => {
+        const overlay = openOverlay(`
+      <div class="modal" style="max-width:380px;">
+        <h2>Reset passcode</h2>
+        <div class="modal-sub" style="margin-bottom:16px;">Set a new passcode for "${escapeHtml(targetName)}". They'll need it next time they sign in.</div>
+        <div class="field">
+          <label for="newPasscodeInput">New passcode</label>
+          <input id="newPasscodeInput" type="text" placeholder="New passcode for them">
+        </div>
+        <div class="field">
+          <label for="adminPasscodeInput">Your passcode (to confirm)</label>
+          <input id="adminPasscodeInput" type="password" placeholder="Your own passcode">
+          <div class="err" id="resetPasscodeErr" style="display:none;"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="resetCancelBtn">Cancel</button>
+          <button class="btn-primary" id="resetOkBtn" style="flex:1;">Reset passcode</button>
+        </div>
+      </div>`);
+        let resolved = false;
+        const finish = (val) => {
+          if (resolved) return;
+          resolved = true;
+          overlay.remove();
+          resolve(val);
+        };
+        overlay.addEventListener('click', e => { if (e.target === overlay) finish(null); });
+        overlay.querySelector('#resetCancelBtn').addEventListener('click', () => finish(null));
+        overlay.querySelector('#resetOkBtn').addEventListener('click', () => {
+          const newPasscode = overlay.querySelector('#newPasscodeInput').value.trim();
+          const adminPasscode = overlay.querySelector('#adminPasscodeInput').value;
+          const errEl = overlay.querySelector('#resetPasscodeErr');
+          if (!newPasscode) { errEl.textContent = 'Enter a new passcode.'; errEl.style.display = 'block'; return; }
+          if (!adminPasscode) { errEl.textContent = 'Enter your own passcode to confirm.'; errEl.style.display = 'block'; return; }
+          finish({ newPasscode, adminPasscode });
+        });
+        setTimeout(() => overlay.querySelector('#newPasscodeInput').focus(), 50);
       });
     }
 
@@ -595,7 +648,8 @@
         }).join('')}
         <option value="__other__">Other…</option>`;
 
-      const isAdmin = session.role === 'admin';
+      const isAdmin = isAdminRole(session.role);
+      const isSuperAdmin = session.role === 'superadmin';
       const buildHistRow = (l) => `
           <tr>
             <td>
@@ -631,14 +685,14 @@
       ` : `<div style="font-size:13px;color:var(--text-secondary);">No history yet.</div>`;
 
       const historyHtml = canSeeHistory
-        ? `<div class="history"><h3>History <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-secondary);">· times in IST</span></h3>${historyTableHtml}</div>`
+        ? `<div class="history"><h3>History <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-secondary);"></span></h3>${historyTableHtml}</div>`
         : '';
 
       const actionHtml = loan
         ? `<div class="field">
          <label>Currently with</label>
          <div style="font-size:14px;font-weight:600;color:var(--accent);">${escapeHtml(loan.borrower)}</div>
-         ${session.role === 'admin' ? `<div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Since ${fmtDate(loan.checkoutAt)}${loan.updatedAt ? ' · last changed ' + fmtDate(loan.updatedAt) : ''}</div>` : ''}
+         ${isAdmin ? `<div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Since ${fmtDate(loan.checkoutAt)}${loan.updatedAt ? ' · last changed ' + fmtDate(loan.updatedAt) : ''}</div>` : ''}
        </div>
        <div class="field" id="reassignField" style="display:none;">
          <label for="reassignSelect">New Borrower</label>
@@ -651,7 +705,7 @@
          <button class="btn-primary" id="returnBtn" style="flex:1;background:var(--status-free);color:var(--bg);">Return</button>
        </div>
        <div class="modal-actions" id="confirmReassignRow" style="display:none;">
-         <button class="btn-primary" id="confirmReassignBtn" style="flex:1;">Save new Borrower</button>
+         <button class="btn-primary" id="confirmReassignBtn" style="flex:1;">Save new Norrower</button>
        </div>`
         : `<div class="field">
          <label for="borrowerSelect">Borrower Name</label>
@@ -707,7 +761,7 @@
       <div id="itemBodyView">
         ${actionHtml}
         ${historyHtml}
-        ${session.role === 'admin' ? `<div class="modal-actions" style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;justify-content:space-between;">
+        ${isAdmin ? `<div class="modal-actions" style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;justify-content:space-between;">
           <button class="btn-danger-outline" id="removeEquip">Delete Equipment</button>
           ${!loan && hist.length > 0 ? `<button class="btn-danger-outline" id="clearHistoryBtn">Clear history</button>` : ''}
         </div>` : ''}
@@ -762,10 +816,11 @@
           catErrEl.style.display = 'none';
           if (!newName) { errEl.textContent = 'Equipment name is required.'; errEl.style.display = 'block'; return; }
           if (!newCat) { catErrEl.textContent = 'Choose or enter a category first.'; catErrEl.style.display = 'block'; return; }
+          const restore = setBtnLoading(saveEditEquip, 'Saving…');
           const r = await callApi({ action: 'updateEquipment', id: equipId, name: newName, category: newCat });
-          if (!r.ok) { errEl.textContent = r.error || 'Could not save changes.'; errEl.style.display = 'block'; return; }
-          overlay.remove();
+          if (!r.ok) { restore(); errEl.textContent = r.error || 'Could not save changes.'; errEl.style.display = 'block'; return; }
           await loadAll();
+          overlay.remove();
           openDetail(equipId); // back to this item's popup with the updated details, not the homepage
         });
       }
@@ -809,6 +864,8 @@
           const showing = field.style.display !== 'none';
           field.style.display = showing ? 'none' : 'block';
           row.style.display = showing ? 'none' : 'flex';
+          const returnBtnEl = overlay.querySelector('#returnBtn');
+          if (returnBtnEl) returnBtnEl.disabled = !showing;
         });
       }
 
@@ -821,10 +878,12 @@
           if (!name) { errEl.textContent = 'Choose or enter a new Borrower name.'; errEl.style.display = 'block'; return; }
           const active = activeLoanFor(equipId);
           if (!active) { errEl.textContent = 'This item is no longer checked out.'; errEl.style.display = 'block'; return; }
+          const restore = setBtnLoading(confirmReassignBtn, 'Saving…');
           const r = await callApi({ action: 'reassignBorrower', logId: active.id, newBorrower: name });
-          if (!r.ok) { errEl.textContent = r.error || 'Could not change borrower.'; errEl.style.display = 'block'; return; }
-          overlay.remove();
+          if (!r.ok) { restore(); errEl.textContent = r.error || 'Could not change Borrower.'; errEl.style.display = 'block'; return; }
           await loadAll();
+          overlay.remove();
+          openDetail(equipId); // stay on this item's popup with the updated borrower, not the homepage
         });
       }
 
@@ -836,10 +895,12 @@
           const selected = borrowerSelect.value;
           const name = selected === '__other__' ? borrowerOther.value.trim() : selected;
           if (!name) { errEl.textContent = 'Choose or enter a Borrower name first.'; errEl.style.display = 'block'; return; }
+          const restore = setBtnLoading(checkoutBtn, 'Borrowing…');
           const r = await callApi({ action: 'checkout', equipmentId: equipId, borrower: name, notes });
-          if (!r.ok) { errEl.textContent = r.error || 'Could not check out item.'; errEl.style.display = 'block'; return; }
-          overlay.remove();
+          if (!r.ok) { restore(); errEl.textContent = r.error || 'Could not check out item.'; errEl.style.display = 'block'; return; }
           await loadAll();
+          overlay.remove();
+          openDetail(equipId); // stay on this item's popup, now showing it checked out
         });
       }
 
@@ -847,9 +908,14 @@
       if (returnBtn) {
         returnBtn.addEventListener('click', async () => {
           const active = activeLoanFor(equipId);
-          if (active) { await callApi({ action: 'returnItem', logId: active.id }); }
-          overlay.remove();
+          if (active) {
+            const restore = setBtnLoading(returnBtn, 'Returning…');
+            const r = await callApi({ action: 'returnItem', logId: active.id });
+            if (!r.ok) { restore(); alert(r.error || 'Could not mark returned.'); return; }
+          }
           await loadAll();
+          overlay.remove();
+          openDetail(equipId); // stay on this item's popup, now showing it available
         });
       }
 
@@ -892,6 +958,7 @@
     }
 
     el('manageUsersBtn').addEventListener('click', async () => {
+      const isSuperAdmin = session.role === 'superadmin';
       const r = await callApi({ action: 'listUsers' });
       const users = r.ok ? r.users : [];
       const errMsg = r.ok ? '' : (r.error || 'Could not load users.');
@@ -902,8 +969,9 @@
         <div style="font-weight:600;">${escapeHtml(u.name)}</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <span class="role-badge ${u.role === 'admin' ? 'admin' : ''}">${escapeHtml(u.role)}</span>
-        ${u.name !== session.name ? `<button class="btn-ghost" style="padding:4px 9px;font-size:12px;" data-remove="${escapeHtml(u.name)}">Remove</button>` : ''}
+        <span class="role-badge ${u.role === 'superadmin' ? 'superadmin' : (u.role === 'admin' ? 'admin' : '')}">${u.role === 'superadmin' ? 'super admin' : escapeHtml(u.role)}</span>
+        ${isSuperAdmin ? `<button class="btn-ghost" style="padding:4px 9px;font-size:12px;" data-reset="${escapeHtml(u.name)}">Reset</button>` : ''}
+        ${isSuperAdmin && u.name !== session.name ? `<button class="btn-ghost" style="padding:4px 9px;font-size:12px;" data-remove="${escapeHtml(u.name)}">Remove</button>` : ''}
       </div>
     </div>`).join('') : `<div style="font-size:13px;color:var(--text-secondary);">No users yet.</div>`;
 
@@ -926,6 +994,7 @@
         <select id="newUserRole">
           <option value="member">Member</option>
           <option value="admin">Admin</option>
+          ${isSuperAdmin ? `<option value="superadmin">Super Admin</option>` : ''}
         </select>
       </div>
       <div class="err" id="userErr" style="display:none;"></div>
@@ -972,6 +1041,25 @@
           cachedUserNames = null;
           overlay.remove();
           el('manageUsersBtn').click();
+        });
+      });
+
+      overlay.querySelectorAll('[data-reset]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const targetName = btn.dataset.reset;
+          const result = await resetPasscodeDialog(targetName);
+          if (!result) return;
+          if (result.adminPasscode !== session.passcode) {
+            alert('That passcode doesn\'t match your account. Passcode was not reset.');
+            return;
+          }
+          const r = await callApi({ action: 'resetUserPasscode', name: targetName, newPasscode: result.newPasscode });
+          if (!r.ok) { alert(r.error || 'Could not reset passcode.'); return; }
+          alert(`Passcode for "${targetName}" has been reset.`);
+          if (targetName === session.name) {
+            session.passcode = result.newPasscode;
+            saveSession(session);
+          }
         });
       });
     });
