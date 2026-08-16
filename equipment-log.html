@@ -342,7 +342,7 @@
       const outCount = equipment.filter(e => activeLoanFor(e.id)).length;
       const freeCount = equipment.length - outCount;
       el('subline').textContent = equipment.length
-        ? `${equipment.length} item${equipment.length === 1 ? '' : 's'} tracked · synced to your sheet`
+        ? `${equipment.length} item${equipment.length === 1 ? '' : 's'} tracked · Synced to database`
         : 'Synced to your Google Sheet';
 
       el('stats').innerHTML = `
