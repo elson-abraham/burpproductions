@@ -1162,10 +1162,22 @@ button {
   font-family: 'Space Grotesk', 'Inter', sans-serif;
 }
 
+#mainScreen.settings-view {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+#mainScreen.settings-view #settingsTab {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
 #settingsTab {
   display: flex;
   flex-direction: column;
-  min-height: calc(100dvh - 260px);
 }
 
 .settings-actions {
@@ -1173,4 +1185,5 @@ button {
   flex-direction: column;
   gap: 10px;
   margin-top: auto;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
 }
