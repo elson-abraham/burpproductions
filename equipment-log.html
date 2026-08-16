@@ -435,65 +435,83 @@
       if (l.previousBorrower) return [{ name: l.previousBorrower, at: l.checkoutAt }, { name: l.borrower, at: l.updatedAt }];
       return [{ name: l.borrower, at: l.checkoutAt }];
     }
-    function computeHistorySegments(hist) {
+    const VIBGYOR = ['#2F7DE0', '#2FAE5C', '#D9C22F', '#E0812F', '#E0402F', '#8B2FE0', '#4B4FE0'];
+
+    function computeHistoryCycles(hist) {
       const now = new Date();
       const chronological = [...hist].sort((a, b) => new Date(a.checkoutAt) - new Date(b.checkoutAt));
-      const segments = [];
-      chronological.forEach(l => {
-        const parts = borrowerTrailParts(l); // [{name, at}], one per hand-off within this log entry
+      return chronological.map(l => {
+        const parts = borrowerTrailParts(l); // [{name, at}], one per hand-off within this cycle
+        const segs = [];
         for (let i = 0; i < parts.length; i++) {
           const startRaw = parts[i].at || (i === 0 ? l.checkoutAt : null);
           if (!startRaw) continue;
           const start = new Date(startRaw);
           const endRaw = i < parts.length - 1 ? parts[i + 1].at : l.returnAt;
           const end = endRaw ? new Date(endRaw) : now;
-          const hours = Math.max((end - start) / 3600000, 0.03);
-          const active = i === parts.length - 1 && !l.returnAt; // only the final, still-current holder is "out"
-          segments.push({ borrower: parts[i].name || '—', hours, active, start });
+          const hours = Math.max((end - start) / 3600000, 0.02);
+          segs.push({ name: parts[i].name || '—', hours, start });
         }
+        const totalHours = segs.reduce((s, seg) => s + seg.hours, 0);
+        return { segs, totalHours, returned: !!l.returnAt };
       });
-      return segments;
     }
 
     function buildHistoryChartSvg(hist) {
-      const bars = computeHistorySegments(hist);
-      const maxHours = Math.max(...bars.map(b => b.hours), 0.03);
-      const chartH = 160;
-      const topPad = 24; // reserves room so the duration label above a full-height bar never gets clipped
-      const barW = 46;
-      const gap = 20;
-      const width = Math.max(bars.length * (barW + gap) + gap, 260);
-      const svgH = topPad + chartH + 46; // + room for two-line date/name labels below the axis
+      const cycles = computeHistoryCycles(hist);
+      const maxTotal = Math.max(...cycles.map(c => c.totalHours), 0.03);
+      const chartH = 170;
+      const topPad = 24;
+      const barW = 64;
+      const gap = 30;
+      const width = Math.max(cycles.length * (barW + gap) + gap, 260);
+      const svgH = topPad + chartH + 30;
       const fmtDur = (h) => h < 1 ? Math.round(h * 60) + 'm' : h < 48 ? Math.round(h) + 'h' : Math.round(h / 24) + 'd';
-      const shortName = (n) => n.length > 9 ? n.slice(0, 8) + '…' : n;
-      const shortDate = (d) => d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' });
+      const baseline = topPad + chartH;
 
-      const barsHtml = bars.map((b, i) => {
-        const x = gap + i * (barW + gap);
-        const h = Math.max((b.hours / maxHours) * chartH, 5);
-        const y = topPad + (chartH - h);
-        const baseline = topPad + chartH;
-        const color = b.active ? 'var(--status-out)' : 'var(--status-free)';
-        return `
-          <g>
-            <rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" fill="${color}" opacity="0.88"/>
-            <text x="${x + barW / 2}" y="${y - 7}" text-anchor="middle" font-size="10" fill="var(--text-primary)" font-family="JetBrains Mono, monospace">${fmtDur(b.hours)}</text>
-            <text x="${x + barW / 2}" y="${baseline + 15}" text-anchor="middle" font-size="10" fill="var(--text-secondary)" font-weight="600">${escapeHtml(shortName(b.borrower))}</text>
-            <text x="${x + barW / 2}" y="${baseline + 28}" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="JetBrains Mono, monospace">${escapeHtml(shortDate(b.start))}</text>
-          </g>`;
+      let legendHtml = '';
+      const barsHtml = cycles.map((cycle, ci) => {
+        const x = gap + ci * (barW + gap);
+        const barTotalH = Math.max((cycle.totalHours / maxTotal) * chartH, 8);
+        let cumY = baseline;
+        const segRects = cycle.segs.map((seg, si) => {
+          const segH = Math.max((seg.hours / cycle.totalHours) * barTotalH, 3);
+          const y = cumY - segH;
+          cumY = y;
+          const isCurrentlyOutSeg = !cycle.returned && si === cycle.segs.length - 1;
+          const color = isCurrentlyOutSeg ? 'var(--status-out)' : VIBGYOR[si % 7];
+          const labelText = segH >= 16 ? `<text x="${x + barW / 2}" y="${y + segH / 2 + 3}" text-anchor="middle" font-size="9" fill="#0A0A0A" font-weight="700">${fmtDur(seg.hours)}</text>` : '';
+          return `<rect x="${x}" y="${y}" width="${barW}" height="${segH}" fill="${color}"/>${labelText}`;
+        }).join('');
+        const topLabel = `<text x="${x + barW / 2}" y="${baseline - barTotalH - 8}" text-anchor="middle" font-size="10" fill="var(--text-primary)" font-family="JetBrains Mono, monospace">${fmtDur(cycle.totalHours)}</text>`;
+        const axisLabel = `<text x="${x + barW / 2}" y="${baseline + 16}" text-anchor="middle" font-size="10" fill="var(--text-secondary)">Cycle ${ci + 1}</text>`;
+
+        legendHtml += `
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;font-weight:700;color:${cycle.returned ? 'var(--text-primary)' : 'var(--status-out)'};margin-bottom:5px;">Cycle ${ci + 1}${cycle.returned ? '' : ' · still out'}</div>
+            ${cycle.segs.map((seg, si) => {
+              const isCurrentlyOut = !cycle.returned && si === cycle.segs.length - 1;
+              return `
+              <div style="display:flex;align-items:baseline;gap:7px;font-size:11px;margin-bottom:3px;">
+                <span style="width:9px;height:9px;border-radius:2px;background:${VIBGYOR[si % 7]};flex:none;display:inline-block;"></span>
+                <span style="color:${isCurrentlyOut ? 'var(--status-out)' : 'var(--text-primary)'};font-weight:600;min-width:60px;">${escapeHtml(seg.name)}</span>
+                <span style="color:var(--text-secondary);">${fmtDur(seg.hours)}</span>
+                <span style="color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:10px;">${escapeHtml(fmtDate(seg.start.toISOString()))}</span>
+              </div>`;
+            }).join('')}
+          </div>`;
+
+        return `<g>${segRects}${topLabel}${axisLabel}</g>`;
       }).join('');
 
       return `
         <div style="overflow-x:auto;padding-bottom:4px;">
           <svg width="${width}" height="${svgH}" viewBox="0 0 ${width} ${svgH}">
-            <line x1="0" y1="${topPad + chartH}" x2="${width}" y2="${topPad + chartH}" stroke="var(--border-strong)" stroke-width="1"/>
+            <line x1="0" y1="${baseline}" x2="${width}" y2="${baseline}" stroke="var(--border-strong)" stroke-width="1"/>
             ${barsHtml}
           </svg>
         </div>
-        <div style="display:flex;gap:18px;justify-content:center;margin-top:14px;font-size:11px;color:var(--text-secondary);">
-          <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--status-free);display:inline-block;"></span>Returned</span>
-          <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--status-out);display:inline-block;"></span>Still out</span>
-        </div>`;
+        <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;max-height:220px;overflow-y:auto;">${legendHtml}</div>`;
     }
 
     function openHistoryChartModal(item, hist) {
@@ -501,7 +519,7 @@
         <div class="modal" style="max-width:540px;">
           <button class="close-x" id="closeChart">&times;</button>
           <h2>${escapeHtml(item.name)}</h2>
-          <div class="modal-sub">Borrow duration by user, oldest to newest</div>
+          <div class="modal-sub">Each bar is one full borrow cycle, split by user</div>
           ${hist.length ? buildHistoryChartSvg(hist) : `<div style="font-size:13px;color:var(--text-secondary);text-align:center;padding:20px 0;">No history yet.</div>`}
         </div>`);
       overlay.querySelector('#closeChart').addEventListener('click', () => overlay.remove());
