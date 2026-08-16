@@ -63,6 +63,7 @@
       <header>
         <div class="header-top">
           <div class="title-block">
+            <img src="/assets/photos/logo_new/BURPFINALLOGO-5.png" alt="Company logo" class="header-logo" onerror="this.style.display='none'">
             <div class="eyebrow">Checkout ledger</div>
             <h1>Equipment log</h1>
           </div>
@@ -78,9 +79,16 @@
         </div>
       </header>
       <div id="banner" class="banner hidden"></div>
-      <div class="sub" id="subline" style="margin-bottom:10px;"></div>
+      <div class="list-toggle-row">
+        <div class="sub" id="subline"></div>
+        <div class="view-toggle" id="viewToggle">
+          <button class="view-toggle-btn" id="viewGridBtn" title="Grid view" aria-label="Grid view">&#9638;</button>
+          <button class="view-toggle-btn" id="viewListBtn" title="List view" aria-label="List view">&#9776;</button>
+        </div>
+      </div>
       <div class="cat-filter-row" id="catFilterRow"></div>
       <div class="grid" id="grid"></div>
+      <div class="list-view" id="listView" style="display:none;"></div>
     </div>
 
   </div>
@@ -98,6 +106,7 @@
     let logs = [];
     let currentFilter = 'all'; // 'all' | 'out' | 'available'
     let currentCategory = null; // null = all categories, otherwise exact category string
+    let currentView = safeGetLS('equipmentLog.view') || 'grid'; // 'grid' | 'list'
     let cachedUserNames = null; // null = not yet fetched this session
 
     function safeGetLS(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -117,7 +126,7 @@
     function fmtDate(iso) {
       const p = fmtParts(iso);
       if (!p) return '';
-      return p.date + ' ' + p.time + ' IST';
+      return p.date + ' ' + p.time;
     }
     function fmtCell(iso) {
       const p = fmtParts(iso);
@@ -294,16 +303,32 @@
     }
 
     function borrowerTrailParts(l) {
-      const trail = l.borrowerTrail || (l.previousBorrower ? l.previousBorrower + ' → ' + l.borrower : l.borrower);
-      return String(trail).split('→').map(s => s.trim()).filter(Boolean);
+      if (l.borrowerTrail) {
+        try {
+          const parsed = JSON.parse(l.borrowerTrail);
+          if (Array.isArray(parsed) && parsed.length) return parsed;
+        } catch (e) { /* not JSON — legacy plain-string trail, fall through */ }
+        const names = String(l.borrowerTrail).split('→').map(s => s.trim()).filter(Boolean);
+        if (names.length) {
+          return names.map((n, i) => ({
+            name: n,
+            at: i === 0 ? l.checkoutAt : (i === names.length - 1 ? l.updatedAt : null)
+          }));
+        }
+      }
+      if (l.previousBorrower) return [{ name: l.previousBorrower, at: l.checkoutAt }, { name: l.borrower, at: l.updatedAt }];
+      return [{ name: l.borrower, at: l.checkoutAt }];
     }
     function borrowerTrailHtml(l) {
       const parts = borrowerTrailParts(l);
       const lastClass = l.returnAt ? 'h-name h-returned' : 'h-name';
-      return parts.map((n, idx) => idx === parts.length - 1
-        ? `<span class="${lastClass}">${escapeHtml(n)}</span>`
-        : `<span class="h-trail-prev">${escapeHtml(n)}</span>`
-      ).join(' <span class="h-arrow">&rarr;</span> ');
+      const hopsHtml = parts.map((p, idx) => {
+        const cls = idx === parts.length - 1 ? lastClass : 'h-trail-prev';
+        const timeHtml = p.at ? `<span class="trail-hop-time">${fmtDate(p.at)}</span>` : '';
+        const arrow = idx === 0 ? '' : `<span class="h-arrow">&rarr;</span>`;
+        return `${arrow}<span class="trail-hop"><span class="${cls}">${escapeHtml(p.name)}</span>${timeHtml}</span>`;
+      }).join('');
+      return `<span class="trail-wrap">${hopsHtml}</span>`;
     }
 
     function activeLoanFor(equipId) { return logs.find(l => l.equipmentId === equipId && !l.returnAt); }
@@ -354,17 +379,47 @@
       });
 
       const grid = el('grid');
+      const listView = el('listView');
+      grid.style.display = currentView === 'grid' ? 'grid' : 'none';
+      listView.style.display = currentView === 'list' ? 'flex' : 'none';
+
       if (equipment.length === 0) {
-        grid.innerHTML = `<div class="empty">No equipment yet. Tap + Add to start logging loans.</div>`;
+        const emptyHtml = `<div class="empty">No equipment yet. Tap + Add to start logging loans.</div>`;
+        grid.innerHTML = emptyHtml;
+        listView.innerHTML = emptyHtml;
         return;
       }
       if (visible.length === 0) {
         const msg = (currentFilter !== 'all' || currentCategory !== null)
           ? 'Nothing matches this filter. Try a different combination.'
           : 'No equipment yet. Tap + Add to start logging loans.';
-        grid.innerHTML = `<div class="empty">${msg}</div>`;
+        const emptyHtml = `<div class="empty">${msg}</div>`;
+        grid.innerHTML = emptyHtml;
+        listView.innerHTML = emptyHtml;
         return;
       }
+
+      if (currentView === 'list') {
+        listView.innerHTML = visible.map(e => {
+          const loan = activeLoanFor(e.id);
+          return `
+      <div class="list-row ${loan ? 'status-out' : 'status-free'}" data-id="${e.id}">
+        <div class="list-row-top">
+          <div class="list-row-main">
+            <div class="list-row-name">${escapeHtml(e.name)}</div>
+            <div class="list-row-cat"><span class="cat-dot"></span>${escapeHtml(e.category || 'Uncategorized')} <span class="list-row-id">#${String(e.id).slice(-5).toUpperCase()}</span></div>
+          </div>
+          ${loan ? `<span class="stamp out">Out</span>` : `<span class="stamp avail">Available</span>`}
+        </div>
+        ${loan ? `<div class="list-row-movement">
+          <span class="list-row-borrower">${borrowerTrailHtml(loan)}</span>
+        </div>` : ''}
+      </div>`;
+        }).join('');
+        listView.querySelectorAll('.list-row').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id)));
+        return;
+      }
+
       grid.innerHTML = visible.map(e => {
         const loan = activeLoanFor(e.id);
         return `
@@ -381,6 +436,22 @@
       }).join('');
       grid.querySelectorAll('.tag').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id)));
     }
+
+    el('viewGridBtn').addEventListener('click', () => {
+      currentView = 'grid';
+      safeSetLS('equipmentLog.view', 'grid');
+      el('viewGridBtn').classList.add('active');
+      el('viewListBtn').classList.remove('active');
+      render();
+    });
+    el('viewListBtn').addEventListener('click', () => {
+      currentView = 'list';
+      safeSetLS('equipmentLog.view', 'list');
+      el('viewListBtn').classList.add('active');
+      el('viewGridBtn').classList.remove('active');
+      render();
+    });
+    el(currentView === 'list' ? 'viewListBtn' : 'viewGridBtn').classList.add('active');
 
     function confirmDialog(title, message, confirmLabel) {
       return new Promise((resolve) => {
@@ -416,6 +487,7 @@
     }
 
     el('addEquipBtn').addEventListener('click', () => {
+      const existingCats = [...new Set(equipment.map(e => e.category).filter(Boolean))].sort((a, b) => a.localeCompare(b));
       const overlay = openOverlay(`
     <div class="modal">
       <button class="close-x" id="closeAdd">&times;</button>
@@ -427,8 +499,14 @@
         <div class="err" id="nameErr" style="display:none;"></div>
       </div>
       <div class="field">
-        <label for="eqCat">Category</label>
-        <input id="eqCat" type="text" placeholder="e.g. Photography">
+        <label for="eqCatSelect">Category</label>
+        <select id="eqCatSelect">
+          <option value="" disabled selected>Select a category…</option>
+          ${existingCats.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('')}
+          <option value="__new__">+ Add new category…</option>
+        </select>
+        <input id="eqCatNew" type="text" placeholder="New category name" style="margin-top:8px;display:none;">
+        <div class="err" id="catErr" style="display:none;"></div>
       </div>
       <div class="modal-actions">
         <button class="btn-secondary" id="cancelAdd">Cancel</button>
@@ -437,11 +515,22 @@
     </div>`);
       overlay.querySelector('#closeAdd').addEventListener('click', () => overlay.remove());
       overlay.querySelector('#cancelAdd').addEventListener('click', () => overlay.remove());
+      const eqCatSelect = overlay.querySelector('#eqCatSelect');
+      const eqCatNew = overlay.querySelector('#eqCatNew');
+      eqCatSelect.addEventListener('change', () => {
+        const isNew = eqCatSelect.value === '__new__';
+        eqCatNew.style.display = isNew ? 'block' : 'none';
+        if (isNew) eqCatNew.focus();
+      });
       overlay.querySelector('#confirmAdd').addEventListener('click', async () => {
         const name = overlay.querySelector('#eqName').value.trim();
-        const cat = overlay.querySelector('#eqCat').value.trim();
+        const cat = eqCatSelect.value === '__new__' ? eqCatNew.value.trim() : eqCatSelect.value;
         const errEl = overlay.querySelector('#nameErr');
+        const catErrEl = overlay.querySelector('#catErr');
+        errEl.style.display = 'none';
+        catErrEl.style.display = 'none';
         if (!name) { errEl.textContent = 'Enter an equipment name first.'; errEl.style.display = 'block'; return; }
+        if (!cat) { catErrEl.textContent = 'Choose or enter a category first.'; catErrEl.style.display = 'block'; return; }
         const r = await callApi({ action: 'addEquipment', name, category: cat });
         if (!r.ok) { errEl.textContent = r.error || 'Could not add item.'; errEl.style.display = 'block'; return; }
         overlay.remove();
@@ -501,7 +590,7 @@
       ` : `<div style="font-size:13px;color:var(--text-secondary);">No history yet.</div>`;
 
       const historyHtml = canSeeHistory
-        ? `<div class="history"><h3>History <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-secondary);">· times in IST</span></h3>${historyTableHtml}</div>`
+        ? `<div class="history"><h3>History <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-secondary);"></span></h3>${historyTableHtml}</div>`
         : '';
 
       const actionHtml = loan
@@ -511,20 +600,20 @@
          ${session.role === 'admin' ? `<div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Since ${fmtDate(loan.checkoutAt)}${loan.updatedAt ? ' · last changed ' + fmtDate(loan.updatedAt) : ''}</div>` : ''}
        </div>
        <div class="field" id="reassignField" style="display:none;">
-         <label for="reassignSelect">New borrower</label>
+         <label for="reassignSelect">New Borrower</label>
          <select id="reassignSelect">${userOptionsHtml('', loan.borrower)}</select>
          <input id="reassignOther" type="text" placeholder="Type their name" style="margin-top:8px;display:none;">
          <div class="err" id="reassignErr" style="display:none;"></div>
        </div>
        <div class="modal-actions">
-         <button class="btn-secondary" id="toggleReassignBtn">Change borrower</button>
+         <button class="btn-secondary" id="toggleReassignBtn">Change Borrower</button>
          <button class="btn-primary" id="returnBtn" style="flex:1;background:var(--status-free);color:var(--bg);">Return</button>
        </div>
        <div class="modal-actions" id="confirmReassignRow" style="display:none;">
-         <button class="btn-primary" id="confirmReassignBtn" style="flex:1;">Save new borrower</button>
+         <button class="btn-primary" id="confirmReassignBtn" style="flex:1;">Save new Borrower</button>
        </div>`
         : `<div class="field">
-         <label for="borrowerSelect">Borrower name</label>
+         <label for="borrowerSelect">Borrower Name</label>
          <select id="borrowerSelect">${userOptionsHtml('')}</select>
          <input id="borrowerOther" type="text" placeholder="Type their name" style="margin-top:8px;display:none;">
          <div class="err" id="borrowerErr" style="display:none;"></div>
@@ -540,17 +629,105 @@
       const overlay = openOverlay(`
     <div class="modal">
       <button class="close-x" id="closeDetail">&times;</button>
-      <h2>${escapeHtml(item.name)}</h2>
-      <div class="modal-sub">${escapeHtml(item.category || 'Uncategorized')}${session.role === 'admin' ? ' · #' + String(item.id).slice(-5).toUpperCase() : ''}</div>
-      ${actionHtml}
-      ${historyHtml}
-      ${session.role === 'admin' ? `<div class="modal-actions" style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;justify-content:space-between;">
-        <button class="btn-danger-outline" id="removeEquip">Delete item</button>
-        ${!loan && hist.length > 0 ? `<button class="btn-danger-outline" id="clearHistoryBtn">Clear history</button>` : ''}
+      <div id="itemHeaderView">
+        <h2 style="margin:0;">${escapeHtml(item.name)}</h2>
+        <div class="modal-sub" style="display:flex;align-items:center;gap:6px;">
+          <span>${escapeHtml(item.category || 'Uncategorized')}${isAdmin ? ' · #' + String(item.id).slice(-5).toUpperCase() : ''}</span>
+          ${isAdmin ? `<button id="editEquipBtn" title="Edit equipment" aria-label="Edit equipment" style="background:none;border:none;color:var(--text-secondary);font-size:13px;cursor:pointer;padding:2px;flex:none;line-height:1;">&#9998;</button>` : ''}
+        </div>
+      </div>
+      ${isAdmin ? `<div id="itemHeaderEdit" style="display:none;">
+        <button id="backEditBtn" title="Back" aria-label="Back" style="background:none;border:none;color:var(--text-secondary);font-size:13px;cursor:pointer;padding:0;margin-bottom:14px;display:flex;align-items:center;gap:5px;">&larr; Back</button>
+        <div class="field">
+          <label for="editName">Name</label>
+          <input id="editName" type="text" value="${escapeHtml(item.name)}">
+          <div class="err" id="editNameErr" style="display:none;"></div>
+        </div>
+        <div class="field">
+          <label for="editCatSelect">Category</label>
+          <select id="editCatSelect">
+            <option value="" disabled ${item.category ? '' : 'selected'}>Select a category…</option>
+            ${[...new Set(equipment.map(e => e.category).filter(Boolean))].sort((a, b) => a.localeCompare(b)).map(c =>
+              `<option value="${escapeHtml(c)}" ${c === (item.category || '') ? 'selected' : ''}>${escapeHtml(c)}</option>`
+            ).join('')}
+            <option value="__new__">+ Add new category…</option>
+          </select>
+          <input id="editCatNew" type="text" placeholder="New category name" style="margin-top:8px;display:none;">
+          <div class="err" id="editCatErr" style="display:none;"></div>
+        </div>
+        <div class="modal-actions" style="margin-top:0;margin-bottom:18px;">
+          <button class="btn-secondary" id="cancelEditEquip">Cancel</button>
+          <button class="btn-primary" id="saveEditEquip" style="flex:1;">Save changes</button>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:14px;">
+          <button class="btn-danger-outline" id="removeEquipEdit" style="width:100%;">Delete Equipment</button>
+        </div>
       </div>` : ''}
+      <div id="itemBodyView">
+        ${actionHtml}
+        ${historyHtml}
+        ${session.role === 'admin' ? `<div class="modal-actions" style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;justify-content:space-between;">
+          <button class="btn-danger-outline" id="removeEquip">Delete Equipment</button>
+          ${!loan && hist.length > 0 ? `<button class="btn-danger-outline" id="clearHistoryBtn">Clear history</button>` : ''}
+        </div>` : ''}
+      </div>
     </div>`);
 
-      overlay.querySelector('#closeDetail').addEventListener('click', () => overlay.remove());
+      const returnToDetailView = () => {
+        overlay.querySelector('#itemHeaderEdit').style.display = 'none';
+        overlay.querySelector('#itemHeaderView').style.display = 'block';
+        overlay.querySelector('#itemBodyView').style.display = 'block';
+      };
+
+      overlay.querySelector('#closeDetail').addEventListener('click', () => {
+        const editSection = overlay.querySelector('#itemHeaderEdit');
+        if (editSection && editSection.style.display !== 'none') {
+          returnToDetailView();
+        } else {
+          overlay.remove();
+        }
+      });
+
+      const editEquipBtn = overlay.querySelector('#editEquipBtn');
+      if (editEquipBtn) {
+        editEquipBtn.addEventListener('click', () => {
+          overlay.querySelector('#itemHeaderView').style.display = 'none';
+          overlay.querySelector('#itemBodyView').style.display = 'none';
+          overlay.querySelector('#itemHeaderEdit').style.display = 'block';
+        });
+      }
+      const cancelEditEquip = overlay.querySelector('#cancelEditEquip');
+      if (cancelEditEquip) cancelEditEquip.addEventListener('click', returnToDetailView);
+      const backEditBtn = overlay.querySelector('#backEditBtn');
+      if (backEditBtn) backEditBtn.addEventListener('click', returnToDetailView);
+
+      const editCatSelect = overlay.querySelector('#editCatSelect');
+      const editCatNew = overlay.querySelector('#editCatNew');
+      if (editCatSelect) {
+        editCatSelect.addEventListener('change', () => {
+          const isNew = editCatSelect.value === '__new__';
+          editCatNew.style.display = isNew ? 'block' : 'none';
+          if (isNew) editCatNew.focus();
+        });
+      }
+      const saveEditEquip = overlay.querySelector('#saveEditEquip');
+      if (saveEditEquip) {
+        saveEditEquip.addEventListener('click', async () => {
+          const newName = overlay.querySelector('#editName').value.trim();
+          const newCat = editCatSelect.value === '__new__' ? editCatNew.value.trim() : editCatSelect.value;
+          const errEl = overlay.querySelector('#editNameErr');
+          const catErrEl = overlay.querySelector('#editCatErr');
+          errEl.style.display = 'none';
+          catErrEl.style.display = 'none';
+          if (!newName) { errEl.textContent = 'Equipment name is required.'; errEl.style.display = 'block'; return; }
+          if (!newCat) { catErrEl.textContent = 'Choose or enter a category first.'; catErrEl.style.display = 'block'; return; }
+          const r = await callApi({ action: 'updateEquipment', id: equipId, name: newName, category: newCat });
+          if (!r.ok) { errEl.textContent = r.error || 'Could not save changes.'; errEl.style.display = 'block'; return; }
+          overlay.remove();
+          await loadAll();
+          openDetail(equipId); // back to this item's popup with the updated details, not the homepage
+        });
+      }
 
       const toggleHistoryBtn = overlay.querySelector('#toggleHistoryBtn');
       if (toggleHistoryBtn) {
@@ -635,19 +812,26 @@
         });
       }
 
+      const doRemoveEquipment = async () => {
+        if (activeLoanFor(equipId)) {
+          alert('This item is currently checked out. Mark it returned before removing it.');
+          return;
+        }
+        const ok = await confirmDialog(
+          'Delete equipment?',
+          `Delete "${item.name}"? This removes the item and its history permanently and cannot be undone.`,
+          'Delete Equipment'
+        );
+        if (!ok) return;
+        const r = await callApi({ action: 'removeEquipment', id: equipId });
+        if (!r.ok) { alert(r.error || 'Could not remove item.'); return; }
+        overlay.remove();
+        await loadAll();
+      };
       const removeEquipBtn = overlay.querySelector('#removeEquip');
-      if (removeEquipBtn) {
-        removeEquipBtn.addEventListener('click', async () => {
-          if (activeLoanFor(equipId)) {
-            alert('This item is currently checked out. Mark it returned before removing it.');
-            return;
-          }
-          const r = await callApi({ action: 'removeEquipment', id: equipId });
-          if (!r.ok) { alert(r.error || 'Could not remove item.'); return; }
-          overlay.remove();
-          await loadAll();
-        });
-      }
+      if (removeEquipBtn) removeEquipBtn.addEventListener('click', doRemoveEquipment);
+      const removeEquipEditBtn = overlay.querySelector('#removeEquipEdit');
+      if (removeEquipEditBtn) removeEquipEditBtn.addEventListener('click', doRemoveEquipment);
 
       const clearHistoryBtn = overlay.querySelector('#clearHistoryBtn');
       if (clearHistoryBtn) {
