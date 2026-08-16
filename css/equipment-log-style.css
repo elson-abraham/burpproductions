@@ -79,13 +79,13 @@ header {
 .header-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   gap: 10px;
 }
 
 .header-logo {
-  max-height: 20px;
-  max-width: 120px;
+  max-height: 28px;
+  max-width: 150px;
   display: block;
   margin-bottom: 6px;
   object-fit: contain;
@@ -435,7 +435,7 @@ button {
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-size: 15px;
+  font-size: 19px;
   cursor: pointer;
   padding: 2px;
   display: flex;
@@ -1062,4 +1062,115 @@ button {
 
 .hidden {
   display: none !important;
+}
+
+/* ---------- Bottom nav / tabs ---------- */
+#mainScreen {
+  padding-bottom: calc(70px + env(safe-area-inset-bottom));
+}
+
+.tab-panel {
+  animation: fadeIn .15s ease;
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border-strong);
+  padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+}
+
+.bottom-nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 26px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: color .15s ease, background .15s ease;
+}
+
+.bottom-nav-btn svg {
+  width: 23px;
+  height: 23px;
+}
+
+.bottom-nav-btn:active {
+  transform: scale(0.92);
+}
+
+.bottom-nav-btn.active {
+  color: var(--accent);
+  background: rgba(254, 64, 0, 0.12);
+}
+
+/* ---------- Equipment tab ---------- */
+.tab-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tab-header-row h1 {
+  margin: 0;
+}
+
+.simple-list .list-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ---------- Settings tab ---------- */
+.settings-profile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.settings-profile-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.settings-profile-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+}
+
+#settingsTab {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 260px);
+}
+
+.settings-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
 }
