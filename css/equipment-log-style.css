@@ -425,6 +425,43 @@ button {
   margin-bottom: 10px;
 }
 
+.sync-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.sync-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 15px;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: color .15s ease;
+}
+
+.sync-btn:hover {
+  color: var(--text-primary);
+}
+
+.sync-btn:active {
+  transform: scale(0.9);
+}
+
+.sync-btn.spinning {
+  color: var(--accent);
+  animation: spin .7s linear infinite;
+}
+
+.sync-btn:disabled {
+  cursor: default;
+}
+
 .view-toggle {
   display: flex;
   gap: 4px;
