@@ -48,6 +48,21 @@ h2,
   padding: 0 16px 90px;
 }
 
+body.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+#setupScreen,
+#loginScreen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+
 /* ---------- Header ---------- */
 header {
   position: sticky;
@@ -924,7 +939,8 @@ button {
 .login-screen {
   position: relative;
   max-width: 380px;
-  margin: calc(10vh + env(safe-area-inset-top)) auto 0;
+  width: 100%;
+  margin: 0 auto;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -1008,5 +1024,5 @@ button {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
