@@ -28,7 +28,7 @@
       <div class="login-screen">
         <div class="login-mark"><img src="/assets/photos/logo_new/BURPFINALLOGO-5.png" alt="Company logo" onerror="this.parentElement.textContent='EQ'"></div>
         <div class="eyebrow">Connect</div>
-        <h1>Connect your sheet</h1>
+        <h1>Connect your database</h1>
         <div class="sub">Paste the Apps Script web app URL (ends in <code
             style="font-family:'JetBrains Mono',monospace;font-size:12px;">/exec</code>).</div>
         <div class="field">
@@ -111,6 +111,8 @@
     let currentCategory = null; // null = all categories, otherwise exact category string
     let currentView = safeGetLS('equipmentLog.view') || 'grid'; // 'grid' | 'list'
     let cachedUserNames = null; // null = not yet fetched this session
+    let autoSyncInterval = null;
+    const AUTO_SYNC_MS = 30000; // 30 seconds
 
     function safeGetLS(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
     function safeSetLS(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
@@ -153,6 +155,7 @@
 
     function showScreen(name) {
       ['setupScreen', 'loginScreen', 'mainScreen'].forEach(s => el(s).classList.toggle('hidden', s !== name));
+      document.body.classList.toggle('no-scroll', name !== 'mainScreen');
     }
 
     function saveSession(s) { safeSetLS(LS_SESSION_KEY, JSON.stringify(s)); }
@@ -162,6 +165,35 @@
       if (!raw) return null;
       try { return JSON.parse(raw); } catch (e) { return null; }
     }
+
+    function anyOverlayOpen() { return !!document.querySelector('.overlay'); }
+
+    function startAutoSync() {
+      stopAutoSync();
+      autoSyncInterval = setInterval(() => {
+        if (session && document.visibilityState === 'visible' && !anyOverlayOpen()) {
+          loadAll();
+        }
+      }, AUTO_SYNC_MS);
+    }
+    function stopAutoSync() {
+      if (autoSyncInterval) { clearInterval(autoSyncInterval); autoSyncInterval = null; }
+    }
+
+    // Refresh the moment the app is brought back to the foreground — covers switching
+    // back from another app, unlocking the phone, or reopening the home-screen icon.
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && session && !anyOverlayOpen()) {
+        loadAll();
+      }
+    });
+    window.addEventListener('focus', () => {
+      if (session && !anyOverlayOpen()) loadAll();
+    });
+    window.addEventListener('pageshow', (e) => {
+      // Handles bfcache restores (e.g. iOS Safari swipe-back navigation).
+      if (e.persisted && session && !anyOverlayOpen()) loadAll();
+    });
 
     async function init() {
       SCRIPT_URL = (HARDCODED_SCRIPT_URL && HARDCODED_SCRIPT_URL.includes('script.google.com'))
@@ -180,6 +212,7 @@
         el('whoami').innerHTML = 'Signed in as <span style="color:var(--accent);font-weight:600;">' + escapeHtml(stored.name) + '</span>';
         el('manageUsersBtn').classList.toggle('hidden', !isAdminRole(stored.role));
         await loadAll();
+        startAutoSync();
         try {
           const r = await fetch(SCRIPT_URL, {
             method: 'POST',
@@ -189,6 +222,7 @@
           if (!r.ok) {
             session = null;
             clearSession();
+            stopAutoSync();
             showScreen('loginScreen');
             el('loginErr').textContent = 'You were signed out (access no longer valid). Sign in again.';
             el('loginErr').style.display = 'block';
@@ -253,8 +287,9 @@
         el('whoami').innerHTML = 'Signed in as <span style="color:var(--accent);font-weight:600;">' + escapeHtml(r.name) + '</span>';
         el('manageUsersBtn').classList.toggle('hidden', !isAdminRole(r.role));
         await loadAll();
+        startAutoSync();
       } catch (e) {
-        errEl.textContent = 'Could not reach the sheet. Check the web app URL and that it\'s deployed with "Anyone" access.';
+        errEl.textContent = 'Could not reach the database. Check the web app URL and that it\'s deployed with "Anyone" access.';
         errEl.style.display = 'block';
       } finally {
         btn.disabled = false;
@@ -265,6 +300,7 @@
     el('signOutBtn').addEventListener('click', () => {
       session = null;
       clearSession();
+      stopAutoSync();
       el('loginName').value = '';
       el('loginPass').value = '';
       el('whoami').textContent = '';
@@ -288,7 +324,8 @@
     }
 
     async function loadAll() {
-      renderSkeleton();
+      const isFirstLoad = equipment.length === 0 && logs.length === 0;
+      if (isFirstLoad) renderSkeleton();
       el('banner').classList.add('hidden');
       try {
         const [eqRes, logRes] = await Promise.all([
@@ -299,7 +336,7 @@
         logs = logRes.ok ? logRes.logs : [];
         getUserNames(); // warm the cache in the background, don't block the grid on it
       } catch (e) {
-        el('banner').textContent = 'Could not load data from the sheet. Try refreshing.';
+        el('banner').textContent = 'Could not load data from the database. Try refreshing.';
         el('banner').classList.remove('hidden');
         equipment = []; logs = [];
       }
@@ -342,8 +379,8 @@
       const outCount = equipment.filter(e => activeLoanFor(e.id)).length;
       const freeCount = equipment.length - outCount;
       el('subline').textContent = equipment.length
-        ? `${equipment.length} item${equipment.length === 1 ? '' : 's'} tracked · Synced to database`
-        : 'Synced to your Google Sheet';
+        ? `${equipment.length} item${equipment.length === 1 ? '' : 's'} tracked · synced to database`
+        : 'Synced to database';
 
       el('stats').innerHTML = `
     <button class="stat stat-filter ${currentFilter === 'all' ? 'active' : ''}" data-filter="all"><span class="num">${equipment.length}</span><span class="lbl">Total</span></button>
