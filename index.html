@@ -422,12 +422,12 @@
           <a href="about.html">About</a>
           <a href="works.html">Work</a>
           <a href="services.html">Services</a>
+          <a href="equipment-log.html" id="equipLogLink">Equipment Logs</a>          
         </div>
         <div class="footer-col">
           <h5>Contact</h5>
           <a href="mailto:info@burpproductions.com">info@burpproductions.com</a>
           <a href="tel:+918088689756">+91 8088689756</a>
-          <a href="equipment-log.html">Equipment Logs</a>
         </div>
         <div class="footer-col">
           <h5>Follow</h5>
@@ -585,13 +585,7 @@
     });
 
     (function () {
-      // -----------------------------------------------------------------
-      // Swap in your own footage: set `video` to a local/hosted .mp4 path
-      // to enable real playback in the lightbox. Left empty, the lightbox
-      // just opens the poster image full-size instead of breaking.
-      // Poster images below are placeholders (picsum.photos) - replace
-      // with real frames from your edits.
-      // -----------------------------------------------------------------
+
       const FEATURED = [
         { title: 'Commercial & Ad Films', client: 'JBL', poster: './assets/photos/thumbs/JBLBurpProductions.png', video: './assets/videos/JBLBurpProductions.mp4' },
         { title: 'Digital & Social Contents', client: 'South Wave', poster: './assets/photos/thumbs/SWBurpProductions1.png', video: './assets/videos/SWBurpProductions.mov' },
@@ -698,15 +692,7 @@
         grid.appendChild(card);
       });
 
-      /* ---------------- Lightboxes ----------------
-         Previously openLightbox() created a brand-new GLightbox with a
-         single-item elements array on every click, so Next/Prev and swipe
-         had nothing to move to. Fix: build one persistent GLightbox
-         instance per collection (FEATURED and WORK), each holding its
-         FULL list of elements, and jump straight to the clicked/current
-         item with .openAt(index). Now arrows and swipe cycle through the
-         whole set for both the featured carousel and the selected-work
-         grid. ---- */
+      /* ---------------- Lightboxes -------------------- */
       function toLightboxElements(items) {
         return items.map(item => (
           item.video
@@ -743,6 +729,28 @@
       restartProgress();
     })();
 
+    (function () {
+      const link = document.getElementById('equipLogLink');
+      if (!link) return;
+
+      let clicks = 0;
+      let timer = null;
+      const REQUIRED_CLICKS = 5;
+      const RESET_MS = 800; // max gap allowed between clicks
+
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        clicks++;
+        clearTimeout(timer);
+
+        if (clicks >= REQUIRED_CLICKS) {
+          clicks = 0;
+          window.open(link.href, '_blank');
+        } else {
+          timer = setTimeout(() => { clicks = 0; }, RESET_MS);
+        }
+      });
+    })();
   </script>
 </body>
 
