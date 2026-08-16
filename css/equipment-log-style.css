@@ -25,6 +25,21 @@
 
 html {
   -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea,
+select {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
 }
 
 body {
@@ -389,6 +404,8 @@ button {
   border-radius: 4px;
   text-transform: uppercase;
   border: 1px solid currentColor;
+  white-space: nowrap;
+  flex: none;
 }
 
 .stamp.out {
@@ -528,6 +545,53 @@ button {
 
 .list-row.status-free {
   border-left-color: var(--status-free);
+}
+
+.my-equip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  cursor: pointer;
+  background: rgba(254, 64, 0, 0.06);
+  transition: background .12s ease;
+}
+
+.my-equip-row:last-child {
+  border-bottom: none;
+}
+
+.my-equip-row:hover {
+  background: rgba(254, 64, 0, 0.12);
+}
+
+.my-equip-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.my-equip-name {
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.my-equip-meta {
+  font-size: 11px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .list-row-top {
