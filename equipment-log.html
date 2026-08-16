@@ -205,6 +205,8 @@
       currentTab = tab;
       ['home', 'equipment', 'settings'].forEach(t => el(t + 'Tab').classList.toggle('hidden', t !== tab));
       document.querySelectorAll('.bottom-nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      el('mainScreen').classList.toggle('settings-view', tab === 'settings');
+      document.body.classList.toggle('no-scroll', tab === 'settings');
     }
     document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
       btn.addEventListener('click', () => showTab(btn.dataset.tab));
@@ -601,7 +603,7 @@
         </div>` : ''}
       </div>`;
         }).join('');
-        listView.querySelectorAll('.list-row').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id)));
+        listView.querySelectorAll('.list-row').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id, 'home')));
         return;
       }
 
@@ -619,7 +621,7 @@
         </div>
       </div>`;
       }).join('');
-      grid.querySelectorAll('.tag').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id)));
+      grid.querySelectorAll('.tag').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id, 'home')));
     }
 
     function renderEquipmentTab() {
@@ -643,7 +645,7 @@
           : `<span class="stamp avail">Available</span>`}
       </div>`;
       }).join('');
-      container.querySelectorAll('.list-row').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id)));
+      container.querySelectorAll('.list-row').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id, 'equipment')));
     }
 
     el('viewGridBtn').addEventListener('click', () => {
@@ -847,7 +849,7 @@
       });
     });
 
-    async function openDetail(equipId) {
+    async function openDetail(equipId, fromTab = 'home') {
       const item = equipment.find(e => e.id === equipId);
       if (!item) return;
       const loan = activeLoanFor(equipId);
@@ -893,7 +895,7 @@
         <tbody>${latestHist.map(buildHistRow).join('')}</tbody>
       </table>
       </div>
-      ${isAdmin ? `<button class="btn-ghost" id="showChartBtn" style="width:100%;margin-top:10px;font-size:12.5px;">&#128202; Show complete History</button>` : ''}
+      ${isAdmin && fromTab === 'equipment' ? `<button class="btn-ghost" id="showChartBtn" style="width:100%;margin-top:10px;font-size:12.5px;">&#128202; Show complete History</button>` : ''}
       ` : `<div style="font-size:13px;color:var(--text-secondary);">No history yet.</div>`;
 
       const historyHtml = canSeeHistory
@@ -1033,7 +1035,7 @@
           if (!r.ok) { restore(); errEl.textContent = r.error || 'Could not save changes.'; errEl.style.display = 'block'; return; }
           await loadAll();
           overlay.remove();
-          openDetail(equipId); // back to this item's popup with the updated details, not the homepage
+          openDetail(equipId, fromTab); // back to this item's popup with the updated details, not the homepage
         });
       }
 
@@ -1089,7 +1091,7 @@
           if (!r.ok) { restore(); errEl.textContent = r.error || 'Could not change Borrower.'; errEl.style.display = 'block'; return; }
           await loadAll();
           overlay.remove();
-          openDetail(equipId); // stay on this item's popup with the updated borrower, not the homepage
+          openDetail(equipId, fromTab); // stay on this item's popup with the updated borrower, not the homepage
         });
       }
 
@@ -1106,7 +1108,7 @@
           if (!r.ok) { restore(); errEl.textContent = r.error || 'Could not check out item.'; errEl.style.display = 'block'; return; }
           await loadAll();
           overlay.remove();
-          openDetail(equipId); // stay on this item's popup, now showing it checked out
+          openDetail(equipId, fromTab); // stay on this item's popup, now showing it checked out
         });
       }
 
@@ -1121,7 +1123,7 @@
           }
           await loadAll();
           overlay.remove();
-          openDetail(equipId); // stay on this item's popup, now showing it available
+          openDetail(equipId, fromTab); // stay on this item's popup, now showing it available
         });
       }
 
