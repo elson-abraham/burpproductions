@@ -82,6 +82,7 @@
 
       <!-- ---------- Home tab ---------- -->
       <div id="homeTab" class="tab-panel">
+        <div id="myEquipmentSection" class="hidden" style="margin-bottom:20px;"></div>
         <div class="stats-row">
           <div class="stats" id="stats"></div>
         </div>
@@ -541,6 +542,7 @@
     function historyFor(equipId) { return logs.filter(l => l.equipmentId === equipId).sort((a, b) => new Date(b.checkoutAt) - new Date(a.checkoutAt)); }
 
     function render() {
+      renderMyEquipment();
       renderEquipmentTab();
       const outCount = equipment.filter(e => activeLoanFor(e.id)).length;
       const freeCount = equipment.length - outCount;
@@ -640,6 +642,37 @@
       </div>`;
       }).join('');
       grid.querySelectorAll('.tag').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id, 'home')));
+    }
+
+    function renderMyEquipment() {
+      const container = el('myEquipmentSection');
+      if (!container || !session) return;
+      const mine = equipment.filter(e => {
+        const loan = activeLoanFor(e.id);
+        return loan && loan.borrower === session.name;
+      });
+      if (mine.length === 0) {
+        container.classList.add('hidden');
+        container.innerHTML = '';
+        return;
+      }
+      container.classList.remove('hidden');
+      container.innerHTML = `
+        <div class="eyebrow" style="margin-bottom:8px;">With you · ${mine.length} item${mine.length === 1 ? '' : 's'}</div>
+        <div class="list-view my-equip-list">
+          ${mine.map(e => {
+            const loan = activeLoanFor(e.id);
+            return `
+          <div class="my-equip-row" data-id="${e.id}">
+            <div class="my-equip-info">
+              <div class="my-equip-name">${escapeHtml(e.name)}</div>
+              <div class="my-equip-meta"><span class="cat-dot"></span>${escapeHtml(e.category || 'Uncategorized')} · Since ${fmtDate(loan.checkoutAt)}</div>
+            </div>
+            <span class="stamp out">Return</span>
+          </div>`;
+          }).join('')}
+        </div>`;
+      container.querySelectorAll('.my-equip-row').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id, 'home')));
     }
 
     function renderEquipmentTab() {
@@ -875,16 +908,19 @@
 
       const userNames = await getUserNames();
 
-      const userOptionsHtml = (selectedVal, disableName) => `
-        <option value="">Select a name…</option>
+      const userOptionsHtml = (selectedVal, disableName, restrictToSelf) => `
+        <option value="" ${selectedVal ? '' : 'disabled selected'}>Select a name…</option>
         ${userNames.map(n => {
-          const isDisabled = disableName && n === disableName;
-          return `<option value="${escapeHtml(n)}" ${n === selectedVal ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}>${escapeHtml(n)}${isDisabled ? ' (current borrower)' : ''}</option>`;
+          const isCurrentBorrower = disableName && n === disableName;
+          const isRestricted = restrictToSelf && n !== session.name;
+          const isDisabled = isCurrentBorrower || isRestricted;
+          return `<option value="${escapeHtml(n)}" ${n === selectedVal ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}>${escapeHtml(n)}${isCurrentBorrower ? ' (current borrower)' : ''}</option>`;
         }).join('')}
         <option value="__other__">Other…</option>`;
 
       const isAdmin = isAdminRole(session.role);
       const isSuperAdmin = session.role === 'superadmin';
+      const canReturn = isAdmin || (loan && loan.borrower === session.name);
       const buildHistRow = (l) => `
           <tr>
             <td>
@@ -933,16 +969,17 @@
          <div class="err" id="reassignErr" style="display:none;"></div>
        </div>
        <div class="modal-actions">
-         <button class="btn-secondary" id="toggleReassignBtn">Change Borrower</button>
-         <button class="btn-primary" id="returnBtn" style="flex:1;background:var(--status-free);color:var(--bg);">Return</button>
+         <button class="btn-secondary" id="toggleReassignBtn" ${canReturn ? '' : 'disabled'} title="${canReturn ? '' : 'Only ' + escapeHtml(loan.borrower) + ' or an admin can transfer this item'}">Transfer</button>
+         <button class="btn-primary" id="returnBtn" style="flex:1;background:var(--status-free);color:var(--bg);" ${canReturn ? '' : 'disabled'} title="${canReturn ? '' : 'Only ' + escapeHtml(loan.borrower) + ' or an admin can return this item'}">Return</button>
        </div>
        <div class="modal-actions" id="confirmReassignRow" style="display:none;">
-         <button class="btn-primary" id="confirmReassignBtn" style="flex:1;">Save new Norrower</button>
+         <button class="btn-primary" id="confirmReassignBtn" style="flex:1;">Save New Borrower</button>
        </div>`
         : `<div class="field">
          <label for="borrowerSelect">Borrower Name</label>
-         <select id="borrowerSelect">${userOptionsHtml('')}</select>
+         <select id="borrowerSelect">${userOptionsHtml(isAdmin ? '' : session.name, null, !isAdmin)}</select>
          <input id="borrowerOther" type="text" placeholder="Type their name" style="margin-top:8px;display:none;">
+         ${isAdmin ? '' : `<div style="font-size:11px;color:var(--text-secondary);margin-top:6px;">You can only borrow under your own name, or choose "Other…" for a guest.</div>`}
          <div class="err" id="borrowerErr" style="display:none;"></div>
        </div>
        <div class="field">
@@ -1085,13 +1122,14 @@
       const toggleReassignBtn = overlay.querySelector('#toggleReassignBtn');
       if (toggleReassignBtn) {
         toggleReassignBtn.addEventListener('click', () => {
+          if (!canReturn) return; // defense in depth; button is already disabled in this case
           const field = overlay.querySelector('#reassignField');
           const row = overlay.querySelector('#confirmReassignRow');
           const showing = field.style.display !== 'none';
           field.style.display = showing ? 'none' : 'block';
           row.style.display = showing ? 'none' : 'flex';
           const returnBtnEl = overlay.querySelector('#returnBtn');
-          if (returnBtnEl) returnBtnEl.disabled = !showing;
+          if (returnBtnEl) returnBtnEl.disabled = showing ? !canReturn : true;
         });
       }
 
@@ -1133,6 +1171,10 @@
       const returnBtn = overlay.querySelector('#returnBtn');
       if (returnBtn) {
         returnBtn.addEventListener('click', async () => {
+          if (!canReturn) {
+            alert(`Only ${loan.borrower} or an admin can return this item.`);
+            return;
+          }
           const active = activeLoanFor(equipId);
           if (active) {
             const restore = setBtnLoading(returnBtn, 'Returning…');
