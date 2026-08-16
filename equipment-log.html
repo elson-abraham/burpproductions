@@ -68,33 +68,71 @@
             <div class="eyebrow">Burp Checkout ledger</div>
             <h1>Equipment log</h1>
           </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">
-            <div class="sub" id="whoami" style="margin:0;"></div>
-            <div class="header-actions">
-              <button class="icon-btn" id="manageUsersBtn" title="Manage users" aria-label="Manage users">&#9776;</button>
-              <button class="btn-ghost" id="signOutBtn">Sign out</button>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;">
+            <div class="sub" id="welcomeMsg" style="margin:0;font-size:18px;"></div>
+            <div class="sync-status">
+              <button class="sync-btn" id="syncNowBtn" title="Sync now" aria-label="Sync now">&#8635;</button>
+              <span class="sub" id="subline"></span>
             </div>
           </div>
         </div>
+      </header>
+
+      <div id="banner" class="banner hidden"></div>
+
+      <!-- ---------- Home tab ---------- -->
+      <div id="homeTab" class="tab-panel">
         <div class="stats-row">
           <div class="stats" id="stats"></div>
+        </div>
+        <div class="list-toggle-row" style="justify-content:flex-end;">
+          <div class="view-toggle" id="viewToggle">
+            <button class="view-toggle-btn" id="viewGridBtn" title="Grid view" aria-label="Grid view">&#9638;</button>
+            <button class="view-toggle-btn" id="viewListBtn" title="List view" aria-label="List view">&#9776;</button>
+          </div>
+        </div>
+        <div class="cat-filter-row" id="catFilterRow"></div>
+        <div class="grid" id="grid"></div>
+        <div class="list-view" id="listView" style="display:none;"></div>
+      </div>
+
+      <!-- ---------- Equipment tab ---------- -->
+      <div id="equipmentTab" class="tab-panel hidden">
+        <div class="tab-header-row">
+          <div>
+            <div class="eyebrow" style="margin-bottom:2px;">All equipment</div>
+            <h1 style="font-size:20px;">Equipment</h1>
+          </div>
           <button class="btn-primary" id="addEquipBtn">+ Add</button>
         </div>
-      </header>
-      <div id="banner" class="banner hidden"></div>
-      <div class="list-toggle-row">
-        <div class="sync-status">
-          <span class="sub" id="subline"></span>
-          <button class="sync-btn" id="syncNowBtn" title="Sync now" aria-label="Sync now">&#8635;</button>
+        <div class="list-view simple-list" id="equipmentList"></div>
+      </div>
+
+      <!-- ---------- Settings tab ---------- -->
+      <div id="settingsTab" class="tab-panel hidden">
+        <div class="eyebrow" style="margin-bottom:14px;">Settings</div>
+        <div class="settings-profile">
+          <div class="settings-profile-label">Signed in as</div>
+          <div class="settings-profile-name" id="whoami"></div>
         </div>
-        <div class="view-toggle" id="viewToggle">
-          <button class="view-toggle-btn" id="viewGridBtn" title="Grid view" aria-label="Grid view">&#9638;</button>
-          <button class="view-toggle-btn" id="viewListBtn" title="List view" aria-label="List view">&#9776;</button>
+        <div class="settings-actions">
+          <button class="btn-ghost" id="manageUsersBtn" style="width:100%;">Manage users</button>
+          <button class="btn-ghost" id="changeUrlBtnSettings" style="width:100%;">Change sheet URL</button>
+          <button class="btn-danger-outline" id="signOutBtn" style="width:100%;background:var(--status-out);color:var(--text-primary);border-color:var(--status-out);">Sign out</button>
         </div>
       </div>
-      <div class="cat-filter-row" id="catFilterRow"></div>
-      <div class="grid" id="grid"></div>
-      <div class="list-view" id="listView" style="display:none;"></div>
+
+      <nav class="bottom-nav">
+        <button class="bottom-nav-btn active" data-tab="home" aria-label="Home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+        </button>
+        <button class="bottom-nav-btn" data-tab="equipment" aria-label="Equipment">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 7v5L3 10.5z"/><rect x="6.5" y="6" width="9.5" height="6.5" rx="1"/><rect x="16.5" y="7" width="3.7" height="4.5" rx="0.6"/><path d="M11.2 12.5v2"/><path d="M11.2 14.5 5.5 21.5"/><path d="M11.2 14.5v7"/><path d="M11.2 14.5 17 21.5"/></svg>
+        </button>
+        <button class="bottom-nav-btn" data-tab="settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </nav>
     </div>
 
   </div>
@@ -161,6 +199,17 @@
       return res.json();
     }
 
+    let currentTab = 'home'; // 'home' | 'equipment' | 'settings'
+
+    function showTab(tab) {
+      currentTab = tab;
+      ['home', 'equipment', 'settings'].forEach(t => el(t + 'Tab').classList.toggle('hidden', t !== tab));
+      document.querySelectorAll('.bottom-nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+    }
+    document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => showTab(btn.dataset.tab));
+    });
+
     function showScreen(name) {
       ['setupScreen', 'loginScreen', 'mainScreen'].forEach(s => el(s).classList.toggle('hidden', s !== name));
       document.body.classList.toggle('no-scroll', name !== 'mainScreen');
@@ -203,6 +252,12 @@
       if (e.persisted && session && !anyOverlayOpen()) loadAll();
     });
 
+    function updateRoleGatedUI(role) {
+      el('manageUsersBtn').classList.toggle('hidden', !isAdminRole(role));
+      const notHardcoded = !(HARDCODED_SCRIPT_URL && HARDCODED_SCRIPT_URL.includes('script.google.com'));
+      el('changeUrlBtnSettings').classList.toggle('hidden', !(role === 'superadmin' && notHardcoded));
+    }
+
     async function init() {
       SCRIPT_URL = (HARDCODED_SCRIPT_URL && HARDCODED_SCRIPT_URL.includes('script.google.com'))
         ? HARDCODED_SCRIPT_URL
@@ -217,8 +272,10 @@
       if (stored && stored.name && stored.passcode) {
         session = stored;
         showScreen('mainScreen');
-        el('whoami').innerHTML = 'Signed in as <span style="color:var(--accent);font-weight:600;">' + escapeHtml(stored.name) + '</span>';
-        el('manageUsersBtn').classList.toggle('hidden', !isAdminRole(stored.role));
+        showTab('home');
+        el('whoami').textContent = stored.name;
+        el('welcomeMsg').innerHTML = 'Welcome, <span style="color:var(--accent);font-weight:600;">' + escapeHtml(stored.name) + '</span>';
+        updateRoleGatedUI(stored.role);
         await loadAll();
         startAutoSync();
         try {
@@ -237,7 +294,7 @@
           } else if (r.role !== session.role) {
             session.role = r.role;
             saveSession(session);
-            el('manageUsersBtn').classList.toggle('hidden', !isAdminRole(r.role));
+            updateRoleGatedUI(r.role);
           }
         } catch (e) {
           // Network hiccup — keep the cached session, don't boot the user out.
@@ -261,6 +318,10 @@
     });
 
     el('changeUrlBtn').addEventListener('click', () => {
+      el('scriptUrlInput').value = SCRIPT_URL || '';
+      showScreen('setupScreen');
+    });
+    el('changeUrlBtnSettings').addEventListener('click', () => {
       el('scriptUrlInput').value = SCRIPT_URL || '';
       showScreen('setupScreen');
     });
@@ -292,8 +353,10 @@
         session = { name: r.name, role: r.role, passcode: pass };
         saveSession(session);
         showScreen('mainScreen');
-        el('whoami').innerHTML = 'Signed in as <span style="color:var(--accent);font-weight:600;">' + escapeHtml(r.name) + '</span>';
-        el('manageUsersBtn').classList.toggle('hidden', !isAdminRole(r.role));
+        showTab('home');
+        el('whoami').textContent = r.name;
+        el('welcomeMsg').innerHTML = 'Welcome, <span style="color:var(--accent);font-weight:600;">' + escapeHtml(r.name) + '</span>';
+        updateRoleGatedUI(r.role);
         await loadAll();
         startAutoSync();
       } catch (e) {
@@ -312,6 +375,7 @@
       el('loginName').value = '';
       el('loginPass').value = '';
       el('whoami').textContent = '';
+      el('welcomeMsg').textContent = '';
       showScreen('loginScreen');
     });
 
@@ -369,6 +433,78 @@
       if (l.previousBorrower) return [{ name: l.previousBorrower, at: l.checkoutAt }, { name: l.borrower, at: l.updatedAt }];
       return [{ name: l.borrower, at: l.checkoutAt }];
     }
+    function computeHistorySegments(hist) {
+      const now = new Date();
+      const chronological = [...hist].sort((a, b) => new Date(a.checkoutAt) - new Date(b.checkoutAt));
+      const segments = [];
+      chronological.forEach(l => {
+        const parts = borrowerTrailParts(l); // [{name, at}], one per hand-off within this log entry
+        for (let i = 0; i < parts.length; i++) {
+          const startRaw = parts[i].at || (i === 0 ? l.checkoutAt : null);
+          if (!startRaw) continue;
+          const start = new Date(startRaw);
+          const endRaw = i < parts.length - 1 ? parts[i + 1].at : l.returnAt;
+          const end = endRaw ? new Date(endRaw) : now;
+          const hours = Math.max((end - start) / 3600000, 0.03);
+          const active = i === parts.length - 1 && !l.returnAt; // only the final, still-current holder is "out"
+          segments.push({ borrower: parts[i].name || '—', hours, active, start });
+        }
+      });
+      return segments;
+    }
+
+    function buildHistoryChartSvg(hist) {
+      const bars = computeHistorySegments(hist);
+      const maxHours = Math.max(...bars.map(b => b.hours), 0.03);
+      const chartH = 160;
+      const topPad = 24; // reserves room so the duration label above a full-height bar never gets clipped
+      const barW = 46;
+      const gap = 20;
+      const width = Math.max(bars.length * (barW + gap) + gap, 260);
+      const svgH = topPad + chartH + 46; // + room for two-line date/name labels below the axis
+      const fmtDur = (h) => h < 1 ? Math.round(h * 60) + 'm' : h < 48 ? Math.round(h) + 'h' : Math.round(h / 24) + 'd';
+      const shortName = (n) => n.length > 9 ? n.slice(0, 8) + '…' : n;
+      const shortDate = (d) => d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' });
+
+      const barsHtml = bars.map((b, i) => {
+        const x = gap + i * (barW + gap);
+        const h = Math.max((b.hours / maxHours) * chartH, 5);
+        const y = topPad + (chartH - h);
+        const baseline = topPad + chartH;
+        const color = b.active ? 'var(--status-out)' : 'var(--status-free)';
+        return `
+          <g>
+            <rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" fill="${color}" opacity="0.88"/>
+            <text x="${x + barW / 2}" y="${y - 7}" text-anchor="middle" font-size="10" fill="var(--text-primary)" font-family="JetBrains Mono, monospace">${fmtDur(b.hours)}</text>
+            <text x="${x + barW / 2}" y="${baseline + 15}" text-anchor="middle" font-size="10" fill="var(--text-secondary)" font-weight="600">${escapeHtml(shortName(b.borrower))}</text>
+            <text x="${x + barW / 2}" y="${baseline + 28}" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="JetBrains Mono, monospace">${escapeHtml(shortDate(b.start))}</text>
+          </g>`;
+      }).join('');
+
+      return `
+        <div style="overflow-x:auto;padding-bottom:4px;">
+          <svg width="${width}" height="${svgH}" viewBox="0 0 ${width} ${svgH}">
+            <line x1="0" y1="${topPad + chartH}" x2="${width}" y2="${topPad + chartH}" stroke="var(--border-strong)" stroke-width="1"/>
+            ${barsHtml}
+          </svg>
+        </div>
+        <div style="display:flex;gap:18px;justify-content:center;margin-top:14px;font-size:11px;color:var(--text-secondary);">
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--status-free);display:inline-block;"></span>Returned</span>
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--status-out);display:inline-block;"></span>Still out</span>
+        </div>`;
+    }
+
+    function openHistoryChartModal(item, hist) {
+      const overlay = openOverlay(`
+        <div class="modal" style="max-width:540px;">
+          <button class="close-x" id="closeChart">&times;</button>
+          <h2>${escapeHtml(item.name)}</h2>
+          <div class="modal-sub">Borrow duration by user, oldest to newest</div>
+          ${hist.length ? buildHistoryChartSvg(hist) : `<div style="font-size:13px;color:var(--text-secondary);text-align:center;padding:20px 0;">No history yet.</div>`}
+        </div>`);
+      overlay.querySelector('#closeChart').addEventListener('click', () => overlay.remove());
+    }
+
     function borrowerTrailHtml(l) {
       const parts = borrowerTrailParts(l);
       const lastClass = l.returnAt ? 'h-name h-returned' : 'h-name';
@@ -385,9 +521,10 @@
     function historyFor(equipId) { return logs.filter(l => l.equipmentId === equipId).sort((a, b) => new Date(b.checkoutAt) - new Date(a.checkoutAt)); }
 
     function render() {
+      renderEquipmentTab();
       const outCount = equipment.filter(e => activeLoanFor(e.id)).length;
       const freeCount = equipment.length - outCount;
-      el('subline').textContent = lastSyncedAt ? `Synced at ${fmtTimeOnly(lastSyncedAt)}` : 'Not synced yet';
+      el('subline').textContent = lastSyncedAt ? `Synced ${fmtTimeOnly(lastSyncedAt)}` : 'Not synced yet';
 
       el('stats').innerHTML = `
     <button class="stat stat-filter ${currentFilter === 'all' ? 'active' : ''}" data-filter="all"><span class="num">${equipment.length}</span><span class="lbl">Total</span></button>
@@ -483,6 +620,30 @@
       </div>`;
       }).join('');
       grid.querySelectorAll('.tag').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id)));
+    }
+
+    function renderEquipmentTab() {
+      const container = el('equipmentList');
+      if (!container) return;
+      if (equipment.length === 0) {
+        container.innerHTML = `<div class="empty">No equipment yet. Tap + Add to get started.</div>`;
+        return;
+      }
+      const sorted = [...equipment].sort((a, b) => a.name.localeCompare(b.name));
+      container.innerHTML = sorted.map(e => {
+        const loan = activeLoanFor(e.id);
+        return `
+      <div class="list-row ${loan ? 'status-out' : 'status-free'}" data-id="${e.id}">
+        <div class="list-row-main">
+          <div class="list-row-name">${escapeHtml(e.name)}</div>
+          <div class="list-row-cat"><span class="cat-dot"></span>${escapeHtml(e.category || 'Uncategorized')}</div>
+        </div>
+        ${loan
+          ? `<div style="text-align:right;flex:none;"><span class="stamp out">Out</span><div class="who" style="margin-top:4px;">${escapeHtml(loan.borrower)}</div></div>`
+          : `<span class="stamp avail">Available</span>`}
+      </div>`;
+      }).join('');
+      container.querySelectorAll('.list-row').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id)));
     }
 
     el('viewGridBtn').addEventListener('click', () => {
@@ -721,9 +882,7 @@
           </tr>`;
 
       const latestHist = hist.slice(0, 1);
-      const olderHist = hist.slice(1);
       const canSeeHistory = isAdmin || !!loan; // members only see history while it's still out
-      const canExpandHistory = isAdmin; // only admins can reveal older entries
 
       const historyTableHtml = hist.length ? `
       <div style="overflow-x:auto;">
@@ -732,10 +891,9 @@
           <tr><th>Borrower</th><th>Out</th><th>In</th></tr>
         </thead>
         <tbody>${latestHist.map(buildHistRow).join('')}</tbody>
-        ${canExpandHistory && olderHist.length ? `<tbody id="olderHistBody" style="display:none;">${olderHist.map(buildHistRow).join('')}</tbody>` : ''}
       </table>
       </div>
-      ${canExpandHistory && olderHist.length ? `<button class="btn-ghost" id="toggleHistoryBtn" style="width:100%;margin-top:10px;font-size:12.5px;">Show more history (${olderHist.length})</button>` : ''}
+      ${isAdmin ? `<button class="btn-ghost" id="showChartBtn" style="width:100%;margin-top:10px;font-size:12.5px;">&#128202; Show complete History</button>` : ''}
       ` : `<div style="font-size:13px;color:var(--text-secondary);">No history yet.</div>`;
 
       const historyHtml = canSeeHistory
@@ -809,15 +967,15 @@
           <button class="btn-primary" id="saveEditEquip" style="flex:1;">Save changes</button>
         </div>
         <div style="border-top:1px solid var(--border);padding-top:14px;">
-          <button class="btn-danger-outline" id="removeEquipEdit" style="width:100%;">Delete Equipment</button>
+          ${isSuperAdmin ? `<button class="btn-danger-outline" id="removeEquipEdit" style="width:100%;">Delete Equipment</button>` : ''}
         </div>
       </div>` : ''}
       <div id="itemBodyView">
         ${actionHtml}
         ${historyHtml}
         ${isAdmin ? `<div class="modal-actions" style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;justify-content:space-between;">
-          <button class="btn-danger-outline" id="removeEquip">Delete Equipment</button>
-          ${!loan && hist.length > 0 ? `<button class="btn-danger-outline" id="clearHistoryBtn">Clear history</button>` : ''}
+          ${isSuperAdmin ? `<button class="btn-danger-outline" id="removeEquip">Delete Equipment</button>` : ''}
+          ${isSuperAdmin && !loan && hist.length > 0 ? `<button class="btn-danger-outline" id="clearHistoryBtn">Clear history</button>` : ''}
         </div>` : ''}
       </div>
     </div>`);
@@ -879,15 +1037,9 @@
         });
       }
 
-      const toggleHistoryBtn = overlay.querySelector('#toggleHistoryBtn');
-      if (toggleHistoryBtn) {
-        toggleHistoryBtn.addEventListener('click', () => {
-          const body = overlay.querySelector('#olderHistBody');
-          const showing = body.style.display !== 'none';
-          body.style.display = showing ? 'none' : 'table-row-group';
-          toggleHistoryBtn.textContent = showing ? toggleHistoryBtn.dataset.showLabel : 'Show less history';
-        });
-        toggleHistoryBtn.dataset.showLabel = toggleHistoryBtn.textContent;
+      const showChartBtn = overlay.querySelector('#showChartBtn');
+      if (showChartBtn) {
+        showChartBtn.addEventListener('click', () => openHistoryChartModal(item, hist));
       }
 
       const borrowerSelect = overlay.querySelector('#borrowerSelect');
