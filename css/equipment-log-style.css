@@ -94,7 +94,7 @@ header {
 .eyebrow,
 .title-block .eyebrow {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-size: 11.5px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--text-secondary);
@@ -116,7 +116,7 @@ header {
 }
 
 h1 {
-  font-size: clamp(20px, 5vw, 28px);
+  font-size: clamp(22px, 5.5vw, 31px);
   margin: 0;
   font-weight: 700;
   letter-spacing: -0.5px;
@@ -126,7 +126,7 @@ h1 {
 
 .sub {
   color: var(--text-secondary);
-  font-size: 12.5px;
+  font-size: 14px;
   margin-top: 2px;
 }
 
@@ -149,7 +149,7 @@ button {
   border: none;
   padding: 10px 16px;
   border-radius: 6px;
-  font-size: 13.5px;
+  font-size: 15.5px;
   font-weight: 600;
   transition: transform .08s ease, background .15s ease;
 }
@@ -173,7 +173,7 @@ button {
   color: var(--text-primary);
   padding: 8px 12px;
   border-radius: 6px;
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 500;
   transition: background .15s ease, border-color .15s ease, transform .08s ease;
 }
@@ -197,7 +197,7 @@ button {
   border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text-primary);
-  font-size: 15px;
+  font-size: 17px;
   padding: 0;
   flex: none;
 }
@@ -270,13 +270,13 @@ button {
 
 .stat .num {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 700;
   color: var(--text-primary);
 }
 
 .stat .lbl {
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.8px;
@@ -342,14 +342,14 @@ button {
 
 .tag-id {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-size: 11.5px;
   color: var(--text-muted);
   letter-spacing: 0.5px;
   margin-bottom: 4px;
 }
 
 .tag-name {
-  font-size: 14.5px;
+  font-size: 16.5px;
   font-weight: 600;
   margin-bottom: 2px;
   line-height: 1.25;
@@ -357,7 +357,7 @@ button {
 }
 
 .tag-cat {
-  font-size: 11.5px;
+  font-size: 13px;
   color: var(--text-secondary);
   margin-bottom: 10px;
   display: flex;
@@ -382,7 +382,7 @@ button {
 
 .stamp {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 1.2px;
   padding: 3px 8px;
@@ -402,7 +402,7 @@ button {
 }
 
 .who {
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   line-height: 1.3;
 }
@@ -414,7 +414,7 @@ button {
   border: 1px dashed var(--border-strong);
   border-radius: 8px;
   grid-column: 1/-1;
-  font-size: 13.5px;
+  font-size: 15.5px;
 }
 
 .list-toggle-row {
@@ -435,7 +435,7 @@ button {
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-size: 19px;
+  font-size: 21.5px;
   cursor: pointer;
   padding: 2px;
   display: flex;
@@ -478,7 +478,7 @@ button {
   background: transparent;
   color: var(--text-secondary);
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 13.5px;
   padding: 0;
   transition: all .12s ease;
 }
@@ -546,12 +546,12 @@ button {
 
 .list-row-name {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-primary);
 }
 
 .list-row-cat {
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
@@ -576,11 +576,11 @@ button {
 }
 
 .list-row-borrower {
-  font-size: 12.5px;
+  font-size: 14px;
 }
 
 .list-row-since {
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--text-secondary);
 }
 
@@ -612,7 +612,7 @@ button {
   background: transparent;
   border: 1px solid var(--border-strong);
   color: var(--text-secondary);
-  font-size: 11.5px;
+  font-size: 13px;
   font-weight: 500;
   padding: 6px 13px;
   border-radius: 20px;
@@ -707,14 +707,14 @@ button {
 }
 
 .modal h2 {
-  font-size: 19px;
+  font-size: 21.5px;
   margin: 0 0 4px;
   font-weight: 700;
   color: var(--text-primary);
 }
 
 .modal .modal-sub {
-  font-size: 12.5px;
+  font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 18px;
 }
@@ -725,7 +725,7 @@ button {
 
 .field label {
   display: block;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
@@ -741,7 +741,7 @@ button {
   border: 1px solid var(--border-strong);
   border-radius: 8px;
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
 }
@@ -790,7 +790,7 @@ button {
   color: var(--text-primary);
   padding: 11px 16px;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   flex: 1;
 }
@@ -805,7 +805,7 @@ button {
   color: var(--status-out);
   padding: 9px 14px;
   border-radius: 6px;
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 500;
 }
 
@@ -815,7 +815,7 @@ button {
 
 .err {
   color: var(--status-out);
-  font-size: 12px;
+  font-size: 13.5px;
   margin-top: 6px;
 }
 
@@ -826,7 +826,7 @@ button {
 }
 
 .history h3 {
-  font-size: 10.5px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-secondary);
@@ -837,13 +837,13 @@ button {
 .history-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 11.5px;
+  font-size: 13px;
   min-width: 300px;
 }
 
 .history-table th {
   text-align: left;
-  font-size: 10px;
+  font-size: 11.5px;
   text-transform: uppercase;
   letter-spacing: 0.6px;
   color: var(--text-secondary);
@@ -881,7 +881,7 @@ button {
 
 .h-meta {
   color: var(--text-secondary);
-  font-size: 10px;
+  font-size: 11.5px;
   margin-top: 2px;
 }
 
@@ -926,7 +926,7 @@ button {
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text-secondary);
-  font-size: 18px;
+  font-size: 20.5px;
   position: absolute;
   top: 16px;
   right: 18px;
@@ -945,7 +945,7 @@ button {
   align-items: center;
   padding: 8px 0;
   border-bottom: 1px solid var(--border);
-  font-size: 12.5px;
+  font-size: 14px;
 }
 
 .user-row:last-child {
@@ -954,7 +954,7 @@ button {
 
 .role-badge {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
+  font-size: 10.5px;
   padding: 2px 6px;
   border-radius: 4px;
   text-transform: uppercase;
@@ -997,7 +997,7 @@ button {
 }
 
 .login-screen h1 {
-  font-size: 26px;
+  font-size: 29.5px;
   margin-bottom: 6px;
 }
 
@@ -1015,7 +1015,7 @@ button {
   justify-content: flex-start;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  font-size: 17px;
+  font-size: 19px;
 }
 
 .login-mark img {
@@ -1030,7 +1030,7 @@ button {
   border-radius: 8px;
   padding: 12px 16px;
   margin-bottom: 16px;
-  font-size: 12.5px;
+  font-size: 14px;
   color: var(--text-secondary);
 }
 
@@ -1148,7 +1148,7 @@ button {
 
 .settings-profile-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--text-secondary);
@@ -1156,7 +1156,7 @@ button {
 }
 
 .settings-profile-name {
-  font-size: 22px;
+  font-size: 25px;
   font-weight: 700;
   color: var(--accent);
   font-family: 'Space Grotesk', 'Inter', sans-serif;
