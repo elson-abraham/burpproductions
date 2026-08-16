@@ -83,7 +83,10 @@
       </header>
       <div id="banner" class="banner hidden"></div>
       <div class="list-toggle-row">
-        <div class="sub" id="subline"></div>
+        <div class="sync-status">
+          <span class="sub" id="subline"></span>
+          <button class="sync-btn" id="syncNowBtn" title="Sync now" aria-label="Sync now">&#8635;</button>
+        </div>
         <div class="view-toggle" id="viewToggle">
           <button class="view-toggle-btn" id="viewGridBtn" title="Grid view" aria-label="Grid view">&#9638;</button>
           <button class="view-toggle-btn" id="viewListBtn" title="List view" aria-label="List view">&#9776;</button>
@@ -111,6 +114,7 @@
     let currentCategory = null; // null = all categories, otherwise exact category string
     let currentView = safeGetLS('equipmentLog.view') || 'grid'; // 'grid' | 'list'
     let cachedUserNames = null; // null = not yet fetched this session
+    let lastSyncedAt = null; // Date of the last successful data load
     let autoSyncInterval = null;
     const AUTO_SYNC_MS = 30000; // 30 seconds
 
@@ -137,6 +141,10 @@
       const p = fmtParts(iso);
       if (!p) return '—';
       return `${p.date}<br>${p.time}`;
+    }
+    function fmtTimeOnly(date) {
+      if (!date) return '';
+      return date.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' }) + ' IST';
     }
     function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
     function isAdminRole(role) { return role === 'admin' || role === 'superadmin'; }
@@ -334,6 +342,7 @@
         ]);
         equipment = eqRes.ok ? eqRes.equipment : [];
         logs = logRes.ok ? logRes.logs : [];
+        lastSyncedAt = new Date();
         getUserNames(); // warm the cache in the background, don't block the grid on it
       } catch (e) {
         el('banner').textContent = 'Could not load data from the database. Try refreshing.';
@@ -378,9 +387,7 @@
     function render() {
       const outCount = equipment.filter(e => activeLoanFor(e.id)).length;
       const freeCount = equipment.length - outCount;
-      el('subline').textContent = equipment.length
-        ? `${equipment.length} item${equipment.length === 1 ? '' : 's'} tracked · synced to database`
-        : 'Synced to database';
+      el('subline').textContent = lastSyncedAt ? `Synced at ${fmtTimeOnly(lastSyncedAt)}` : 'Not synced yet';
 
       el('stats').innerHTML = `
     <button class="stat stat-filter ${currentFilter === 'all' ? 'active' : ''}" data-filter="all"><span class="num">${equipment.length}</span><span class="lbl">Total</span></button>
@@ -493,6 +500,16 @@
       render();
     });
     el(currentView === 'list' ? 'viewListBtn' : 'viewGridBtn').classList.add('active');
+
+    el('syncNowBtn').addEventListener('click', async () => {
+      const btn = el('syncNowBtn');
+      if (btn.classList.contains('spinning')) return; // already syncing
+      btn.classList.add('spinning');
+      btn.disabled = true;
+      await loadAll();
+      btn.classList.remove('spinning');
+      btn.disabled = false;
+    });
 
     function setBtnLoading(btn, loadingText) {
       if (!btn) return () => {};
