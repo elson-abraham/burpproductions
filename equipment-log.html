@@ -126,7 +126,7 @@
     function fmtDate(iso) {
       const p = fmtParts(iso);
       if (!p) return '';
-      return p.date + ' ' + p.time;
+      return p.date + ' ' + p.time + ' IST';
     }
     function fmtCell(iso) {
       const p = fmtParts(iso);
@@ -477,6 +477,47 @@
       });
     }
 
+    function passwordPromptDialog(title, message, confirmLabel) {
+      return new Promise((resolve) => {
+        const overlay = openOverlay(`
+      <div class="modal" style="max-width:380px;">
+        <h2>${escapeHtml(title)}</h2>
+        <div class="modal-sub" style="margin-bottom:16px;">${escapeHtml(message)}</div>
+        <div class="field">
+          <label for="pwPromptInput">Your passcode</label>
+          <input id="pwPromptInput" type="password" placeholder="Passcode">
+          <div class="err" id="pwPromptErr" style="display:none;"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="pwPromptCancel">Cancel</button>
+          <button class="btn-primary" id="pwPromptOk" style="flex:1;background:var(--status-out);color:var(--text-primary);">${escapeHtml(confirmLabel)}</button>
+        </div>
+      </div>`);
+        let resolved = false;
+        const finish = (val) => {
+          if (resolved) return;
+          resolved = true;
+          overlay.remove();
+          resolve(val);
+        };
+        overlay.addEventListener('click', e => { if (e.target === overlay) finish(null); });
+        overlay.querySelector('#pwPromptCancel').addEventListener('click', () => finish(null));
+        overlay.querySelector('#pwPromptOk').addEventListener('click', () => {
+          const val = overlay.querySelector('#pwPromptInput').value;
+          if (!val) {
+            const errEl = overlay.querySelector('#pwPromptErr');
+            errEl.textContent = 'Enter your passcode.';
+            errEl.style.display = 'block';
+            return;
+          }
+          finish(val);
+        });
+        const input = overlay.querySelector('#pwPromptInput');
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') overlay.querySelector('#pwPromptOk').click(); });
+        setTimeout(() => input.focus(), 50);
+      });
+    }
+
     function openOverlay(html) {
       const overlay = document.createElement('div');
       overlay.className = 'overlay';
@@ -590,7 +631,7 @@
       ` : `<div style="font-size:13px;color:var(--text-secondary);">No history yet.</div>`;
 
       const historyHtml = canSeeHistory
-        ? `<div class="history"><h3>History <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-secondary);"></span></h3>${historyTableHtml}</div>`
+        ? `<div class="history"><h3>History <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-secondary);">· times in IST</span></h3>${historyTableHtml}</div>`
         : '';
 
       const actionHtml = loan
@@ -777,7 +818,7 @@
           const errEl = overlay.querySelector('#reassignErr');
           const selected = reassignSelect.value;
           const name = selected === '__other__' ? reassignOther.value.trim() : selected;
-          if (!name) { errEl.textContent = 'Choose or enter a new borrower name.'; errEl.style.display = 'block'; return; }
+          if (!name) { errEl.textContent = 'Choose or enter a new Borrower name.'; errEl.style.display = 'block'; return; }
           const active = activeLoanFor(equipId);
           if (!active) { errEl.textContent = 'This item is no longer checked out.'; errEl.style.display = 'block'; return; }
           const r = await callApi({ action: 'reassignBorrower', logId: active.id, newBorrower: name });
@@ -794,7 +835,7 @@
           const notes = overlay.querySelector('#borrowNotes').value.trim();
           const selected = borrowerSelect.value;
           const name = selected === '__other__' ? borrowerOther.value.trim() : selected;
-          if (!name) { errEl.textContent = 'Choose or enter a borrower name first.'; errEl.style.display = 'block'; return; }
+          if (!name) { errEl.textContent = 'Choose or enter a Borrower name first.'; errEl.style.display = 'block'; return; }
           const r = await callApi({ action: 'checkout', equipmentId: equipId, borrower: name, notes });
           if (!r.ok) { errEl.textContent = r.error || 'Could not check out item.'; errEl.style.display = 'block'; return; }
           overlay.remove();
@@ -907,7 +948,27 @@
       });
       overlay.querySelectorAll('[data-remove]').forEach(btn => {
         btn.addEventListener('click', async () => {
-          await callApi({ action: 'removeUser', name: btn.dataset.remove });
+          const targetName = btn.dataset.remove;
+          const ok = await confirmDialog(
+            'Remove user?',
+            `Remove "${targetName}"? They will no longer be able to sign in.`,
+            'Remove user'
+          );
+          if (!ok) return;
+
+          const passcode = await passwordPromptDialog(
+            'Confirm your passcode',
+            `Enter your own passcode to confirm removing "${targetName}".`,
+            'Confirm removal'
+          );
+          if (passcode === null) return; // cancelled
+          if (passcode !== session.passcode) {
+            alert('That passcode doesn\'t match your account. User was not removed.');
+            return;
+          }
+
+          const r = await callApi({ action: 'removeUser', name: targetName });
+          if (!r.ok) { alert(r.error || 'Could not remove user.'); return; }
           cachedUserNames = null;
           overlay.remove();
           el('manageUsersBtn').click();
