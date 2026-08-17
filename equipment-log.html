@@ -78,6 +78,16 @@
         </div>
       </header>
 
+      <div id="selectionBar" class="selection-bar hidden">
+        <button id="selectionCancelBtn" class="icon-btn" aria-label="Cancel selection" title="Cancel">&times;</button>
+        <span id="selectionCount" class="selection-count"></span>
+        <div class="selection-actions">
+          <button id="selBorrowBtn" class="btn-ghost">Borrow</button>
+          <button id="selTransferBtn" class="btn-ghost">Transfer</button>
+          <button id="selReturnBtn" class="btn-primary" style="background:var(--status-free);color:var(--bg);">Return</button>
+        </div>
+      </div>
+
       <div id="banner" class="banner hidden"></div>
 
       <!-- ---------- Home tab ---------- -->
@@ -103,6 +113,7 @@
           <div>
             <div class="eyebrow" style="margin-bottom:2px;">All equipment</div>
             <h1 style="font-size:22.5px;">Equipment</h1>
+            <div class="sub" id="equipmentCount" style="margin-top:2px;"></div>
           </div>
           <button class="btn-primary" id="addEquipBtn">+ Add</button>
         </div>
@@ -121,6 +132,7 @@
           <button class="btn-ghost" id="changeUrlBtnSettings" style="width:100%;">Change sheet URL</button>
           <button class="btn-danger-outline" id="signOutBtn" style="width:100%;background:var(--status-out);color:var(--text-primary);border-color:var(--status-out);">Sign out</button>
         </div>
+        <div style="text-align:center;font-size:10px;font-weight:300;color:var(--text-muted);margin-top:14px;letter-spacing:0.3px;">[v1.1] developed by Elson.</div>
       </div>
 
       <nav class="bottom-nav">
@@ -189,7 +201,7 @@
     }
     function fmtTimeOnly(date) {
       if (!date) return '';
-      return date.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' });
+      return date.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' }) + ' IST';
     }
     function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
     function isAdminRole(role) { return role === 'admin' || role === 'superadmin'; }
@@ -268,8 +280,7 @@
 
     function updateRoleGatedUI(role) {
       el('manageUsersBtn').classList.toggle('hidden', !isAdminRole(role));
-      const notHardcoded = !(HARDCODED_SCRIPT_URL && HARDCODED_SCRIPT_URL.includes('script.google.com'));
-      el('changeUrlBtnSettings').classList.toggle('hidden', !(role === 'superadmin' && notHardcoded));
+      el('changeUrlBtnSettings').classList.toggle('hidden', role !== 'superadmin');
     }
 
     async function init() {
@@ -593,24 +604,248 @@
     function activeLoanFor(equipId) { return logs.find(l => l.equipmentId === equipId && !l.returnAt); }
     function historyFor(equipId) { return logs.filter(l => l.equipmentId === equipId).sort((a, b) => new Date(b.checkoutAt) - new Date(a.checkoutAt)); }
 
-    // ---------- Delegated click handling (attached once, not re-bound on every render) ----------
-    // Instead of grid.querySelectorAll('.tag').forEach(node => node.addEventListener(...))
-    // being re-run — and a fresh closure + listener created per item — on every single
-    // render(), we attach ONE listener per container up front and resolve the clicked
-    // item via event delegation. This avoids O(n) listener churn/GC pressure on every
-    // auto-sync tick and scales flat regardless of how many equipment items exist.
-    function bindDelegatedClicks(containerId, fromTab) {
+    // ---------- Multi-select (long-press) ----------
+    let selectionMode = false;
+    const selectedIds = new Set();
+    const LONG_PRESS_MS = 480;
+    const MOVE_TOLERANCE_PX = 10;
+
+    function enterSelectionMode() {
+      if (selectionMode) return;
+      selectionMode = true;
+      el('selectionBar').classList.remove('hidden');
+    }
+    function exitSelectionMode() {
+      selectionMode = false;
+      selectedIds.clear();
+      el('selectionBar').classList.add('hidden');
+      applySelectionHighlights();
+    }
+    function toggleSelection(id) {
+      if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
+      if (selectedIds.size === 0) { exitSelectionMode(); return; }
+      updateSelectionBar();
+      applySelectionHighlights();
+    }
+    // Re-applies the visual "selected" outline across every rendered view (grid, list,
+    // equipment tab, with-you section) — cheap, since it only toggles a class, not innerHTML.
+    function applySelectionHighlights() {
+      document.querySelectorAll('#grid [data-id], #listView [data-id], #equipmentList [data-id], #myEquipmentSection [data-id]')
+        .forEach(node => node.classList.toggle('selected', selectedIds.has(node.dataset.id)));
+    }
+    function updateSelectionBar() {
+      const n = selectedIds.size;
+      el('selectionCount').textContent = `${n} selected`;
+      const items = [...selectedIds].map(id => equipment.find(e => e.id === id)).filter(Boolean);
+      const isAdmin = isAdminRole(session.role);
+      const allAvailable = items.length > 0 && items.every(e => !activeLoanFor(e.id));
+      const allOutAndMine = items.length > 0 && items.every(e => {
+        const loan = activeLoanFor(e.id);
+        return loan && (isAdmin || loan.borrower === session.name);
+      });
+      el('selBorrowBtn').disabled = !allAvailable;
+      el('selTransferBtn').disabled = !allOutAndMine;
+      el('selReturnBtn').disabled = !allOutAndMine;
+    }
+    el('selectionCancelBtn').addEventListener('click', exitSelectionMode);
+
+    // Binds ONE listener per container (same delegation pattern as before) that now
+    // additionally detects a long-press via pointer events — works for touch and mouse
+    // alike, so it behaves the same on phones and desktop. Long-press enters selection
+    // mode and selects the pressed item; a normal tap either opens detail (not in
+    // selection mode) or toggles that item's selection (already in selection mode).
+    function bindSelectableContainer(containerId, fromTab) {
       const container = el(containerId);
       if (!container) return;
+      let pressTimer = null;
+      let longPressFired = false;
+      let startX = 0, startY = 0;
+
+      const clearPressTimer = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
+
+      container.addEventListener('pointerdown', (e) => {
+        const row = e.target.closest('[data-id]');
+        if (!row || !container.contains(row)) return;
+        startX = e.clientX; startY = e.clientY;
+        longPressFired = false;
+        pressTimer = setTimeout(() => {
+          longPressFired = true;
+          enterSelectionMode();
+          toggleSelection(row.dataset.id);
+          if (navigator.vibrate) navigator.vibrate(15);
+        }, LONG_PRESS_MS);
+      });
+      container.addEventListener('pointermove', (e) => {
+        if (!pressTimer) return;
+        if (Math.abs(e.clientX - startX) > MOVE_TOLERANCE_PX || Math.abs(e.clientY - startY) > MOVE_TOLERANCE_PX) clearPressTimer();
+      });
+      container.addEventListener('pointerup', clearPressTimer);
+      container.addEventListener('pointercancel', clearPressTimer);
+      container.addEventListener('pointerleave', clearPressTimer);
+
       container.addEventListener('click', (e) => {
         const row = e.target.closest('[data-id]');
-        if (row && container.contains(row)) openDetail(row.dataset.id, fromTab);
+        if (!row || !container.contains(row)) return;
+        if (longPressFired) { longPressFired = false; return; } // long-press already handled this interaction
+        if (selectionMode) { toggleSelection(row.dataset.id); return; }
+        openDetail(row.dataset.id, fromTab);
       });
     }
-    bindDelegatedClicks('grid', 'home');
-    bindDelegatedClicks('listView', 'home');
-    bindDelegatedClicks('equipmentList', 'equipment');
-    bindDelegatedClicks('myEquipmentSection', 'home');
+    bindSelectableContainer('grid', 'home');
+    bindSelectableContainer('listView', 'home');
+    bindSelectableContainer('equipmentList', 'equipment');
+    bindSelectableContainer('myEquipmentSection', 'home');
+
+    // ---------- Bulk actions ----------
+    async function runBulkAction(ids, actionFn) {
+      let successCount = 0;
+      const failed = [];
+      for (const id of ids) { // sequential on purpose — kinder to the backend's lock-serialized writes than firing N parallel requests
+        try {
+          const ok = await actionFn(id);
+          if (ok) successCount++; else failed.push(id);
+        } catch (e) {
+          failed.push(id);
+        }
+      }
+      return { successCount, failed };
+    }
+
+    el('selBorrowBtn').addEventListener('click', async () => {
+      if (el('selBorrowBtn').disabled) return;
+      const ids = [...selectedIds];
+      const userNames = await getUserNames();
+      const isAdmin = isAdminRole(session.role);
+      const optionsHtml = `
+        <option value="" disabled selected>Select a name…</option>
+        ${userNames.map(n => {
+          const disabled = !isAdmin && n !== session.name;
+          return `<option value="${escapeHtml(n)}" ${disabled ? 'disabled' : ''} ${(!isAdmin && n === session.name) ? 'selected' : ''}>${escapeHtml(n)}</option>`;
+        }).join('')}
+        <option value="__other__">Other…</option>`;
+      const overlay = openOverlay(`
+        <div class="modal" style="max-width:420px;">
+          <button class="close-x" id="closeBulkBorrow">&times;</button>
+          <h2>Borrow ${ids.length} item${ids.length === 1 ? '' : 's'}</h2>
+          <div class="modal-sub">Same borrower applies to all selected items.</div>
+          <div class="field">
+            <label for="bulkBorrowerSelect">Borrower Name</label>
+            <select id="bulkBorrowerSelect">${optionsHtml}</select>
+            <input id="bulkBorrowerOther" type="text" placeholder="Type their name" style="margin-top:8px;display:none;">
+            <div class="err" id="bulkBorrowErr" style="display:none;"></div>
+          </div>
+          <div class="field">
+            <label for="bulkBorrowNotes">For which shoot?</label>
+            <textarea id="bulkBorrowNotes" placeholder="Reason, expected return date, condition…"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-primary" id="confirmBulkBorrow" style="flex:1;background:var(--status-out);color:var(--text-primary);">Borrow ${ids.length} item${ids.length === 1 ? '' : ''}</button>
+          </div>
+        </div>`);
+      overlay.querySelector('#closeBulkBorrow').addEventListener('click', () => overlay.remove());
+      const sel = overlay.querySelector('#bulkBorrowerSelect');
+      const other = overlay.querySelector('#bulkBorrowerOther');
+      sel.addEventListener('change', () => {
+        const isOther = sel.value === '__other__';
+        other.style.display = isOther ? 'block' : 'none';
+        if (isOther) other.focus();
+      });
+      overlay.querySelector('#confirmBulkBorrow').addEventListener('click', async () => {
+        const btn = overlay.querySelector('#confirmBulkBorrow');
+        if (btn.disabled) return;
+        const errEl = overlay.querySelector('#bulkBorrowErr');
+        const name = sel.value === '__other__' ? other.value.trim() : sel.value;
+        const notes = overlay.querySelector('#bulkBorrowNotes').value.trim();
+        if (!name) { errEl.textContent = 'Choose or enter a borrower name first.'; errEl.style.display = 'block'; return; }
+        const restore = setBtnLoading(btn, `Borrowing 0/${ids.length}…`);
+        let done = 0;
+        const { successCount, failed } = await runBulkAction(ids, async (id) => {
+          const r = await callApi({ action: 'checkout', equipmentId: id, borrower: name, notes });
+          done++; btn.innerHTML = `<span class="spinner"></span>Borrowing ${done}/${ids.length}…`;
+          return r.ok;
+        });
+        if (failed.length) { restore(); errEl.textContent = `${successCount} succeeded, ${failed.length} failed. Try the failed ones again.`; errEl.style.display = 'block'; return; }
+        overlay.remove();
+        exitSelectionMode();
+        await loadAll();
+      });
+    });
+
+    el('selTransferBtn').addEventListener('click', async () => {
+      if (el('selTransferBtn').disabled) return;
+      const ids = [...selectedIds];
+      const userNames = await getUserNames();
+      const optionsHtml = `
+        <option value="" disabled selected>Select a name…</option>
+        ${userNames.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('')}
+        <option value="__other__">Other…</option>`;
+      const overlay = openOverlay(`
+        <div class="modal" style="max-width:420px;">
+          <button class="close-x" id="closeBulkTransfer">&times;</button>
+          <h2>Transfer ${ids.length} item${ids.length === 1 ? '' : 's'}</h2>
+          <div class="modal-sub">Hands all selected items to the same new borrower.</div>
+          <div class="field">
+            <label for="bulkTransferSelect">New Borrower</label>
+            <select id="bulkTransferSelect">${optionsHtml}</select>
+            <input id="bulkTransferOther" type="text" placeholder="Type their name" style="margin-top:8px;display:none;">
+            <div class="err" id="bulkTransferErr" style="display:none;"></div>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-primary" id="confirmBulkTransfer" style="flex:1;">Transfer ${ids.length} item${ids.length === 1 ? '' : ''}</button>
+          </div>
+        </div>`);
+      overlay.querySelector('#closeBulkTransfer').addEventListener('click', () => overlay.remove());
+      const sel = overlay.querySelector('#bulkTransferSelect');
+      const other = overlay.querySelector('#bulkTransferOther');
+      sel.addEventListener('change', () => {
+        const isOther = sel.value === '__other__';
+        other.style.display = isOther ? 'block' : 'none';
+        if (isOther) other.focus();
+      });
+      overlay.querySelector('#confirmBulkTransfer').addEventListener('click', async () => {
+        const btn = overlay.querySelector('#confirmBulkTransfer');
+        if (btn.disabled) return;
+        const errEl = overlay.querySelector('#bulkTransferErr');
+        const name = sel.value === '__other__' ? other.value.trim() : sel.value;
+        if (!name) { errEl.textContent = 'Choose or enter a new borrower name.'; errEl.style.display = 'block'; return; }
+        const restore = setBtnLoading(btn, `Transferring 0/${ids.length}…`);
+        let done = 0;
+        const { successCount, failed } = await runBulkAction(ids, async (id) => {
+          const active = activeLoanFor(id);
+          if (!active) return false;
+          const r = await callApi({ action: 'reassignBorrower', logId: active.id, newBorrower: name });
+          done++; btn.innerHTML = `<span class="spinner"></span>Transferring ${done}/${ids.length}…`;
+          return r.ok;
+        });
+        if (failed.length) { restore(); errEl.textContent = `${successCount} succeeded, ${failed.length} failed. Try the failed ones again.`; errEl.style.display = 'block'; return; }
+        overlay.remove();
+        exitSelectionMode();
+        await loadAll();
+      });
+    });
+
+    el('selReturnBtn').addEventListener('click', async () => {
+      if (el('selReturnBtn').disabled) return;
+      const ids = [...selectedIds];
+      const ok = await confirmDialog(
+        'Return items?',
+        `Mark all ${ids.length} selected item${ids.length === 1 ? '' : 's'} as returned?`,
+        `Return ${ids.length} item${ids.length === 1 ? '' : 's'}`,
+        async () => {
+          const { successCount, failed } = await runBulkAction(ids, async (id) => {
+            const active = activeLoanFor(id);
+            if (!active) return false;
+            const r = await callApi({ action: 'returnItem', logId: active.id });
+            return r.ok;
+          });
+          if (failed.length) { alert(`${successCount} returned, ${failed.length} failed. Try the failed ones again.`); return false; }
+          return true;
+        }
+      );
+      if (!ok) return;
+      exitSelectionMode();
+      await loadAll();
+    });
 
     function computeStatsAndFilters() {
       const outCount = equipment.filter(e => activeLoanFor(e.id)).length;
@@ -672,6 +907,7 @@
         const emptyHtml = `<div class="empty">No equipment yet. Tap + Add to start logging loans.</div>`;
         grid.innerHTML = emptyHtml;
         listView.innerHTML = emptyHtml;
+        applySelectionHighlights();
         return;
       }
       if (visible.length === 0) {
@@ -681,6 +917,7 @@
         const emptyHtml = `<div class="empty">${msg}</div>`;
         grid.innerHTML = emptyHtml;
         listView.innerHTML = emptyHtml;
+        applySelectionHighlights();
         return;
       }
 
@@ -701,6 +938,7 @@
         </div>` : ''}
       </div>`;
         }).join('');
+        applySelectionHighlights();
         return;
       }
 
@@ -718,6 +956,7 @@
         </div>
       </div>`;
       }).join('');
+      applySelectionHighlights();
     }
 
     function renderMyEquipment() {
@@ -750,11 +989,13 @@
         </div>`;
       // No addEventListener here — clicks are handled by the delegated listener
       // bound once on #myEquipmentSection at startup.
+      applySelectionHighlights();
     }
 
     function renderEquipmentTab() {
       const container = el('equipmentList');
       if (!container) return;
+      el('equipmentCount').textContent = `${equipment.length} item${equipment.length === 1 ? '' : 's'} total`;
       if (equipment.length === 0) {
         container.innerHTML = `<div class="empty">No equipment yet. Tap + Add to get started.</div>`;
         return;
@@ -774,6 +1015,7 @@
       </div>`;
       }).join('');
       // No addEventListener here either — delegated on #equipmentList at startup.
+      applySelectionHighlights();
     }
 
     el('viewGridBtn').addEventListener('click', () => {
@@ -810,7 +1052,7 @@
       return () => { btn.disabled = false; btn.innerHTML = original; };
     }
 
-    function confirmDialog(title, message, confirmLabel) {
+    function confirmDialog(title, message, confirmLabel, onConfirm) {
       return new Promise((resolve) => {
         const overlay = openOverlay(`
       <div class="modal" style="max-width:380px;">
@@ -822,15 +1064,29 @@
         </div>
       </div>`);
         let resolved = false;
+        const cancelBtn = overlay.querySelector('#confirmCancelBtn');
+        const okBtn = overlay.querySelector('#confirmOkBtn');
         const finish = (val) => {
           if (resolved) return;
           resolved = true;
           overlay.remove();
           resolve(val);
         };
-        overlay.addEventListener('click', e => { if (e.target === overlay) finish(false); });
-        overlay.querySelector('#confirmCancelBtn').addEventListener('click', () => finish(false));
-        overlay.querySelector('#confirmOkBtn').addEventListener('click', () => finish(true));
+        overlay.addEventListener('click', e => { if (e.target === overlay && !okBtn.disabled) finish(false); });
+        cancelBtn.addEventListener('click', () => finish(false));
+        okBtn.addEventListener('click', async () => {
+          if (okBtn.disabled) return;
+          if (!onConfirm) { finish(true); return; } // no async work to wait on — old behavior, close immediately
+          cancelBtn.disabled = true;
+          const restore = setBtnLoading(okBtn, 'Please wait…');
+          const success = await onConfirm(); // caller does its own error alert() and returns false on failure
+          if (success) {
+            finish(true);
+          } else {
+            restore();
+            cancelBtn.disabled = false;
+          }
+        });
       });
     }
 
@@ -961,7 +1217,9 @@
         eqCatNew.style.display = isNew ? 'block' : 'none';
         if (isNew) eqCatNew.focus();
       });
+      let isSubmittingEquip = false;
       overlay.querySelector('#confirmAdd').addEventListener('click', async () => {
+        if (isSubmittingEquip) return; // explicit flag, checked before anything else — not just DOM .disabled
         const name = overlay.querySelector('#eqName').value.trim();
         const cat = eqCatSelect.value === '__new__' ? eqCatNew.value.trim() : eqCatSelect.value;
         const errEl = overlay.querySelector('#nameErr');
@@ -970,8 +1228,17 @@
         catErrEl.style.display = 'none';
         if (!name) { errEl.textContent = 'Enter an equipment name first.'; errEl.style.display = 'block'; return; }
         if (!cat) { catErrEl.textContent = 'Choose or enter a category first.'; catErrEl.style.display = 'block'; return; }
+        const normalized = name.toLowerCase();
+        if (equipment.some(e => (e.name || '').trim().toLowerCase() === normalized)) {
+          errEl.textContent = 'An item with this name already exists.';
+          errEl.style.display = 'block';
+          return;
+        }
+        isSubmittingEquip = true;
+        const confirmAddBtn = overlay.querySelector('#confirmAdd');
+        const restore = setBtnLoading(confirmAddBtn, 'Adding…');
         const r = await callApi({ action: 'addEquipment', name, category: cat });
-        if (!r.ok) { errEl.textContent = r.error || 'Could not add item.'; errEl.style.display = 'block'; return; }
+        if (!r.ok) { isSubmittingEquip = false; restore(); errEl.textContent = r.error || 'Could not add item.'; errEl.style.display = 'block'; return; }
         overlay.remove();
         await loadAll();
       });
@@ -1258,9 +1525,8 @@
             const r = await callApi({ action: 'returnItem', logId: active.id });
             if (!r.ok) { restore(); alert(r.error || 'Could not mark returned.'); return; }
           }
-          await loadAll();
           overlay.remove();
-          openDetail(equipId, fromTab); // stay on this item's popup, now showing it available
+          await loadAll();
         });
       }
 
@@ -1272,11 +1538,14 @@
         const ok = await confirmDialog(
           'Delete equipment?',
           `Delete "${item.name}"? This removes the item and its history permanently and cannot be undone.`,
-          'Delete Equipment'
+          'Delete Equipment',
+          async () => {
+            const r = await callApi({ action: 'removeEquipment', id: equipId });
+            if (!r.ok) { alert(r.error || 'Could not remove item.'); return false; }
+            return true;
+          }
         );
         if (!ok) return;
-        const r = await callApi({ action: 'removeEquipment', id: equipId });
-        if (!r.ok) { alert(r.error || 'Could not remove item.'); return; }
         overlay.remove();
         await loadAll();
       };
@@ -1291,11 +1560,14 @@
           const ok = await confirmDialog(
             'Clear history?',
             `Clear all history for "${item.name}"? This deletes every past borrow record and cannot be undone.`,
-            'Clear history'
+            'Clear history',
+            async () => {
+              const r = await callApi({ action: 'clearHistory', equipmentId: equipId });
+              if (!r.ok) { alert(r.error || 'Could not clear history.'); return false; }
+              return true;
+            }
           );
           if (!ok) return;
-          const r = await callApi({ action: 'clearHistory', equipmentId: equipId });
-          if (!r.ok) { alert(r.error || 'Could not clear history.'); return; }
           overlay.remove();
           await loadAll();
         });
@@ -1338,8 +1610,7 @@
         <label for="newUserRole">Role</label>
         <select id="newUserRole">
           <option value="member">Member</option>
-          <option value="admin">Admin</option>
-          ${isSuperAdmin ? `<option value="superadmin">Super Admin</option>` : ''}
+          ${isSuperAdmin ? `<option value="admin">Admin</option><option value="superadmin">Super Admin</option>` : ''}
         </select>
       </div>
       <div class="err" id="userErr" style="display:none;"></div>
@@ -1348,14 +1619,19 @@
     </div>`);
 
       overlay.querySelector('#closeUsers').addEventListener('click', () => overlay.remove());
+      let isSubmittingUser = false;
       overlay.querySelector('#addUserBtn').addEventListener('click', async () => {
+        if (isSubmittingUser) return; // explicit flag, checked before anything else
         const name = overlay.querySelector('#newUserName').value.trim();
         const pass = overlay.querySelector('#newUserPass').value.trim();
         const role = overlay.querySelector('#newUserRole').value;
         const errEl = overlay.querySelector('#userErr');
         if (!name || !pass) { errEl.textContent = 'Enter a name and passcode.'; errEl.style.display = 'block'; return; }
+        isSubmittingUser = true;
+        const addUserBtn = overlay.querySelector('#addUserBtn');
+        const restore = setBtnLoading(addUserBtn, 'Adding…');
         const res = await callApi({ action: 'addUser', name, passcode: pass, role });
-        if (!res.ok) { errEl.textContent = res.error || 'Could not add user.'; errEl.style.display = 'block'; return; }
+        if (!res.ok) { isSubmittingUser = false; restore(); errEl.textContent = res.error || 'Could not add user.'; errEl.style.display = 'block'; return; }
         cachedUserNames = null;
         overlay.remove();
         el('manageUsersBtn').click();
