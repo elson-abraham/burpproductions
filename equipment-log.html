@@ -157,6 +157,12 @@
     let autoSyncInterval = null;
     const AUTO_SYNC_MS = 30000; // 30 seconds
 
+    // ---------- Performance: in-flight request + change-detection state ----------
+    let loadAllInFlight = null;     // Promise — coalesces overlapping loadAll() calls into one
+    let loadAllAbortCtrl = null;    // AbortController — cancels a stale fetch if a newer one starts
+    let lastDataSignature = null;   // cheap fingerprint of last-rendered equipment+logs, to skip no-op renders
+    const dirtyTabs = { home: true, equipment: true }; // re-render only the tabs that actually need it
+
     function safeGetLS(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
     function safeSetLS(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
 
@@ -188,13 +194,14 @@
     function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
     function isAdminRole(role) { return role === 'admin' || role === 'superadmin'; }
 
-    async function callApi(payload) {
+    async function callApi(payload, signal) {
       const body = Object.assign({}, payload);
       if (session) { body.actorName = session.name; body.actorPasscode = session.passcode; }
       const res = await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        signal
       });
       if (!res.ok) throw new Error('Request failed (' + res.status + ')');
       return res.json();
@@ -204,10 +211,14 @@
 
     function showTab(tab) {
       currentTab = tab;
+      window.scrollTo(0, 0); // reset first, otherwise Settings' overflow:hidden freezes at whatever scroll offset Home was left at
       ['home', 'equipment', 'settings'].forEach(t => el(t + 'Tab').classList.toggle('hidden', t !== tab));
       document.querySelectorAll('.bottom-nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
       el('mainScreen').classList.toggle('settings-view', tab === 'settings');
       document.body.classList.toggle('no-scroll', tab === 'settings');
+      // Lazily render a tab only the moment it's actually shown, if its data changed since last render.
+      if (tab === 'home' && dirtyTabs.home) { renderHomeTab(); dirtyTabs.home = false; }
+      if (tab === 'equipment' && dirtyTabs.equipment) { renderEquipmentTab(); dirtyTabs.equipment = false; }
     }
     document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
       btn.addEventListener('click', () => showTab(btn.dataset.tab));
@@ -398,25 +409,66 @@
       grid.innerHTML = Array.from({ length: 6 }).map(() => `<div class="tag skeleton"></div>`).join('');
     }
 
+    // ---------- loadAll(): coalesced, cancellable, change-aware ----------
     async function loadAll() {
-      const isFirstLoad = equipment.length === 0 && logs.length === 0;
-      if (isFirstLoad) renderSkeleton();
-      el('banner').classList.add('hidden');
+      // If a load is already in flight, just piggyback on it instead of firing a
+      // second parallel request — collapses redundant triggers (auto-sync tick +
+      // focus event + manual sync tap all landing at once, etc.) into one call.
+      if (loadAllInFlight) return loadAllInFlight;
+
+      loadAllInFlight = (async () => {
+        // Cancel any previous still-pending request (shouldn't normally happen given
+        // the guard above, but protects against edge cases like a very slow prior call).
+        if (loadAllAbortCtrl) loadAllAbortCtrl.abort();
+        loadAllAbortCtrl = new AbortController();
+        const signal = loadAllAbortCtrl.signal;
+
+        const isFirstLoad = equipment.length === 0 && logs.length === 0;
+        if (isFirstLoad) renderSkeleton();
+        el('banner').classList.add('hidden');
+        try {
+          const [eqRes, logRes] = await Promise.all([
+            callApi({ action: 'listEquipment' }, signal),
+            callApi({ action: 'listLogs' }, signal)
+          ]);
+          const newEquipment = eqRes.ok ? eqRes.equipment : [];
+          const newLogs = logRes.ok ? logRes.logs : [];
+
+          // Cheap fingerprint so a 30s auto-sync that finds nothing new skips the
+          // (comparatively expensive) DOM rebuild entirely.
+          const signature = newEquipment.length + ':' + newLogs.length + ':' +
+            JSON.stringify(newEquipment) + JSON.stringify(newLogs);
+          const changed = signature !== lastDataSignature;
+          lastDataSignature = signature;
+
+          equipment = newEquipment;
+          logs = newLogs;
+          lastSyncedAt = new Date();
+          getUserNames(); // warm the cache in the background, don't block the grid on it
+
+          if (changed || isFirstLoad) {
+            dirtyTabs.home = true;
+            dirtyTabs.equipment = true;
+          }
+        } catch (e) {
+          if (e.name === 'AbortError') return; // superseded by a newer call, not a real failure
+          el('banner').textContent = 'Could not load data from the database. Try refreshing.';
+          el('banner').classList.remove('hidden');
+          equipment = []; logs = [];
+          dirtyTabs.home = true;
+          dirtyTabs.equipment = true;
+        }
+        // Always refresh sync-time display + whichever tab is currently visible.
+        el('subline').textContent = lastSyncedAt ? `Synced ${fmtTimeOnly(lastSyncedAt)}` : 'Not synced yet';
+        if (currentTab === 'home' && dirtyTabs.home) { renderHomeTab(); dirtyTabs.home = false; }
+        if (currentTab === 'equipment' && dirtyTabs.equipment) { renderEquipmentTab(); dirtyTabs.equipment = false; }
+      })();
+
       try {
-        const [eqRes, logRes] = await Promise.all([
-          callApi({ action: 'listEquipment' }),
-          callApi({ action: 'listLogs' })
-        ]);
-        equipment = eqRes.ok ? eqRes.equipment : [];
-        logs = logRes.ok ? logRes.logs : [];
-        lastSyncedAt = new Date();
-        getUserNames(); // warm the cache in the background, don't block the grid on it
-      } catch (e) {
-        el('banner').textContent = 'Could not load data from the database. Try refreshing.';
-        el('banner').classList.remove('hidden');
-        equipment = []; logs = [];
+        await loadAllInFlight;
+      } finally {
+        loadAllInFlight = null;
       }
-      render();
     }
 
     function borrowerTrailParts(l) {
@@ -541,24 +593,50 @@
     function activeLoanFor(equipId) { return logs.find(l => l.equipmentId === equipId && !l.returnAt); }
     function historyFor(equipId) { return logs.filter(l => l.equipmentId === equipId).sort((a, b) => new Date(b.checkoutAt) - new Date(a.checkoutAt)); }
 
-    function render() {
-      renderMyEquipment();
-      renderEquipmentTab();
+    // ---------- Delegated click handling (attached once, not re-bound on every render) ----------
+    // Instead of grid.querySelectorAll('.tag').forEach(node => node.addEventListener(...))
+    // being re-run — and a fresh closure + listener created per item — on every single
+    // render(), we attach ONE listener per container up front and resolve the clicked
+    // item via event delegation. This avoids O(n) listener churn/GC pressure on every
+    // auto-sync tick and scales flat regardless of how many equipment items exist.
+    function bindDelegatedClicks(containerId, fromTab) {
+      const container = el(containerId);
+      if (!container) return;
+      container.addEventListener('click', (e) => {
+        const row = e.target.closest('[data-id]');
+        if (row && container.contains(row)) openDetail(row.dataset.id, fromTab);
+      });
+    }
+    bindDelegatedClicks('grid', 'home');
+    bindDelegatedClicks('listView', 'home');
+    bindDelegatedClicks('equipmentList', 'equipment');
+    bindDelegatedClicks('myEquipmentSection', 'home');
+
+    function computeStatsAndFilters() {
       const outCount = equipment.filter(e => activeLoanFor(e.id)).length;
       const freeCount = equipment.length - outCount;
-      el('subline').textContent = lastSyncedAt ? `Synced ${fmtTimeOnly(lastSyncedAt)}` : 'Not synced yet';
+      return { outCount, freeCount };
+    }
+
+    // renderHomeTab(): everything specific to the Home tab (stats, filters, grid/list).
+    // Split out from the old monolithic render() so it can be skipped entirely when the
+    // Home tab isn't the one currently visible (see loadAll()/showTab() dirty-tab logic).
+    function renderHomeTab() {
+      renderMyEquipment();
+      const { outCount, freeCount } = computeStatsAndFilters();
 
       el('stats').innerHTML = `
     <button class="stat stat-filter ${currentFilter === 'all' ? 'active' : ''}" data-filter="all"><span class="num">${equipment.length}</span><span class="lbl">Total</span></button>
     <button class="stat out stat-filter ${currentFilter === 'out' ? 'active' : ''}" data-filter="out"><span class="num">${outCount}</span><span class="lbl">Out</span></button>
     <button class="stat avail stat-filter ${currentFilter === 'available' ? 'active' : ''}" data-filter="available"><span class="num">${freeCount}</span><span class="lbl">Free</span></button>
   `;
-      el('stats').querySelectorAll('.stat-filter').forEach(btn => {
-        btn.addEventListener('click', () => {
-          currentFilter = btn.dataset.filter;
-          render();
-        });
-      });
+      // Event delegation here too — one listener on the container, not three rebuilt every render.
+      el('stats').onclick = (e) => {
+        const btn = e.target.closest('.stat-filter');
+        if (!btn) return;
+        currentFilter = btn.dataset.filter;
+        renderHomeTab();
+      };
 
       const categories = [...new Set(equipment.map(e => e.category || 'Uncategorized'))].sort((a, b) => a.localeCompare(b));
       const catRow = el('catFilterRow');
@@ -567,12 +645,12 @@
     <button class="cat-chip ${currentCategory === null ? 'active' : ''}" data-cat="">All</button>
     ${categories.map(c => `<button class="cat-chip ${currentCategory === c ? 'active' : ''}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('')}
   `;
-        catRow.querySelectorAll('.cat-chip').forEach(chip => {
-          chip.addEventListener('click', () => {
-            currentCategory = chip.dataset.cat || null;
-            render();
-          });
-        });
+        catRow.onclick = (e) => {
+          const chip = e.target.closest('.cat-chip');
+          if (!chip) return;
+          currentCategory = chip.dataset.cat || null;
+          renderHomeTab();
+        };
       } else {
         catRow.innerHTML = '';
       }
@@ -623,7 +701,6 @@
         </div>` : ''}
       </div>`;
         }).join('');
-        listView.querySelectorAll('.list-row').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id, 'home')));
         return;
       }
 
@@ -641,7 +718,6 @@
         </div>
       </div>`;
       }).join('');
-      grid.querySelectorAll('.tag').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id, 'home')));
     }
 
     function renderMyEquipment() {
@@ -672,7 +748,8 @@
           </div>`;
           }).join('')}
         </div>`;
-      container.querySelectorAll('.my-equip-row').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id, 'home')));
+      // No addEventListener here — clicks are handled by the delegated listener
+      // bound once on #myEquipmentSection at startup.
     }
 
     function renderEquipmentTab() {
@@ -696,7 +773,7 @@
           : `<span class="stamp avail">Available</span>`}
       </div>`;
       }).join('');
-      container.querySelectorAll('.list-row').forEach(node => node.addEventListener('click', () => openDetail(node.dataset.id, 'equipment')));
+      // No addEventListener here either — delegated on #equipmentList at startup.
     }
 
     el('viewGridBtn').addEventListener('click', () => {
@@ -704,14 +781,14 @@
       safeSetLS('equipmentLog.view', 'grid');
       el('viewGridBtn').classList.add('active');
       el('viewListBtn').classList.remove('active');
-      render();
+      renderHomeTab();
     });
     el('viewListBtn').addEventListener('click', () => {
       currentView = 'list';
       safeSetLS('equipmentLog.view', 'list');
       el('viewListBtn').classList.add('active');
       el('viewGridBtn').classList.remove('active');
-      render();
+      renderHomeTab();
     });
     el(currentView === 'list' ? 'viewListBtn' : 'viewGridBtn').classList.add('active');
 
