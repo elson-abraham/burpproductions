@@ -89,6 +89,7 @@ header {
   border-bottom: 1px solid var(--border-strong);
   padding: calc(14px + env(safe-area-inset-top)) 16px 12px;
   margin: 0 -16px 16px;
+  transition: opacity .15s ease;
 }
 
 .header-top {
@@ -221,13 +222,47 @@ button {
   transform: scale(0.94);
 }
 
+/* Equipment tab has no brand header above it, so its title row is the first thing
+   on screen — give it real breathing room from the top edge (not just the notch inset,
+   which is 0 on most devices and left the title flush against the status bar). */
+#equipmentTab>.tab-header-row {
+  padding-top: calc(22px + env(safe-area-inset-top));
+}
+
+/* Stats + category filters float together as one sticky cluster while the grid/list
+   scrolls underneath — this is the "floating filter" the Equipment tab now has instead
+   of a sticky header. Sits below the (also-fixed) selection bar when one is showing,
+   via the top-offset override further down. */
+.equip-sticky-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  margin: 0 -16px 14px;
+  padding: calc(8px + env(safe-area-inset-top)) 16px 10px;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  transition: top .15s ease;
+}
+
+.equip-sticky-toolbar .stats-row {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.equip-sticky-toolbar .cat-filter-row {
+  margin-bottom: 0;
+}
+
 /* ---------- Stat pills ---------- */
 .stats-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-top: 12px;
+  margin-top: 4px;
+  margin-bottom: 12px;
 }
 
 .stats-row .btn-primary {
@@ -325,15 +360,36 @@ button {
   }
 }
 
+/* ---------- Selection bar: nested inside the sticky filter cluster, right where the
+   thumb already is, instead of a separate strip pinned to the very top of the screen.
+   Styled as a raised, glowing card so it visually pops out from the toolbar around it
+   the instant it appears — a "you're in a different mode now" cue, not just a label. */
 .selection-bar {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 16px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border-strong);
-  margin: 0 -16px 16px;
-  animation: fadeIn .15s ease;
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(254, 64, 0, 0.24), rgba(185, 51, 33, 0.08));
+  border: 1px solid rgba(254, 64, 0, 0.5);
+  box-shadow:
+    0 12px 28px -8px rgba(254, 64, 0, 0.45),
+    0 2px 10px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: selectionPop .18s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+@keyframes selectionPop {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .selection-count {
@@ -366,6 +422,39 @@ button {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
   background: rgba(254, 64, 0, 0.1);
+}
+
+/* Momentary feedback when a tap tries to add an item of the "wrong" status to an
+   in-progress selection (e.g. an Out item while only Available ones are selected). */
+@keyframes selectionShake {
+
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+.tag.selection-blocked,
+.list-row.selection-blocked {
+  animation: selectionShake 0.4s ease;
+  outline: 2px solid var(--status-out);
+  outline-offset: -2px;
 }
 
 .tag {
@@ -477,6 +566,32 @@ button {
   font-size: 15.5px;
 }
 
+/* "With you" empty state — friendlier, with an icon and a CTA into the Equipment tab */
+.empty-withyou {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 46px 20px;
+}
+
+.empty-icon {
+  font-size: 34px;
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+
+.empty-title {
+  font-size: 16.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.empty-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
 .list-toggle-row {
   display: flex;
   align-items: center;
@@ -489,6 +604,14 @@ button {
   display: flex;
   align-items: center;
   gap: 7px;
+}
+
+/* Matches the "Welcome," label's size exactly (that's 50% of the header's 20.5px name
+   text) — scoped to .sync-status .sub only, so it doesn't touch .sub's default size
+   used elsewhere (modal subtitles, "With you" count, etc.), and the icon next to it
+   keeps its own untouched font-size. */
+.sync-status .sub {
+  font-size: 10.25px;
 }
 
 .sync-btn {
@@ -611,6 +734,17 @@ button {
   background: rgba(254, 64, 0, 0.12);
 }
 
+.my-equip-row.skeleton {
+  cursor: default;
+  border-left-color: var(--border);
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s ease-in-out infinite;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border-bottom: none;
+}
+
 .my-equip-info {
   min-width: 0;
   flex: 1;
@@ -635,6 +769,151 @@ button {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ---------- Admin dashboard: "Borrowed by team" (Home tab, Admin/Super Admin only) ---------- */
+.borrower-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  transition: border-color .12s ease;
+}
+
+.borrower-card:hover {
+  border-color: var(--border-strong);
+}
+
+/* Selection bar docks here while the Home tab is active — collapses to zero height
+   when empty since #selectionBar is display:none via .hidden until selection starts. */
+#homeSelectionSlot:not(:empty) {
+  margin-bottom: 18px;
+}
+
+.borrower-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.borrower-chevron {
+  flex: none;
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: transform .15s ease;
+}
+
+.borrower-card.expanded .borrower-chevron {
+  transform: rotate(180deg);
+  color: var(--text-secondary);
+}
+
+.borrower-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 14.5px;
+  color: #0A0A0A;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.borrower-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.borrower-name {
+  font-weight: 600;
+  font-size: 15.5px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.borrower-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+
+.borrower-count-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 13px;
+  background: rgba(254, 64, 0, 0.12);
+  color: var(--accent);
+  border: 1px solid rgba(254, 64, 0, 0.35);
+  border-radius: 20px;
+  padding: 3px 11px;
+  flex: none;
+}
+
+.borrower-items {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Collapsed state — needs to explicitly beat the .borrower-items display:flex above,
+   since an equal-specificity author rule always wins over the UA default [hidden]
+   behavior regardless of source order. Without this, toggling the `hidden` attribute
+   in JS had no visible effect at all. */
+.borrower-items[hidden] {
+  display: none;
+}
+
+.borrower-item-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 5px 6px;
+  margin: 0 -6px;
+  transition: background .12s ease;
+}
+
+.borrower-item-row:hover {
+  background: var(--surface-2);
+}
+
+.borrower-item-name {
+  color: var(--text-primary);
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.borrower-item-time {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  flex: none;
 }
 
 .list-row-top {
@@ -1293,4 +1572,16 @@ button {
   gap: 10px;
   margin-top: auto;
   padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
