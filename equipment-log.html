@@ -61,7 +61,7 @@
     </div>
 
     <div id="mainScreen" class="hidden">
-      <header>
+      <header id="appHeader">
         <div class="header-top">
           <div class="title-block">
             <img src="/assets/photos/logo_new/BURPFINALLOGO-5.png" alt="Company logo" class="header-logo" onerror="this.style.display='none'">
@@ -78,46 +78,65 @@
         </div>
       </header>
 
-      <div id="selectionBar" class="selection-bar hidden">
-        <button id="selectionCancelBtn" class="icon-btn" aria-label="Cancel selection" title="Cancel">&times;</button>
-        <span id="selectionCount" class="selection-count"></span>
-        <div class="selection-actions">
-          <button id="selBorrowBtn" class="btn-ghost">Borrow</button>
-          <button id="selTransferBtn" class="btn-ghost">Transfer</button>
-          <button id="selReturnBtn" class="btn-primary" style="background:var(--status-free);color:var(--bg);">Return</button>
-        </div>
-      </div>
-
       <div id="banner" class="banner hidden"></div>
 
-      <!-- ---------- Home tab ---------- -->
+      <!-- ---------- Home tab : "With you" ---------- -->
       <div id="homeTab" class="tab-panel">
-        <div id="myEquipmentSection" class="hidden" style="margin-bottom:20px;"></div>
-        <div class="stats-row">
-          <div class="stats" id="stats"></div>
-        </div>
-        <div class="list-toggle-row" style="justify-content:flex-end;">
-          <div class="view-toggle" id="viewToggle">
-            <button class="view-toggle-btn" id="viewGridBtn" title="Grid view" aria-label="Grid view">&#9638;</button>
-            <button class="view-toggle-btn" id="viewListBtn" title="List view" aria-label="List view">&#9776;</button>
+        <div class="tab-header-row">
+          <div>
+            <div class="eyebrow" style="margin-bottom:2px;">With you</div>
+            <h1 style="font-size:22.5px;">Your equipment</h1>
+            <div class="sub" id="withYouCount" style="margin-top:2px;"></div>
           </div>
         </div>
-        <div class="cat-filter-row" id="catFilterRow"></div>
-        <div class="grid" id="grid"></div>
-        <div class="list-view" id="listView" style="display:none;"></div>
+        <div id="homeSelectionSlot"></div>
+        <div id="myEquipmentSection"></div>
+
+        <!-- Admin/Super Admin only — who has what out, at a glance -->
+        <div id="teamDashboardSection" class="hidden" style="margin-top:30px;">
+          <div class="tab-header-row" style="margin-bottom:14px;">
+            <div>
+              <div class="eyebrow" style="margin-bottom:2px;">Admin overview</div>
+              <h1 style="font-size:20px;">Borrowed by team</h1>
+              <div class="sub" id="teamDashboardSub" style="margin-top:2px;"></div>
+            </div>
+          </div>
+          <div id="teamDashboardList"></div>
+        </div>
       </div>
 
       <!-- ---------- Equipment tab ---------- -->
       <div id="equipmentTab" class="tab-panel hidden">
         <div class="tab-header-row">
           <div>
-            <div class="eyebrow" style="margin-bottom:2px;">All equipment</div>
+            <div class="eyebrow" style="margin-bottom:2px;">Burp Equipment</div>
             <h1 style="font-size:22.5px;">Equipment</h1>
-            <div class="sub" id="equipmentCount" style="margin-top:2px;"></div>
           </div>
-          <button class="btn-primary" id="addEquipBtn">+ Add</button>
+          <div style="display:flex;align-items:center;gap:12px;flex:none;">
+            <button class="btn-primary" id="addEquipBtn">+ Add</button>
+          </div>
         </div>
-        <div class="list-view simple-list" id="equipmentList"></div>
+        <div class="equip-sticky-toolbar" id="equipStickyToolbar">
+          <div class="stats-row">
+            <div class="stats" id="stats"></div>
+            <div class="view-toggle" id="viewToggle">
+              <button class="view-toggle-btn" id="viewGridBtn" title="Grid view" aria-label="Grid view">&#9638;</button>
+              <button class="view-toggle-btn" id="viewListBtn" title="List view" aria-label="List view">&#9776;</button>
+            </div>
+          </div>
+          <div class="cat-filter-row" id="catFilterRow"></div>
+          <div id="selectionBar" class="selection-bar hidden" role="toolbar" aria-label="Bulk equipment actions">
+            <button id="selectionCancelBtn" class="icon-btn" aria-label="Cancel selection" title="Cancel">&times;</button>
+            <span id="selectionCount" class="selection-count"></span>
+            <div class="selection-actions">
+              <button id="selBorrowBtn" class="btn-ghost">Borrow</button>
+              <button id="selTransferBtn" class="btn-ghost">Transfer</button>
+              <button id="selReturnBtn" class="btn-primary" style="background:var(--status-free);color:var(--bg);">Return</button>
+            </div>
+          </div>
+        </div>
+        <div class="grid" id="grid"></div>
+        <div class="list-view" id="listView" style="display:none;"></div>
       </div>
 
       <!-- ---------- Settings tab ---------- -->
@@ -132,11 +151,11 @@
           <button class="btn-ghost" id="changeUrlBtnSettings" style="width:100%;">Change sheet URL</button>
           <button class="btn-danger-outline" id="signOutBtn" style="width:100%;background:var(--status-out);color:var(--text-primary);border-color:var(--status-out);">Sign out</button>
         </div>
-        <div style="text-align:center;font-size:10px;font-weight:300;color:var(--text-muted);margin-top:14px;letter-spacing:0.3px;">[v1.1] developed by Elson.</div>
+        <div style="text-align:center;font-size:10px;font-weight:300;color:var(--text-muted);margin-top:14px;letter-spacing:0.3px;">[v1.2] developed by Elson.</div>
       </div>
 
       <nav class="bottom-nav">
-        <button class="bottom-nav-btn active" data-tab="home" aria-label="Home">
+        <button class="bottom-nav-btn active" data-tab="home" aria-label="With you" aria-current="page">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
         </button>
         <button class="bottom-nav-btn" data-tab="equipment" aria-label="Equipment">
@@ -201,7 +220,7 @@
     }
     function fmtTimeOnly(date) {
       if (!date) return '';
-      return date.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' }) + ' IST';
+      return date.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' });
     }
     function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
     function isAdminRole(role) { return role === 'admin' || role === 'superadmin'; }
@@ -223,14 +242,35 @@
 
     function showTab(tab) {
       currentTab = tab;
-      window.scrollTo(0, 0); // reset first, otherwise Settings' overflow:hidden freezes at whatever scroll offset Home was left at
+      window.scrollTo(0, 0); // reset first, otherwise Settings' overflow:hidden freezes at whatever scroll offset was left
       ['home', 'equipment', 'settings'].forEach(t => el(t + 'Tab').classList.toggle('hidden', t !== tab));
-      document.querySelectorAll('.bottom-nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+        const active = btn.dataset.tab === tab;
+        btn.classList.toggle('active', active);
+        if (active) btn.setAttribute('aria-current', 'page'); else btn.removeAttribute('aria-current');
+      });
       el('mainScreen').classList.toggle('settings-view', tab === 'settings');
       document.body.classList.toggle('no-scroll', tab === 'settings');
+      // The Equipment tab has its own toolbar (title, sync, stats/filters), so the brand
+      // header is redundant chrome there — remove it outright rather than just un-sticking it.
+      el('appHeader').classList.toggle('hidden', tab === 'equipment');
+      // Multi-select works on both the Home tab ("With you") and the Equipment tab —
+      // Settings is the only place it doesn't make sense, so that's the only tab switch
+      // that force-exits it.
+      if (selectionMode && tab === 'settings') exitSelectionMode();
+      // The selection bar is a single shared element (one set of listeners, one state) —
+      // just re-parent it into whichever tab-specific slot is now visible instead of
+      // keeping two separate bars in sync.
+      relocateSelectionBar(tab);
       // Lazily render a tab only the moment it's actually shown, if its data changed since last render.
       if (tab === 'home' && dirtyTabs.home) { renderHomeTab(); dirtyTabs.home = false; }
       if (tab === 'equipment' && dirtyTabs.equipment) { renderEquipmentTab(); dirtyTabs.equipment = false; }
+    }
+    function relocateSelectionBar(tab) {
+      const bar = el('selectionBar');
+      if (tab === 'home') el('homeSelectionSlot').appendChild(bar);
+      else if (tab === 'equipment') el('equipStickyToolbar').appendChild(bar);
+      // Settings has no slot for it — fine, selection is always exited before landing there.
     }
     document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
       btn.addEventListener('click', () => showTab(btn.dataset.tab));
@@ -469,7 +509,7 @@
           dirtyTabs.home = true;
           dirtyTabs.equipment = true;
         }
-        // Always refresh sync-time display + whichever tab is currently visible.
+        // Always refresh sync-time display for whichever tab is currently visible.
         el('subline').textContent = lastSyncedAt ? `Synced ${fmtTimeOnly(lastSyncedAt)}` : 'Not synced yet';
         if (currentTab === 'home' && dirtyTabs.home) { renderHomeTab(); dirtyTabs.home = false; }
         if (currentTab === 'equipment' && dirtyTabs.equipment) { renderEquipmentTab(); dirtyTabs.equipment = false; }
@@ -604,7 +644,7 @@
     function activeLoanFor(equipId) { return logs.find(l => l.equipmentId === equipId && !l.returnAt); }
     function historyFor(equipId) { return logs.filter(l => l.equipmentId === equipId).sort((a, b) => new Date(b.checkoutAt) - new Date(a.checkoutAt)); }
 
-    // ---------- Multi-select (long-press) ----------
+    // ---------- Multi-select (long-press), scoped to the Equipment tab ----------
     let selectionMode = false;
     const selectedIds = new Set();
     const LONG_PRESS_MS = 480;
@@ -621,16 +661,49 @@
       el('selectionBar').classList.add('hidden');
       applySelectionHighlights();
     }
+    function statusOf(id) { return activeLoanFor(id) ? 'out' : 'available'; }
+    // The current selection's status ('available' | 'out'), or null if nothing's selected
+    // yet — every item in selectedIds is guaranteed to share this status by construction
+    // (toggleSelection refuses to add anything else), so checking any one member is enough.
+    function currentSelectionStatus() {
+      if (selectedIds.size === 0) return null;
+      return statusOf(selectedIds.values().next().value);
+    }
     function toggleSelection(id) {
-      if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
-      if (selectedIds.size === 0) { exitSelectionMode(); return; }
+      if (selectedIds.has(id)) {
+        selectedIds.delete(id);
+        if (selectedIds.size === 0) { exitSelectionMode(); return; }
+        updateSelectionBar();
+        applySelectionHighlights();
+        return;
+      }
+      // Borrow needs every item Available; Transfer/Return need every item Out. Mixing
+      // the two in one selection guarantees no action button could ever be enabled, so
+      // block the add at the source instead of letting the user select into a dead end.
+      const existingStatus = currentSelectionStatus();
+      if (existingStatus && statusOf(id) !== existingStatus) {
+        rejectSelection(id);
+        return;
+      }
+      selectedIds.add(id);
       updateSelectionBar();
       applySelectionHighlights();
     }
-    // Re-applies the visual "selected" outline across every rendered view (grid, list,
-    // equipment tab, with-you section) — cheap, since it only toggles a class, not innerHTML.
+    // Brief shake + red flash + a distinct double-buzz — tells the user their tap
+    // registered but was refused, and roughly why, without an interrupting alert().
+    function rejectSelection(id) {
+      if (navigator.vibrate) navigator.vibrate([12, 40, 12]);
+      const node = document.querySelector(`#grid [data-id="${id}"], #listView [data-id="${id}"], #myEquipmentSection [data-id="${id}"]`);
+      if (!node) return;
+      node.classList.remove('selection-blocked');
+      void node.offsetWidth; // force reflow so the animation restarts on rapid re-taps
+      node.classList.add('selection-blocked');
+      setTimeout(() => node.classList.remove('selection-blocked'), 420);
+    }
+    // Re-applies the visual "selected" outline across every rendered view (grid, list) —
+    // cheap, since it only toggles a class, not innerHTML.
     function applySelectionHighlights() {
-      document.querySelectorAll('#grid [data-id], #listView [data-id], #equipmentList [data-id], #myEquipmentSection [data-id]')
+      document.querySelectorAll('#grid [data-id], #listView [data-id], #myEquipmentSection [data-id]')
         .forEach(node => node.classList.toggle('selected', selectedIds.has(node.dataset.id)));
     }
     function updateSelectionBar() {
@@ -649,11 +722,12 @@
     }
     el('selectionCancelBtn').addEventListener('click', exitSelectionMode);
 
-    // Binds ONE listener per container (same delegation pattern as before) that now
-    // additionally detects a long-press via pointer events — works for touch and mouse
-    // alike, so it behaves the same on phones and desktop. Long-press enters selection
-    // mode and selects the pressed item; a normal tap either opens detail (not in
-    // selection mode) or toggles that item's selection (already in selection mode).
+    // Binds ONE listener per container (event delegation) that detects a long-press via
+    // pointer events — works for touch and mouse alike. Long-press enters selection mode
+    // and selects the pressed item; a normal tap either opens detail (not in selection
+    // mode) or toggles that item's selection (already in selection mode). Wired up on the
+    // Equipment tab's grid/list and the Home tab's "With you" list — the two surfaces
+    // where selecting equipment items actually makes sense.
     function bindSelectableContainer(containerId, fromTab) {
       const container = el(containerId);
       if (!container) return;
@@ -691,9 +765,8 @@
         openDetail(row.dataset.id, fromTab);
       });
     }
-    bindSelectableContainer('grid', 'home');
-    bindSelectableContainer('listView', 'home');
-    bindSelectableContainer('equipmentList', 'equipment');
+    bindSelectableContainer('grid', 'equipment');
+    bindSelectableContainer('listView', 'equipment');
     bindSelectableContainer('myEquipmentSection', 'home');
 
     // ---------- Bulk actions ----------
@@ -853,11 +926,148 @@
       return { outCount, freeCount };
     }
 
-    // renderHomeTab(): everything specific to the Home tab (stats, filters, grid/list).
-    // Split out from the old monolithic render() so it can be skipped entirely when the
-    // Home tab isn't the one currently visible (see loadAll()/showTab() dirty-tab logic).
+    // renderHomeTab(): the "With you" tab — the items the signed-in user currently has
+    // checked out, plus (for Admins/Super Admins only) a team-wide "who has what"
+    // dashboard. Deliberately lightweight; all browsing/filtering/bulk-action UI lives
+    // in the Equipment tab.
     function renderHomeTab() {
-      renderMyEquipment();
+      const mine = session ? equipment.filter(e => {
+        const loan = activeLoanFor(e.id);
+        return loan && loan.borrower === session.name;
+      }) : [];
+
+      el('withYouCount').textContent = mine.length
+        ? `${mine.length} item${mine.length === 1 ? '' : 's'} checked out to you`
+        : '';
+
+      const container = el('myEquipmentSection');
+      if (equipment.length === 0 && logs.length === 0 && !lastSyncedAt) {
+        // First-load skeleton, mirrors the Equipment tab's shimmer treatment.
+        container.innerHTML = Array.from({ length: 2 }).map(() => `<div class="my-equip-row skeleton" style="height:52px;"></div>`).join('');
+      } else if (mine.length === 0) {
+        container.innerHTML = `
+          <div class="empty empty-withyou">
+            <div class="empty-icon" aria-hidden="true">&#128230;</div>
+            <div class="empty-title">Nothing with you right now</div>
+            <div class="empty-sub">Items you borrow will show up here.</div>
+            <button class="btn-primary" id="withYouBrowseBtn" style="margin-top:14px;">Browse equipment</button>
+          </div>`;
+        const browseBtn = el('withYouBrowseBtn');
+        if (browseBtn) browseBtn.addEventListener('click', () => showTab('equipment'));
+      } else {
+        container.innerHTML = `
+        <div class="list-view my-equip-list">
+          ${mine.map(e => {
+            const loan = activeLoanFor(e.id);
+            return `
+          <div class="my-equip-row" data-id="${e.id}">
+            <div class="my-equip-info">
+              <div class="my-equip-name">${escapeHtml(e.name)}</div>
+              <div class="my-equip-meta"><span class="cat-dot"></span>${escapeHtml(e.category || 'Uncategorized')} · Since ${fmtDate(loan.checkoutAt)}</div>
+            </div>
+            <span class="stamp out">Return</span>
+          </div>`;
+          }).join('')}
+        </div>`;
+      }
+
+      renderTeamDashboard();
+    }
+
+    // ---------- Admin/Super Admin dashboard: "Borrowed by team" ----------
+    // Small deterministic string hash → stable avatar color per borrower, reusing the
+    // same VIBGYOR palette the per-item history chart uses, so color language stays
+    // consistent across the app instead of introducing a second palette.
+    function colorForName(name) {
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      return VIBGYOR[Math.abs(hash) % VIBGYOR.length];
+    }
+    function initialsOf(name) {
+      const parts = String(name).trim().split(/\s+/).filter(Boolean);
+      if (parts.length === 0) return '?';
+      if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    function computeBorrowerGroups() {
+      const byName = {};
+      equipment.forEach(e => {
+        const loan = activeLoanFor(e.id);
+        if (!loan) return;
+        (byName[loan.borrower] = byName[loan.borrower] || []).push({ item: e, loan });
+      });
+      return Object.entries(byName)
+        .map(([name, items]) => ({ name, items: items.sort((a, b) => new Date(a.loan.checkoutAt) - new Date(b.loan.checkoutAt)) }))
+        .sort((a, b) => b.items.length - a.items.length || a.name.localeCompare(b.name));
+    }
+    // Which borrowers are expanded, by name — persists across renderTeamDashboard() calls
+    // (auto-sync, manual sync, any action) so a card the admin opened doesn't collapse
+    // back the moment fresh data comes in.
+    const expandedBorrowers = new Set();
+
+    function renderTeamDashboard() {
+      const section = el('teamDashboardSection');
+      if (!session || !isAdminRole(session.role)) { section.classList.add('hidden'); return; }
+      section.classList.remove('hidden');
+
+      const groups = computeBorrowerGroups();
+      const totalOut = groups.reduce((sum, g) => sum + g.items.length, 0);
+      el('teamDashboardSub').textContent = groups.length
+        ? `${groups.length} borrower${groups.length === 1 ? '' : 's'} · ${totalOut} item${totalOut === 1 ? '' : 's'} out`
+        : '';
+
+      const list = el('teamDashboardList');
+      if (groups.length === 0) {
+        list.innerHTML = `<div class="empty" style="padding:34px 20px;">Nothing borrowed by anyone right now.</div>`;
+        return;
+      }
+      list.innerHTML = groups.map(g => {
+        const isOpen = expandedBorrowers.has(g.name);
+        return `
+        <div class="borrower-card ${isOpen ? 'expanded' : ''}" data-borrower="${escapeHtml(g.name)}">
+          <button type="button" class="borrower-card-head" aria-expanded="${isOpen}">
+            <div class="borrower-avatar" style="background:${colorForName(g.name)};">${escapeHtml(initialsOf(g.name))}</div>
+            <div class="borrower-card-info">
+              <div class="borrower-name">${escapeHtml(g.name)}</div>
+              <div class="borrower-meta">${g.items.length} item${g.items.length === 1 ? '' : 's'} out</div>
+            </div>
+            <span class="borrower-count-badge">${g.items.length}</span>
+            <span class="borrower-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="borrower-items" ${isOpen ? '' : 'hidden'}>
+            ${g.items.map(({ item, loan }) => `
+              <div class="borrower-item-row" data-id="${item.id}">
+                <span class="cat-dot"></span>
+                <span class="borrower-item-name">${escapeHtml(item.name)}</span>
+                <span class="borrower-item-time">${fmtDate(loan.checkoutAt)}</span>
+              </div>`).join('')}
+          </div>
+        </div>`;
+      }).join('');
+    }
+    // Delegated click — tapping a borrower's name/avatar toggles that card's item list
+    // open/closed; tapping an item row (only reachable once expanded) jumps to its detail.
+    el('teamDashboardList').addEventListener('click', (e) => {
+      const headBtn = e.target.closest('.borrower-card-head');
+      if (headBtn) {
+        const card = headBtn.closest('.borrower-card');
+        const name = card.dataset.borrower;
+        const itemsEl = card.querySelector('.borrower-items');
+        const opening = itemsEl.hidden;
+        itemsEl.hidden = !opening;
+        headBtn.setAttribute('aria-expanded', String(opening));
+        card.classList.toggle('expanded', opening);
+        if (opening) expandedBorrowers.add(name); else expandedBorrowers.delete(name);
+        return;
+      }
+      const row = e.target.closest('[data-id]');
+      if (row) openDetail(row.dataset.id, 'home');
+    });
+
+    // renderEquipmentTab(): the merged browsing surface — stats, category filters,
+    // grid/list toggle, and the full equipment collection. This is what used to be
+    // split across the old Home tab (grid/list/filters) and Equipment tab (add button).
+    function renderEquipmentTab() {
       const { outCount, freeCount } = computeStatsAndFilters();
 
       el('stats').innerHTML = `
@@ -870,7 +1080,7 @@
         const btn = e.target.closest('.stat-filter');
         if (!btn) return;
         currentFilter = btn.dataset.filter;
-        renderHomeTab();
+        renderEquipmentTab();
       };
 
       const categories = [...new Set(equipment.map(e => e.category || 'Uncategorized'))].sort((a, b) => a.localeCompare(b));
@@ -884,7 +1094,7 @@
           const chip = e.target.closest('.cat-chip');
           if (!chip) return;
           currentCategory = chip.dataset.cat || null;
-          renderHomeTab();
+          renderEquipmentTab();
         };
       } else {
         catRow.innerHTML = '';
@@ -959,90 +1169,33 @@
       applySelectionHighlights();
     }
 
-    function renderMyEquipment() {
-      const container = el('myEquipmentSection');
-      if (!container || !session) return;
-      const mine = equipment.filter(e => {
-        const loan = activeLoanFor(e.id);
-        return loan && loan.borrower === session.name;
-      });
-      if (mine.length === 0) {
-        container.classList.add('hidden');
-        container.innerHTML = '';
-        return;
-      }
-      container.classList.remove('hidden');
-      container.innerHTML = `
-        <div class="eyebrow" style="margin-bottom:8px;">With you · ${mine.length} item${mine.length === 1 ? '' : 's'}</div>
-        <div class="list-view my-equip-list">
-          ${mine.map(e => {
-            const loan = activeLoanFor(e.id);
-            return `
-          <div class="my-equip-row" data-id="${e.id}">
-            <div class="my-equip-info">
-              <div class="my-equip-name">${escapeHtml(e.name)}</div>
-              <div class="my-equip-meta"><span class="cat-dot"></span>${escapeHtml(e.category || 'Uncategorized')} · Since ${fmtDate(loan.checkoutAt)}</div>
-            </div>
-            <span class="stamp out">Return</span>
-          </div>`;
-          }).join('')}
-        </div>`;
-      // No addEventListener here — clicks are handled by the delegated listener
-      // bound once on #myEquipmentSection at startup.
-      applySelectionHighlights();
-    }
-
-    function renderEquipmentTab() {
-      const container = el('equipmentList');
-      if (!container) return;
-      el('equipmentCount').textContent = `${equipment.length} item${equipment.length === 1 ? '' : 's'} total`;
-      if (equipment.length === 0) {
-        container.innerHTML = `<div class="empty">No equipment yet. Tap + Add to get started.</div>`;
-        return;
-      }
-      const sorted = [...equipment].sort((a, b) => a.name.localeCompare(b.name));
-      container.innerHTML = sorted.map(e => {
-        const loan = activeLoanFor(e.id);
-        return `
-      <div class="list-row ${loan ? 'status-out' : 'status-free'}" data-id="${e.id}">
-        <div class="list-row-main">
-          <div class="list-row-name">${escapeHtml(e.name)}</div>
-          <div class="list-row-cat"><span class="cat-dot"></span>${escapeHtml(e.category || 'Uncategorized')}</div>
-        </div>
-        ${loan
-          ? `<div style="text-align:right;flex:none;"><span class="stamp out">Out</span><div class="who" style="margin-top:4px;">${escapeHtml(loan.borrower)}</div></div>`
-          : `<span class="stamp avail">Available</span>`}
-      </div>`;
-      }).join('');
-      // No addEventListener here either — delegated on #equipmentList at startup.
-      applySelectionHighlights();
-    }
-
     el('viewGridBtn').addEventListener('click', () => {
       currentView = 'grid';
       safeSetLS('equipmentLog.view', 'grid');
       el('viewGridBtn').classList.add('active');
       el('viewListBtn').classList.remove('active');
-      renderHomeTab();
+      renderEquipmentTab();
     });
     el('viewListBtn').addEventListener('click', () => {
       currentView = 'list';
       safeSetLS('equipmentLog.view', 'list');
       el('viewListBtn').classList.add('active');
       el('viewGridBtn').classList.remove('active');
-      renderHomeTab();
+      renderEquipmentTab();
     });
     el(currentView === 'list' ? 'viewListBtn' : 'viewGridBtn').classList.add('active');
 
-    el('syncNowBtn').addEventListener('click', async () => {
-      const btn = el('syncNowBtn');
+    // Shared entry point for the header's sync button. loadAll() is already coalesced,
+    // so this stays correct even if auto-sync fires while a manual sync is mid-flight.
+    async function handleSyncClick(btn) {
       if (btn.classList.contains('spinning')) return; // already syncing
       btn.classList.add('spinning');
       btn.disabled = true;
       await loadAll();
       btn.classList.remove('spinning');
       btn.disabled = false;
-    });
+    }
+    el('syncNowBtn').addEventListener('click', () => handleSyncClick(el('syncNowBtn')));
 
     function setBtnLoading(btn, loadingText) {
       if (!btn) return () => {};
@@ -1244,7 +1397,7 @@
       });
     });
 
-    async function openDetail(equipId, fromTab = 'home') {
+    async function openDetail(equipId, fromTab = 'equipment') {
       const item = equipment.find(e => e.id === equipId);
       if (!item) return;
       const loan = activeLoanFor(equipId);
@@ -1293,7 +1446,7 @@
         <tbody>${latestHist.map(buildHistRow).join('')}</tbody>
       </table>
       </div>
-      ${isAdmin && fromTab === 'equipment' ? `<button class="btn-ghost" id="showChartBtn" style="width:100%;margin-top:10px;font-size:14px;">&#128202; Show complete History</button>` : ''}
+      ${isAdmin ? `<button class="btn-ghost" id="showChartBtn" style="width:100%;margin-top:10px;font-size:14px;">&#128202; Show complete History</button>` : ''}
       ` : `<div style="font-size:14.5px;color:var(--text-secondary);">No history yet.</div>`;
 
       const historyHtml = canSeeHistory
