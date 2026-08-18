@@ -251,6 +251,12 @@ button {
   margin-bottom: 10px;
 }
 
+.view-toggle-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
 .equip-sticky-toolbar .cat-filter-row {
   margin-bottom: 0;
 }
